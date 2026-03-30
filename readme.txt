@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, privacy, cookie banner
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 1.3.1
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,17 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.3.4 =
+* Fixed WP Consent API bridge: enqueue after WP Consent API script (PHP_INT_MAX - 50 priority)
+* Removed redundant window.wp_consent_type inline script (WP Consent API reads consent type via wp_localize_script)
+
+= 1.3.3 =
+* Fixed WP Consent API integration not loading because kukie-cookie-consent loads before wp-consent-api alphabetically
+* Deferred init to plugins_loaded hook so wp_set_consent() is available
+
+= 1.3.2 =
+* Fixed WP Consent API bridge not loading due to script registration timing (priority 10 -> 20)
 
 = 1.3.1 =
 * Fixed wp_has_consent() always returning true because window.wp_consent_type was undefined in JavaScript

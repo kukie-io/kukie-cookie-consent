@@ -25,9 +25,12 @@ class Kukie_Plugin {
 		$injector = new Kukie_Script_Injector( $this );
 		$injector->init();
 
-		// WP Consent API integration (auto-activates if WP Consent API plugin is present)
-		$wp_consent_api = new Kukie_WP_Consent_API();
-		$wp_consent_api->init();
+		// WP Consent API integration (delayed until all plugins are loaded,
+		// because wp-consent-api loads after kukie-cookie-consent alphabetically)
+		add_action( 'plugins_loaded', static function () {
+			$wp_consent_api = new Kukie_WP_Consent_API();
+			$wp_consent_api->init();
+		} );
 
 		// "Settings" link on plugins list page
 		add_filter( 'plugin_action_links_' . plugin_basename( KUKIE_PLUGIN_FILE ), [ $this, 'add_action_links' ] );

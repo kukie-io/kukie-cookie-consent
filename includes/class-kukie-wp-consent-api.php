@@ -41,7 +41,8 @@ class Kukie_WP_Consent_API {
 		add_filter( 'wp_get_consent_type', [ $this, 'get_consent_type' ] );
 
 		// Enqueue the JS bridge script
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_bridge_script' ] );
+		// Must run after WP Consent API enqueues its script at PHP_INT_MAX - 100
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_bridge_script' ], PHP_INT_MAX - 50 );
 	}
 
 	/**
@@ -63,10 +64,6 @@ class Kukie_WP_Consent_API {
 			return;
 		}
 
-		// Set consent type BEFORE wp-consent-api loads
-		wp_add_inline_script( 'wp-consent-api', "window.wp_consent_type = 'optin';", 'before' );
-
-		// Sync bridge AFTER wp-consent-api loads
 		wp_add_inline_script( 'wp-consent-api', $this->get_bridge_js(), 'after' );
 	}
 
