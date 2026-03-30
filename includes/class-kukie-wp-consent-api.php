@@ -63,6 +63,10 @@ class Kukie_WP_Consent_API {
 			return;
 		}
 
+		// Set consent type BEFORE wp-consent-api loads
+		wp_add_inline_script( 'wp-consent-api', "window.wp_consent_type = 'optin';", 'before' );
+
+		// Sync bridge AFTER wp-consent-api loads
 		wp_add_inline_script( 'wp-consent-api', $this->get_bridge_js(), 'after' );
 	}
 
