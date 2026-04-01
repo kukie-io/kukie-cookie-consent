@@ -95,6 +95,22 @@ class Kukie_Plugin {
 		return new Kukie_Api_Client( $key );
 	}
 
+	public function is_api_key_valid(): bool {
+		$settings = $this->get_settings();
+		if ( empty( $settings['api_key_encrypted'] ) ) {
+			return false;
+		}
+		return $settings['api_key_valid'] ?? true;
+	}
+
+	public function set_api_key_valid( bool $valid ): void {
+		$this->update_option( 'api_key_valid', $valid );
+		if ( ! $valid ) {
+			delete_transient( 'kukie_dashboard_data' );
+			delete_transient( 'kukie_settings_cache' );
+		}
+	}
+
 	public function add_action_links( array $links ): array {
 		$url = $this->is_connected()
 			? admin_url( 'admin.php?page=kukie' )

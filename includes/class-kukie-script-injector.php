@@ -17,6 +17,10 @@ class Kukie_Script_Injector {
 			return;
 		}
 
+		if ( ! $this->plugin->is_api_key_valid() ) {
+			return;
+		}
+
 		$position = $this->plugin->get_option( 'script_position', 'head' );
 
 		if ( $position === 'manual' ) {

@@ -47,6 +47,14 @@ class Kukie_Api_Client {
 		$status = wp_remote_retrieve_response_code( $response );
 		$data   = json_decode( wp_remote_retrieve_body( $response ), true );
 
+		$plugin = Kukie_Plugin::instance();
+
+		if ( $status === 401 ) {
+			$plugin->set_api_key_valid( false );
+		} elseif ( $status >= 200 && $status < 300 && ! $plugin->is_api_key_valid() ) {
+			$plugin->set_api_key_valid( true );
+		}
+
 		return [
 			'success' => $status >= 200 && $status < 300,
 			'data'    => $data,

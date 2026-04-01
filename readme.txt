@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, privacy, cookie banner
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,12 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.4.1 =
+* Fixed: Banner continues to display after API key is regenerated or deleted
+* Added: Admin notice when API key is invalid with link to generate a new key
+* Added: Banner injection automatically disabled when API key becomes invalid
+* Added: Auto-recovery when a new valid API key is entered
 
 = 1.4.0 =
 * Added translations for 11 languages: Bulgarian, German, French, Spanish, Italian, Portuguese (Brazil), Dutch, Polish, Romanian, Turkish, Japanese

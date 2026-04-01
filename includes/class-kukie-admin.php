@@ -17,6 +17,7 @@ class Kukie_Admin {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 		add_action( 'admin_init', [ $this, 'maybe_redirect' ] );
 		add_action( 'admin_notices', [ $this, 'connection_notice' ] );
+		add_action( 'admin_notices', [ $this, 'invalid_api_key_notice' ] );
 		add_action( 'admin_notices', [ $this, 'maybe_show_wp_rocket_notice' ] );
 
 		// AJAX handlers
@@ -189,6 +190,34 @@ class Kukie_Admin {
 			esc_html__( 'Kukie.io cookie consent is not connected.', 'kukie-cookie-consent' ),
 			esc_url( admin_url( 'admin.php?page=kukie-connect' ) ),
 			esc_html__( 'Connect now &rarr;', 'kukie-cookie-consent' )
+		);
+	}
+
+	public function invalid_api_key_notice(): void {
+		if ( ! $this->plugin->is_connected() || $this->plugin->is_api_key_valid() ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// Don't show on Kukie's own admin pages (the dashboard already has the detailed notice)
+		$screen = get_current_screen();
+		if ( $screen && str_contains( $screen->id, 'kukie' ) ) {
+			return;
+		}
+
+		$settings = $this->plugin->get_settings();
+		$site_id  = $settings['site_id'] ?? '';
+		$key_url  = 'https://app.kukie.io/sites/' . rawurlencode( (string) $site_id );
+
+		printf(
+			'<div class="notice notice-error"><p><strong>%s</strong> %s <a href="%s" target="_blank" rel="noopener noreferrer">%s &rarr;</a></p></div>',
+			esc_html__( 'Kukie:', 'kukie-cookie-consent' ),
+			esc_html__( 'Invalid API key - the cookie consent banner is disabled.', 'kukie-cookie-consent' ),
+			esc_url( $key_url ),
+			esc_html__( 'Generate a new API key', 'kukie-cookie-consent' )
 		);
 	}
 
@@ -375,6 +404,7 @@ class Kukie_Admin {
 
 		$this->plugin->update_options( [
 			'api_key_encrypted' => Kukie_Encryption::encrypt( $api_key ),
+			'api_key_valid'     => true,
 			'site_key'          => sanitize_text_field( $data['site_key'] ?? '' ),
 			'site_id'           => absint( $data['site_id'] ?? 0 ),
 			'domain'            => sanitize_text_field( $data['domain'] ?? '' ),

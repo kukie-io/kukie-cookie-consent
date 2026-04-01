@@ -16,6 +16,25 @@ $kukie_app_url = 'https://app.kukie.io';
 	</div>
 	<hr class="wp-header-end">
 
+	<?php if ( $kukie_plugin->is_connected() && ! $kukie_plugin->is_api_key_valid() ) :
+		$kukie_key_url = 'https://app.kukie.io/sites/' . rawurlencode( (string) $kukie_site_id );
+	?>
+		<div class="notice notice-error kukie-notice-api-key-invalid">
+			<p>
+				<strong><?php esc_html_e( 'Invalid API key.', 'kukie-cookie-consent' ); ?></strong>
+				<?php esc_html_e( 'The cookie consent banner is currently disabled on your site.', 'kukie-cookie-consent' ); ?>
+			</p>
+			<p>
+				<?php esc_html_e( 'Your API key has been regenerated or deleted in the Kukie dashboard. Generate a new API key and enter it below to restore the banner.', 'kukie-cookie-consent' ); ?>
+			</p>
+			<p>
+				<a href="<?php echo esc_url( $kukie_key_url ); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary">
+					<?php esc_html_e( 'Generate a new API key', 'kukie-cookie-consent' ); ?> &rarr;
+				</a>
+			</p>
+		</div>
+	<?php endif; ?>
+
 	<div id="kukie-dashboard-error" class="kukie-notice kukie-notice-error" style="display:none;"></div>
 
 	<!-- Overview Cards -->
