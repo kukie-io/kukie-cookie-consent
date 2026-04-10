@@ -40,8 +40,21 @@ class Kukie_Script_Injector {
 	 * The banner script is already optimized and minified. Further processing by caching
 	 * plugins can truncate or corrupt it, breaking consent management entirely.
 	 *
+	 * Programmatically excludes cdn.kukie.io and app.kukie.io from:
+	 * - WP Rocket: Minify JS (rocket_exclude_js)
+	 * - WP Rocket: External JS minify (rocket_minify_excluded_external_js)
+	 * - WP Rocket: Delay JavaScript execution (rocket_delay_js_exclusions)
+	 * - WP Rocket: Load JavaScript deferred (rocket_exclude_defer_js) [since 1.5.0]
+	 *
+	 * These exclusions are applied at runtime per request via each caching plugin's
+	 * own filter hooks, so they take effect without writing to stored settings and
+	 * without requiring the user to touch any settings UI.
+	 *
 	 * Must be called early and unconditionally (even before API key is configured),
 	 * because caching plugins scan all enqueued scripts regardless.
+	 *
+	 * @since 1.0.0
+	 * @since 1.5.0 Added rocket_exclude_defer_js filter.
 	 */
 	public static function register_cache_exclusions(): void {
 		// --- Autoptimize ---
@@ -66,6 +79,14 @@ class Kukie_Script_Injector {
 			return $excluded;
 		} );
 		add_filter( 'rocket_minify_excluded_external_js', function ( $excluded ) {
+			if ( ! kukie_array_contains_domain( $excluded, 'kukie.io' ) ) {
+				$excluded[] = 'cdn.kukie.io';
+				$excluded[] = 'app.kukie.io';
+			}
+			return $excluded;
+		} );
+		// WP Rocket: exclude from Load JavaScript deferred (Defer JS)
+		add_filter( 'rocket_exclude_defer_js', function ( $excluded ) {
 			if ( ! kukie_array_contains_domain( $excluded, 'kukie.io' ) ) {
 				$excluded[] = 'cdn.kukie.io';
 				$excluded[] = 'app.kukie.io';

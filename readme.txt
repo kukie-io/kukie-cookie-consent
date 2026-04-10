@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, privacy, cookie banner
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 1.4.1
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,11 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.5.0 =
+* Added: WP Rocket "Load JavaScript deferred" exclusion is now applied automatically via rocket_exclude_defer_js filter, no manual configuration required
+* Improved: WP Rocket compatibility notice now checks runtime exclusion state instead of saved DB option, eliminating false positives when our own filters already handle exclusions
+* Result: Default WP Rocket configurations now work with Kukie out of the box across all four optimization paths (Minify, Combine, Defer, Delay) with zero manual setup
 
 = 1.4.1 =
 * Fixed: Banner continues to display after API key is regenerated or deleted

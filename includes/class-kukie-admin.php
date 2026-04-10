@@ -226,55 +226,67 @@ class Kukie_Admin {
 	// ─────────────────────────────────────────
 
 	/**
-	 * Check WP Rocket compatibility.
+	 * Check WP Rocket compatibility by inspecting runtime exclusion state.
 	 *
-	 * @return array{active: bool, issues: string[]}
+	 * Unlike the previous implementation, this checks what WP Rocket will actually
+	 * do at runtime (via apply_filters) rather than what is stored in the DB option.
+	 * This means the notice only fires when there is a genuine configuration problem,
+	 * not when our own filters are silently handling the exclusions.
+	 *
+	 * @since 1.5.0
+	 * @return array List of WP Rocket setting labels missing kukie exclusion.
 	 */
-	private function check_wp_rocket_compatibility(): array {
-		$result = [ 'active' => false, 'issues' => [] ];
-
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			return $result;
+	public function check_wp_rocket_compatibility(): array {
+		// Bail if WP Rocket is not active.
+		if ( ! defined( 'WP_ROCKET_VERSION' ) ) {
+			return [];
 		}
 
-		if ( ! is_plugin_active( 'wp-rocket/wp-rocket.php' )
-			&& ! is_plugin_active_for_network( 'wp-rocket/wp-rocket.php' ) ) {
-			return $result;
+		$rocket_settings = get_option( 'wp_rocket_settings', [] );
+		if ( ! is_array( $rocket_settings ) ) {
+			return [];
 		}
 
-		$result['active'] = true;
+		$issues = [];
 
-		$wp_rocket_options = get_option( 'wp_rocket_settings', [] );
+		// Helper to test whether a runtime filter pipeline excludes cdn.kukie.io.
+		$is_excluded_at_runtime = function ( $filter_name ) {
+			$excluded = apply_filters( $filter_name, [] );
+			if ( ! is_array( $excluded ) ) {
+				return false;
+			}
+			foreach ( $excluded as $entry ) {
+				if ( false !== strpos( (string) $entry, 'cdn.kukie.io' ) ) {
+					return true;
+				}
+			}
+			return false;
+		};
 
-		if ( ! is_array( $wp_rocket_options ) ) {
-			return $result;
-		}
-
-		// Check Minify JS - is it enabled and is cdn.kukie.io excluded?
-		if ( ! empty( $wp_rocket_options['minify_js'] ) ) {
-			$excluded_js = $wp_rocket_options['exclude_js'] ?? [];
-			if ( ! is_array( $excluded_js ) || ! kukie_array_contains_domain( $excluded_js, 'cdn.kukie.io' ) ) {
-				$result['issues'][] = 'minify_js';
+		// Minify JS - check both filters WP Rocket consults.
+		if ( ! empty( $rocket_settings['minify_js'] ) ) {
+			$excluded_minify = $is_excluded_at_runtime( 'rocket_exclude_js' )
+				|| $is_excluded_at_runtime( 'rocket_minify_excluded_external_js' );
+			if ( ! $excluded_minify ) {
+				$issues[] = __( 'Minify JavaScript files', 'kukie-cookie-consent' );
 			}
 		}
 
-		// Check Defer JS - is it enabled and is cdn.kukie.io excluded?
-		if ( ! empty( $wp_rocket_options['defer_all_js'] ) ) {
-			$excluded_defer = $wp_rocket_options['exclude_defer_js'] ?? [];
-			if ( ! is_array( $excluded_defer ) || ! kukie_array_contains_domain( $excluded_defer, 'cdn.kukie.io' ) ) {
-				$result['issues'][] = 'defer_js';
+		// Defer JS.
+		if ( ! empty( $rocket_settings['defer_all_js'] ) ) {
+			if ( ! $is_excluded_at_runtime( 'rocket_exclude_defer_js' ) ) {
+				$issues[] = __( 'Load JavaScript deferred', 'kukie-cookie-consent' );
 			}
 		}
 
-		// Check Delay JS - is it enabled and is cdn.kukie.io excluded?
-		if ( ! empty( $wp_rocket_options['delay_js'] ) ) {
-			$excluded_delay = $wp_rocket_options['delay_js_exclusions'] ?? [];
-			if ( ! is_array( $excluded_delay ) || ! kukie_array_contains_domain( $excluded_delay, 'cdn.kukie.io' ) ) {
-				$result['issues'][] = 'delay_js';
+		// Delay JS.
+		if ( ! empty( $rocket_settings['delay_js'] ) ) {
+			if ( ! $is_excluded_at_runtime( 'rocket_delay_js_exclusions' ) ) {
+				$issues[] = __( 'Delay JavaScript execution', 'kukie-cookie-consent' );
 			}
 		}
 
-		return $result;
+		return $issues;
 	}
 
 	public function maybe_show_wp_rocket_notice(): void {
@@ -292,21 +304,15 @@ class Kukie_Admin {
 			return;
 		}
 
-		$compat = $this->check_wp_rocket_compatibility();
+		$issues = $this->check_wp_rocket_compatibility();
 
-		if ( empty( $compat['issues'] ) ) {
+		if ( empty( $issues ) ) {
 			return;
 		}
 
-		$settings_labels = [
-			'minify_js' => 'Minify JavaScript files - Excluded JavaScript Files',
-			'defer_js'  => 'Load JavaScript deferred - Excluded JavaScript Files',
-			'delay_js'  => 'Delay JavaScript execution - Excluded JavaScript Files',
-		];
-
 		$issue_list = '';
-		foreach ( $compat['issues'] as $issue ) {
-			$issue_list .= '<li><strong>' . esc_html( $settings_labels[ $issue ] ) . '</strong></li>';
+		foreach ( $issues as $issue_label ) {
+			$issue_list .= '<li><strong>' . esc_html( $issue_label ) . ' - ' . esc_html__( 'Excluded JavaScript Files', 'kukie-cookie-consent' ) . '</strong></li>';
 		}
 
 		$rocket_settings_url = admin_url( 'options-general.php?page=wprocket#file_optimization' );
