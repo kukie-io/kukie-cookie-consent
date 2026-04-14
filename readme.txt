@@ -1,10 +1,10 @@
 === Kukie - Cookie Banner and Consent Management (GDPR, CCPA, DSVGO, CNIL, PIPEDA) ===
 Contributors: kukieio, filesubmit
-Tags: cookie consent, gdpr, ccpa, privacy, cookie banner
+Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 1.5.0
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,27 @@ By installing and configuring this plugin with your site key, you consent to con
 
 NOTE: INSTALLING THIS PLUGIN ALONE DOES NOT MAKE YOUR SITE FULLY COMPLIANT WITH GDPR, CCPA OR OTHER PRIVACY REGULATIONS. COMPLIANCE DEPENDS ON CORRECT CONFIGURATION AND MAY REQUIRE ADDITIONAL LEGAL MEASURES SPECIFIC TO YOUR ORGANISATION.
 
+== Multilingual Support ==
+
+Kukie works out of the box with WPML and Polylang. When a visitor views a translated page, the cookie consent banner automatically displays in the matching language - no additional configuration needed.
+
+Supported language sources (in priority order):
+
+1. Manual override from plugin settings ("Banner language" dropdown)
+2. WPML current language
+3. Polylang current language
+4. WordPress site locale
+
+Banner translations (titles, descriptions, buttons, cookie categories) are managed in the Kukie dashboard at https://app.kukie.io. The plugin ships with built-in translations for 71 languages.
+
+Developers can programmatically override the detected language via the `kukie_script_lang` filter:
+
+`add_filter( 'kukie_script_lang', function( $lang, $source ) {
+    return 'de'; // Force German regardless of WPML/Polylang state
+}, 10, 2 );`
+
+The `$source` argument is one of `forced`, `wpml`, `polylang`, `wp_core`, or `none`, letting filter callbacks decide based on where the language came from.
+
 == Installation ==
 
 1. In your WordPress dashboard, go to **Plugins > Add New**
@@ -237,6 +258,15 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.6.0 =
+* Added: Full WPML compatibility - banner now follows WPML active language automatically
+* Added: Full Polylang compatibility - banner follows Polylang language on pages without WPML
+* Added: "Banner language" setting for manual override (Auto-detect by default)
+* Added: `kukie_script_lang` filter for programmatic language override
+* Added: `wpml-config.xml` for WPML Go Global program compliance
+* Changed: Script tag now includes `data-lang` attribute when language detection succeeds
+* Tested: WPML 4.6+, Polylang 3.4+
 
 = 1.5.0 =
 * Added: WP Rocket "Load JavaScript deferred" exclusion is now applied automatically via rocket_exclude_defer_js filter, no manual configuration required

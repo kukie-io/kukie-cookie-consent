@@ -1,0 +1,41 @@
+<wpml-config>
+
+    <!--
+    Kukie Cookie Consent - WPML Language Configuration
+
+    Kukie stores all banner content (titles, descriptions, button labels,
+    category names) in the Kukie.io SaaS backend, not in the WordPress
+    database. Per-language banner content is managed in the Kukie dashboard
+    at https://app.kukie.io, and the banner script automatically selects
+    the appropriate language based on the data-lang attribute set by this
+    plugin.
+
+    Because banner content is not stored in wp_options, wp_postmeta, or
+    any WordPress database table, there are no plugin-side strings to
+    register for WPML string translation. This configuration file exists
+    to signal WPML compatibility to the Go Global program.
+
+    Admin-facing UI strings (settings pages, notices) are localized via
+    standard WordPress gettext functions with the "kukie-cookie-consent"
+    text domain and bundled .po/.mo files in the /languages directory.
+    -->
+
+    <admin-texts>
+        <!-- No admin texts to register: plugin options contain only
+             site keys, URLs, and boolean flags. Banner content is
+             managed server-side via the Kukie.io dashboard. -->
+    </admin-texts>
+
+    <custom-fields>
+        <!-- No custom fields: plugin does not attach post meta. -->
+    </custom-fields>
+
+    <custom-types>
+        <!-- No custom post types. -->
+    </custom-types>
+
+    <taxonomies>
+        <!-- No custom taxonomies. -->
+    </taxonomies>
+
+</wpml-config>

@@ -417,6 +417,7 @@
 			const data = {
 				banner_enabled: form.querySelector('#kukie-banner-enabled')?.checked ? '1' : '0',
 				script_position: form.querySelector('input[name="script_position"]:checked')?.value || 'head',
+				force_language: form.querySelector('#kukie-force-language')?.value || 'auto',
 				auto_translate: form.querySelector('#kukie-auto-translate')?.checked ? '1' : '0',
 				default_language: form.querySelector('#kukie-default-language')?.value || 'en',
 				enabled_languages: enabledLangs,
@@ -519,6 +520,12 @@
 		const verifiedStatusEl = document.getElementById('kukie-verified-status');
 		if (verifiedStatusEl && d.verified_at) {
 			verifiedStatusEl.textContent = `Verified on ${formatDate(d.verified_at)}`;
+		}
+
+		// Banner language override (WPML/Polylang dropdown)
+		const forceLangSelect = document.getElementById('kukie-force-language');
+		if (forceLangSelect) {
+			forceLangSelect.value = d.force_language || 'auto';
 		}
 
 		// Auto-translate

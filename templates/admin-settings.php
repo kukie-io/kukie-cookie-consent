@@ -120,6 +120,45 @@ $kukie_app_url = 'https://app.kukie.io';
 			<div class="kukie-card">
 				<h2 class="kukie-card-title"><?php esc_html_e( 'Language', 'kukie-cookie-consent' ); ?></h2>
 
+				<div class="kukie-form-group">
+					<label for="kukie-force-language"><?php esc_html_e( 'Banner language', 'kukie-cookie-consent' ); ?></label>
+					<select name="force_language" id="kukie-force-language" class="kukie-select">
+						<option value="auto"><?php esc_html_e( 'Auto-detect (WPML / Polylang / WordPress)', 'kukie-cookie-consent' ); ?></option>
+						<option value="en">English</option>
+						<option value="de">Deutsch</option>
+						<option value="fr">Français</option>
+						<option value="es">Español</option>
+						<option value="it">Italiano</option>
+						<option value="pt">Português</option>
+						<option value="pt-br">Português (Brasil)</option>
+						<option value="nl">Nederlands</option>
+						<option value="pl">Polski</option>
+						<option value="ru">Русский</option>
+						<option value="tr">Türkçe</option>
+						<option value="ja">日本語</option>
+						<option value="zh-cn">中文 (简体)</option>
+						<option value="zh-tw">中文 (繁體)</option>
+						<option value="ar">العربية</option>
+						<option value="bg">Български</option>
+						<option value="cs">Čeština</option>
+						<option value="da">Dansk</option>
+						<option value="el">Ελληνικά</option>
+						<option value="fi">Suomi</option>
+						<option value="he">עברית</option>
+						<option value="hu">Magyar</option>
+						<option value="id">Bahasa Indonesia</option>
+						<option value="ko">한국어</option>
+						<option value="no">Norsk</option>
+						<option value="ro">Română</option>
+						<option value="sk">Slovenčina</option>
+						<option value="sv">Svenska</option>
+						<option value="th">ภาษาไทย</option>
+						<option value="uk">Українська</option>
+						<option value="vi">Tiếng Việt</option>
+					</select>
+					<p class="kukie-help-text"><?php esc_html_e( 'Choose "Auto-detect" (recommended) to follow WPML, Polylang, or the WordPress site language. Select a specific language to force the banner into that locale regardless of page context.', 'kukie-cookie-consent' ); ?></p>
+				</div>
+
 				<div class="kukie-form-row">
 					<div class="kukie-form-row-label">
 						<span><?php esc_html_e( 'Auto-Translate', 'kukie-cookie-consent' ); ?></span>

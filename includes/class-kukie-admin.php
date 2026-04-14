@@ -496,6 +496,7 @@ class Kukie_Admin {
 		$cached = get_transient( 'kukie_settings_cache' );
 		if ( $cached !== false ) {
 			$cached['script_position'] = $this->plugin->get_option( 'script_position', 'head' );
+			$cached['force_language']  = $this->plugin->get_option( 'force_language', 'auto' );
 			wp_send_json_success( $cached );
 		}
 
@@ -514,8 +515,33 @@ class Kukie_Admin {
 
 		$data                    = $response['data'];
 		$data['script_position'] = $this->plugin->get_option( 'script_position', 'head' );
+		$data['force_language']  = $this->plugin->get_option( 'force_language', 'auto' );
 
 		wp_send_json_success( $data );
+	}
+
+	/**
+	 * Whitelist of language codes accepted by the "Banner language" override
+	 * dropdown. `auto` disables the override (detector falls through to
+	 * WPML / Polylang / WP core). All other entries are Kukie-format short
+	 * codes matching the banner script's translations map.
+	 *
+	 * This list is an escape hatch for manual override, not the canonical
+	 * language catalogue — the full 71-language Kukie set is still honored
+	 * via auto-detect. Values must already be Kukie-normalized (lowercase,
+	 * hyphen-separated).
+	 *
+	 * @since 1.6.0
+	 * @return string[]
+	 */
+	private function allowed_force_languages(): array {
+		return [
+			'auto',
+			'en', 'de', 'fr', 'es', 'it', 'pt', 'pt-br', 'nl',
+			'pl', 'ru', 'tr', 'ja', 'zh-cn', 'zh-tw', 'ar', 'bg',
+			'cs', 'da', 'el', 'fi', 'he', 'hu', 'id', 'ko',
+			'no', 'ro', 'sk', 'sv', 'th', 'uk', 'vi',
+		];
 	}
 
 	public function ajax_save_settings(): void {
@@ -531,6 +557,15 @@ class Kukie_Admin {
 			$script_position = 'head';
 		}
 		$this->plugin->update_option( 'script_position', $script_position );
+
+		// Local-only: force_language (WPML/Polylang override dropdown).
+		// Invalid values silently fall back to 'auto' so the detector
+		// takes over normally.
+		$force_language = sanitize_text_field( wp_unslash( $_POST['force_language'] ?? 'auto' ) );
+		if ( ! in_array( $force_language, $this->allowed_force_languages(), true ) ) {
+			$force_language = 'auto';
+		}
+		$this->plugin->update_option( 'force_language', $force_language );
 
 		// API-synced settings
 		$api_data = [

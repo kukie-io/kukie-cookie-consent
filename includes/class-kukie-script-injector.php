@@ -179,7 +179,13 @@ class Kukie_Script_Injector {
 	 * Add cache/minification exclusion attributes to the banner script tag and
 	 * wrap with <!-- noptimize --> comments for Autoptimize compatibility.
 	 *
+	 * Also injects a `data-lang` attribute reflecting the current page language
+	 * as detected by Kukie_Language_Detector (WPML / Polylang / WP core). The
+	 * banner script reads this attribute as its highest-priority language
+	 * signal.
+	 *
 	 * Attributes:
+	 *   data-lang="xx"         - WPML/Polylang/WP locale (since 1.6.0)
 	 *   data-no-minify="1"     - WP Rocket, LiteSpeed Cache
 	 *   data-no-defer="1"      - WP Rocket
 	 *   data-no-delay="1"      - WP Rocket (delay JS)
@@ -193,6 +199,15 @@ class Kukie_Script_Injector {
 		}
 
 		$attrs = 'data-no-minify="1" data-no-defer="1" data-no-delay="1" data-cfasync="false" data-pagespeed-no-defer data-no-optimize="1"';
+
+		// Prepend data-lang when language detection yields a non-empty result.
+		// When the detector returns '', we skip injection entirely so the
+		// banner script's own fallback chain (<html lang> -> navigator.language
+		// -> config default) takes over.
+		$lang = Kukie_Language_Detector::detect();
+		if ( ! empty( $lang ) ) {
+			$attrs = 'data-lang="' . esc_attr( $lang ) . '" ' . $attrs;
+		}
 
 		$tag = str_replace( ' src=', ' ' . $attrs . ' src=', $tag );
 
