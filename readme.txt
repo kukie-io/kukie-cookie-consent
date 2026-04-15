@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -258,6 +258,9 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.6.1 =
+* Fix: Removed regulatory framing from GCM and UET admin descriptions per Google CMP Partner Program guidance. Consent Mode is now correctly described as a technical mechanism for communicating consent to Google/Microsoft services rather than as a regulatory compliance solution.
 
 = 1.6.0 =
 * Added: Full WPML compatibility - banner now follows WPML active language automatically

@@ -268,7 +268,7 @@ msgid "Enable GCM v2"
 msgstr ""
 
 #: templates/admin-gcm.php:30
-msgid "Enable Google Consent Mode v2 to integrate consent signals with Google services. Required for EU user consent compliance with Google Ads and Analytics."
+msgid "Enable Google Consent Mode v2 to pass visitor consent choices to Google tags (Analytics, Ads, GTM). Required by Google Ads for audience building and remarketing in the EEA under Google's platform policies."
 msgstr ""
 
 #: templates/admin-uet.php:34
@@ -465,7 +465,7 @@ msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking."
 msgstr ""
 
 #: templates/admin-uet.php:29
-msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, consent state is forwarded to Microsoft UET tags for GDPR compliance."
+msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, visitor consent choices are forwarded to Microsoft UET tags so they can adjust their data-collection behaviour."
 msgstr ""
 
 #: templates/admin-connect.php:29

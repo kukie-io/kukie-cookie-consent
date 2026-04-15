@@ -270,8 +270,8 @@ msgid "Enable GCM v2"
 msgstr "GCM v2を有効にする"
 
 #: templates/admin-gcm.php:30
-msgid "Enable Google Consent Mode v2 to integrate consent signals with Google services. Required for EU user consent compliance with Google Ads and Analytics."
-msgstr "Google Consent Mode v2を有効にして、同意シグナルをGoogleサービスと統合します。Google広告およびアナリティクスのEUユーザー同意コンプライアンスに必要です。"
+msgid "Enable Google Consent Mode v2 to pass visitor consent choices to Google tags (Analytics, Ads, GTM). Required by Google Ads for audience building and remarketing in the EEA under Google's platform policies."
+msgstr "Google Consent Mode v2 を有効にして、訪問者の同意選択を Google タグ (Analytics、Ads、GTM) に渡します。Google のプラットフォーム ポリシーに基づき、EEA でのオーディエンス構築とリマーケティングのために Google Ads で必要です。"
 
 #: templates/admin-uet.php:34
 msgid "Enable Microsoft UET consent signals"
@@ -467,8 +467,8 @@ msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking."
 msgstr "同意シグナルをMicrosoft Advertising Universal Event Trackingに渡します。"
 
 #: templates/admin-uet.php:29
-msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, consent state is forwarded to Microsoft UET tags for GDPR compliance."
-msgstr "同意シグナルをMicrosoft Advertising Universal Event Trackingに渡します。有効にすると、GDPRコンプライアンスのために同意状態がMicrosoft UETタグに転送されます。"
+msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, visitor consent choices are forwarded to Microsoft UET tags so they can adjust their data-collection behaviour."
+msgstr "Microsoft Advertising Universal Event Tracking に同意シグナルを渡します。有効にすると、訪問者の同意選択が Microsoft UET タグに転送され、データ収集動作を調整できるようになります。"
 
 #: templates/admin-connect.php:29
 msgid "Paste your 64-character API key"

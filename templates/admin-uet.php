@@ -26,7 +26,7 @@ $kukie_plugin = Kukie_Plugin::instance();
 		<div class="kukie-card">
 			<h2 class="kukie-card-title"><?php esc_html_e( 'Microsoft UET Consent Signals', 'kukie-cookie-consent' ); ?></h2>
 			<p class="kukie-card-description">
-				<?php esc_html_e( 'Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, consent state is forwarded to Microsoft UET tags for GDPR compliance.', 'kukie-cookie-consent' ); ?>
+				<?php esc_html_e( 'Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, visitor consent choices are forwarded to Microsoft UET tags so they can adjust their data-collection behaviour.', 'kukie-cookie-consent' ); ?>
 			</p>
 
 			<div class="kukie-form-row">

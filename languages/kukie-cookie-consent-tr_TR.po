@@ -270,8 +270,8 @@ msgid "Enable GCM v2"
 msgstr "GCM v2'yi Etkinleştir"
 
 #: templates/admin-gcm.php:30
-msgid "Enable Google Consent Mode v2 to integrate consent signals with Google services. Required for EU user consent compliance with Google Ads and Analytics."
-msgstr "Onay sinyallerini Google hizmetleriyle entegre etmek için Google Consent Mode v2'yi etkinleştirin. Google Ads ve Analytics ile AB kullanıcı onayı uyumluluğu için gereklidir."
+msgid "Enable Google Consent Mode v2 to pass visitor consent choices to Google tags (Analytics, Ads, GTM). Required by Google Ads for audience building and remarketing in the EEA under Google's platform policies."
+msgstr "Ziyaretçi izin tercihlerini Google etiketlerine (Analytics, Ads, GTM) iletmek için Google Consent Mode v2'yi etkinleştirin. Google'ın platform politikalarına göre AEA'da kitle oluşturma ve yeniden pazarlama için Google Ads tarafından gereklidir."
 
 #: templates/admin-uet.php:34
 msgid "Enable Microsoft UET consent signals"
@@ -467,8 +467,8 @@ msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking."
 msgstr "Onay sinyallerini Microsoft Advertising Universal Event Tracking'e iletin."
 
 #: templates/admin-uet.php:29
-msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, consent state is forwarded to Microsoft UET tags for GDPR compliance."
-msgstr "Onay sinyallerini Microsoft Advertising Universal Event Tracking'e iletin. Etkinleştirildiğinde, onay durumu GDPR uyumluluğu için Microsoft UET etiketlerine iletilir."
+msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, visitor consent choices are forwarded to Microsoft UET tags so they can adjust their data-collection behaviour."
+msgstr "Microsoft Advertising Universal Event Tracking'e izin sinyalleri gönderin. Etkinleştirildiğinde, ziyaretçi izin tercihleri Microsoft UET etiketlerine iletilir ve veri toplama davranışlarını ayarlayabilirler."
 
 #: templates/admin-connect.php:29
 msgid "Paste your 64-character API key"

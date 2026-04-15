@@ -27,7 +27,7 @@ $kukie_plugin = Kukie_Plugin::instance();
 		<div class="kukie-card">
 			<h2 class="kukie-card-title"><?php esc_html_e( 'Google Consent Mode v2', 'kukie-cookie-consent' ); ?></h2>
 			<p class="kukie-card-description">
-				<?php esc_html_e( 'Enable Google Consent Mode v2 to integrate consent signals with Google services. Required for EU user consent compliance with Google Ads and Analytics.', 'kukie-cookie-consent' ); ?>
+				<?php esc_html_e( 'Enable Google Consent Mode v2 to pass visitor consent choices to Google tags (Analytics, Ads, GTM). Required by Google Ads for audience building and remarketing in the EEA under Google\'s platform policies.', 'kukie-cookie-consent' ); ?>
 			</p>
 
 			<div class="kukie-form-row">

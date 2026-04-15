@@ -270,8 +270,8 @@ msgid "Enable GCM v2"
 msgstr "GCM v2 inschakelen"
 
 #: templates/admin-gcm.php:30
-msgid "Enable Google Consent Mode v2 to integrate consent signals with Google services. Required for EU user consent compliance with Google Ads and Analytics."
-msgstr "Schakel Google Consent Mode v2 in om toestemmingssignalen te integreren met Google-diensten. Vereist voor naleving van EU-gebruikerstoestemming met Google Ads en Analytics."
+msgid "Enable Google Consent Mode v2 to pass visitor consent choices to Google tags (Analytics, Ads, GTM). Required by Google Ads for audience building and remarketing in the EEA under Google's platform policies."
+msgstr "Schakel Google Consent Mode v2 in om de toestemmingskeuzes van bezoekers door te geven aan Google-tags (Analytics, Ads, GTM). Vereist door Google Ads voor doelgroepopbouw en remarketing in de EER volgens het platformbeleid van Google."
 
 #: templates/admin-uet.php:34
 msgid "Enable Microsoft UET consent signals"
@@ -467,8 +467,8 @@ msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking."
 msgstr "Toestemmingssignalen doorgeven aan Microsoft Advertising Universal Event Tracking."
 
 #: templates/admin-uet.php:29
-msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, consent state is forwarded to Microsoft UET tags for GDPR compliance."
-msgstr "Toestemmingssignalen doorgeven aan Microsoft Advertising Universal Event Tracking. Indien ingeschakeld, wordt de toestemmingsstatus doorgestuurd naar Microsoft UET-tags voor AVG-naleving."
+msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, visitor consent choices are forwarded to Microsoft UET tags so they can adjust their data-collection behaviour."
+msgstr "Stuur toestemmingssignalen door naar Microsoft Advertising Universal Event Tracking. Indien ingeschakeld, worden de toestemmingskeuzes van bezoekers doorgestuurd naar Microsoft UET-tags zodat zij hun gegevensverzamelingsgedrag kunnen aanpassen."
 
 #: templates/admin-connect.php:29
 msgid "Paste your 64-character API key"

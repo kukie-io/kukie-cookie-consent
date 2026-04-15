@@ -270,8 +270,8 @@ msgid "Enable GCM v2"
 msgstr "Activar GCM v2"
 
 #: templates/admin-gcm.php:30
-msgid "Enable Google Consent Mode v2 to integrate consent signals with Google services. Required for EU user consent compliance with Google Ads and Analytics."
-msgstr "Active Google Consent Mode v2 para integrar las señales de consentimiento con los servicios de Google. Necesario para el cumplimiento del consentimiento de usuarios de la UE con Google Ads y Analytics."
+msgid "Enable Google Consent Mode v2 to pass visitor consent choices to Google tags (Analytics, Ads, GTM). Required by Google Ads for audience building and remarketing in the EEA under Google's platform policies."
+msgstr "Habilita Google Consent Mode v2 para enviar las elecciones de consentimiento de los visitantes a las etiquetas de Google (Analytics, Ads, GTM). Requerido por Google Ads para la creación de audiencias y el remarketing en el EEE según las políticas de la plataforma de Google."
 
 #: templates/admin-uet.php:34
 msgid "Enable Microsoft UET consent signals"
@@ -467,8 +467,8 @@ msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking."
 msgstr "Transmitir señales de consentimiento a Microsoft Advertising Universal Event Tracking."
 
 #: templates/admin-uet.php:29
-msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, consent state is forwarded to Microsoft UET tags for GDPR compliance."
-msgstr "Transmitir señales de consentimiento a Microsoft Advertising Universal Event Tracking. Cuando está activado, el estado de consentimiento se envía a las etiquetas de Microsoft UET para el cumplimiento del RGPD."
+msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, visitor consent choices are forwarded to Microsoft UET tags so they can adjust their data-collection behaviour."
+msgstr "Enviar señales de consentimiento a Microsoft Advertising Universal Event Tracking. Cuando está habilitado, las elecciones de consentimiento de los visitantes se envían a las etiquetas de Microsoft UET para que puedan ajustar su comportamiento de recopilación de datos."
 
 #: templates/admin-connect.php:29
 msgid "Paste your 64-character API key"
