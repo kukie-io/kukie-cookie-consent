@@ -6,7 +6,7 @@
  * Version:           1.6.1
  * Requires at least: 6.0
  * Requires PHP:      8.1
- * Tested up to:      6.9
+ * Tested up to:      7.0
  * Author:            Kukie.io
  * Author URI:        https://kukie.io
  * License:           GPL v2 or later
