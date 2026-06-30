@@ -154,6 +154,7 @@ class Kukie_Admin {
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
 			'nonce'        => wp_create_nonce( 'kukie_admin' ),
 			'dashboardUrl' => $this->plugin->get_option( 'dashboard_url', 'https://app.kukie.io' ),
+			'embedUrl'     => $this->plugin->get_option( 'embed_url', '' ),
 			'siteId'       => $this->plugin->get_option( 'site_id', 0 ),
 			'isConnected'  => $this->plugin->is_connected(),
 		] );

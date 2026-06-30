@@ -508,12 +508,21 @@
 			if (manualEmbed) manualEmbed.style.display = 'block';
 		}
 
-		// Build embed code display
+		// Build embed code display.
+		// Use the stored CDN bundle URL (embed_url) verbatim -- the same value the
+		// automatic <head>/<body> injection enqueues. Never rebuild it from
+		// dashboard_url, which is a per-site /sites/{id} dashboard link and would
+		// produce an invalid script URL.
 		const embedCodeEl = document.getElementById('kukie-embed-code-display');
-		if (embedCodeEl && kukieAdmin.dashboardUrl) {
-			// Approximate the embed code - it depends on whether CDN is used
+		if (embedCodeEl) {
 			const siteKey = document.querySelector('.kukie-info-value code')?.textContent || '';
-			embedCodeEl.textContent = `<script src="${kukieAdmin.dashboardUrl.replace('sites/', '')}c.js" data-site-key="${siteKey}" async></script>`;
+			// Fall back to the CDN URL built from the UUID site key (with correct
+			// /s/ and /c.js separators) only when embed_url is missing on a legacy
+			// connection. Never fall back to dashboard_url string surgery.
+			const embedUrl = kukieAdmin.embedUrl || (siteKey ? `https://cdn.kukie.io/s/${siteKey}/c.js` : '');
+			if (embedUrl) {
+				embedCodeEl.textContent = `<script src="${embedUrl}" data-site-key="${siteKey}" async></script>`;
+			}
 		}
 
 		// Verification status
