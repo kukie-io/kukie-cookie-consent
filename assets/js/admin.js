@@ -519,9 +519,12 @@
 			// Fall back to the CDN URL built from the UUID site key (with correct
 			// /s/ and /c.js separators) only when embed_url is missing on a legacy
 			// connection. Never fall back to dashboard_url string surgery.
+			// CDN bundles carry their config in the URL path, so the snippet is
+			// just the script src -- no data-site-key. This mirrors what the
+			// automatic <head>/<body> injection emits.
 			const embedUrl = kukieAdmin.embedUrl || (siteKey ? `https://cdn.kukie.io/s/${siteKey}/c.js` : '');
 			if (embedUrl) {
-				embedCodeEl.textContent = `<script src="${embedUrl}" data-site-key="${siteKey}" async></script>`;
+				embedCodeEl.textContent = `<script src="${embedUrl}" async></script>`;
 			}
 		}
 

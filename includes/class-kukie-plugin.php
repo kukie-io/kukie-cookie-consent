@@ -17,6 +17,8 @@ class Kukie_Plugin {
 	}
 
 	private function __construct() {
+		$this->maybe_upgrade();
+
 		if ( is_admin() ) {
 			$admin = new Kukie_Admin( $this );
 			$admin->init();
@@ -34,6 +36,48 @@ class Kukie_Plugin {
 
 		// "Settings" link on plugins list page
 		add_filter( 'plugin_action_links_' . plugin_basename( KUKIE_PLUGIN_FILE ), [ $this, 'add_action_links' ] );
+	}
+
+	/**
+	 * Version-gated upgrade routine. Runs at most one option write per plugin
+	 * version bump: the stored plugin_version is compared against KUKIE_VERSION
+	 * on every request, but the write (and any migration) only happens when they
+	 * differ. After the write, subsequent requests short-circuit on the first
+	 * comparison, so there is no per-request write storm.
+	 *
+	 * Migration for 1.6.3: self-heal a stale embed_url. Pre-CDN installs stored
+	 * a legacy app.kukie.io URL that no longer serves anything; rewrite it to the
+	 * canonical CDN form built from the stored site_key so the admin snippet and
+	 * any downstream reader see the correct value without requiring a reconnect.
+	 * Injection itself no longer trusts embed_url (see Kukie_Script_Injector).
+	 *
+	 * @since 1.6.3
+	 */
+	private function maybe_upgrade(): void {
+		$settings = $this->get_settings();
+
+		if ( ( $settings['plugin_version'] ?? '' ) === KUKIE_VERSION ) {
+			return;
+		}
+
+		$site_key = $settings['site_key'] ?? '';
+
+		// Only heal embed_url when connected; never write cdn.kukie.io/s//c.js.
+		if ( $site_key !== '' ) {
+			$canonical = sprintf( 'https://cdn.kukie.io/s/%s/c.js', rawurlencode( $site_key ) );
+			if ( ( $settings['embed_url'] ?? '' ) !== $canonical ) {
+				$settings['embed_url'] = $canonical;
+			}
+		}
+
+		$settings['plugin_version'] = KUKIE_VERSION;
+
+		$this->settings = $settings;
+		update_option( 'kukie_settings', $settings );
+
+		// Serve the corrected value immediately if the plugin caches settings.
+		delete_transient( 'kukie_settings_cache' );
+		delete_transient( 'kukie_dashboard_data' );
 	}
 
 	public static function activate(): void {

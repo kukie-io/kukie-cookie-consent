@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -258,6 +258,9 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.6.3 =
+* Fix: existing installs now always load the current CDN banner script; stale stored embed URLs are self-corrected on upgrade.
 
 = 1.6.2 =
 * Fix: Manual embed code snippet on the settings page showed an invalid script URL (built from the dashboard URL instead of the CDN bundle URL), which could 404 if pasted. The snippet now uses the correct CDN bundle URL. Sites using the recommended automatic <head>/<body> injection were not affected.

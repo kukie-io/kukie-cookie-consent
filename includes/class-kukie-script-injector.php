@@ -137,16 +137,17 @@ class Kukie_Script_Injector {
 			return;
 		}
 
-		$embed_url = $this->plugin->get_option( 'embed_url', '' );
-		$site_key  = $this->plugin->get_option( 'site_key', '' );
+		$site_key = $this->plugin->get_option( 'site_key', '' );
 
-		if ( empty( $embed_url ) || empty( $site_key ) ) {
+		if ( empty( $site_key ) ) {
 			return;
 		}
 
-		// CDN bundles have config embedded -- no data-site-key needed
-		// App URL bundles need data-site-key
-		$is_cdn = str_contains( $embed_url, '/s/' . $site_key . '/c.js' );
+		// Always build the CDN bundle URL canonically from the site key. The
+		// stored embed_url is never trusted for injection: legacy installs may
+		// hold a stale app.kukie.io URL that no longer serves anything. CDN
+		// bundles carry their config in the URL path -- no data-site-key needed.
+		$src = sprintf( 'https://cdn.kukie.io/s/%s/c.js', rawurlencode( $site_key ) );
 
 		$position = $this->plugin->get_option( 'script_position', 'head' );
 
@@ -156,7 +157,7 @@ class Kukie_Script_Injector {
 
 		wp_enqueue_script(
 			'kukie-banner-script',
-			esc_url( $embed_url ),
+			esc_url( $src ),
 			[],
 			$version,
 			[
@@ -164,15 +165,6 @@ class Kukie_Script_Injector {
 				'in_footer' => ( $position === 'body' ),
 			]
 		);
-
-		// For non-CDN URLs, pass the site key via inline script
-		if ( ! $is_cdn ) {
-			wp_add_inline_script(
-				'kukie-banner-script',
-				'window.__KUKIE_SITE_KEY__ = ' . wp_json_encode( sanitize_text_field( $site_key ) ) . ';',
-				'before'
-			);
-		}
 	}
 
 	/**
