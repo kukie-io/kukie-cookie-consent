@@ -9,6 +9,11 @@ class Kukie_Plugin {
 	private static ?Kukie_Plugin $instance = null;
 	private ?array $settings = null;
 
+	// Per-request memo of the decrypted API key, keyed to the ciphertext it
+	// was derived from so a reconnect (new ciphertext) self-invalidates.
+	private ?string $api_key_plain = null;
+	private string $api_key_cipher_seen = '';
+
 	public static function instance(): Kukie_Plugin {
 		if ( self::$instance === null ) {
 			self::$instance = new self();
@@ -118,17 +123,61 @@ class Kukie_Plugin {
 		update_option( 'kukie_settings', $settings );
 	}
 
+	/**
+	 * Connected means the stored API key is actually USABLE, not merely
+	 * present. After a salt rotation (wp config shuffle-salts) or a
+	 * cross-environment DB clone, the stored ciphertext no longer decrypts;
+	 * treating that install as "connected" showed a working Dashboard while
+	 * every action failed with "Not connected." and no reconnect guidance.
+	 *
+	 * The front-end banner is NOT gated on this - Kukie_Script_Injector only
+	 * needs the site_key.
+	 *
+	 * @since 1.7.0 accounts for decryptability, not just presence.
+	 */
 	public function is_connected(): bool {
-		$key = $this->get_option( 'api_key_encrypted' );
-		return ! empty( $key ) && ! empty( $this->get_option( 'site_key' ) );
+		return ! empty( $this->get_option( 'site_key' ) )
+			&& $this->has_stored_api_key()
+			&& $this->get_api_key() !== '';
+	}
+
+	public function has_stored_api_key(): bool {
+		return ! empty( $this->get_option( 'api_key_encrypted' ) );
+	}
+
+	/**
+	 * An API key is stored but can no longer be decrypted (salt rotation or
+	 * DB clone with different salts). Distinct from a fresh install, which
+	 * has no stored key at all.
+	 *
+	 * @since 1.7.0
+	 */
+	public function api_key_decrypt_failed(): bool {
+		return $this->has_stored_api_key() && $this->get_api_key() === '';
 	}
 
 	public function get_api_key(): string {
-		$encrypted = $this->get_option( 'api_key_encrypted', '' );
-		if ( empty( $encrypted ) ) {
+		$encrypted = (string) $this->get_option( 'api_key_encrypted', '' );
+		if ( $encrypted === '' ) {
 			return '';
 		}
-		return Kukie_Encryption::decrypt( $encrypted );
+
+		if ( $this->api_key_plain === null || $this->api_key_cipher_seen !== $encrypted ) {
+			$this->api_key_plain       = Kukie_Encryption::decrypt( $encrypted );
+			$this->api_key_cipher_seen = $encrypted;
+
+			// Migrate legacy '::'-delimited ciphertext to the fixed-length-IV
+			// format on the first successful decrypt (see Kukie_Encryption).
+			if ( $this->api_key_plain !== '' && Kukie_Encryption::is_legacy( $encrypted ) ) {
+				$reencrypted = Kukie_Encryption::encrypt( $this->api_key_plain );
+				if ( $reencrypted !== '' ) {
+					$this->update_option( 'api_key_encrypted', $reencrypted );
+					$this->api_key_cipher_seen = $reencrypted;
+				}
+			}
+		}
+
+		return $this->api_key_plain;
 	}
 
 	public function get_api_client(): ?Kukie_Api_Client {

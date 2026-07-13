@@ -17,6 +17,7 @@ class Kukie_Admin {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 		add_action( 'admin_init', [ $this, 'maybe_redirect' ] );
 		add_action( 'admin_notices', [ $this, 'connection_notice' ] );
+		add_action( 'admin_notices', [ $this, 'reconnect_notice' ] );
 		add_action( 'admin_notices', [ $this, 'invalid_api_key_notice' ] );
 		add_action( 'admin_notices', [ $this, 'maybe_show_wp_rocket_notice' ] );
 
@@ -181,6 +182,12 @@ class Kukie_Admin {
 			return;
 		}
 
+		// A stored-but-undecryptable key gets the more specific reconnect
+		// notice instead of the generic "not connected" one.
+		if ( $this->plugin->api_key_decrypt_failed() ) {
+			return;
+		}
+
 		$screen = get_current_screen();
 		if ( $screen && str_contains( $screen->id, 'kukie' ) ) {
 			return;
@@ -191,6 +198,32 @@ class Kukie_Admin {
 			esc_html__( 'Kukie.io cookie consent is not connected.', 'kukie-cookie-consent' ),
 			esc_url( admin_url( 'admin.php?page=kukie-connect' ) ),
 			esc_html__( 'Connect now &rarr;', 'kukie-cookie-consent' )
+		);
+	}
+
+	/**
+	 * Shown when an API key is stored but can no longer be decrypted -
+	 * typically after the site's security keys/salts were rotated
+	 * (wp config shuffle-salts) or the database was cloned from another
+	 * environment. Reconnecting re-encrypts the key with the current salts.
+	 *
+	 * @since 1.7.0
+	 */
+	public function reconnect_notice(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if ( ! $this->plugin->api_key_decrypt_failed() ) {
+			return;
+		}
+
+		printf(
+			'<div class="notice notice-error"><p><strong>%s</strong> %s <a href="%s">%s &rarr;</a></p></div>',
+			esc_html__( 'Kukie:', 'kukie-cookie-consent' ),
+			esc_html__( 'The stored Kukie.io API key can no longer be read. This usually happens after the site\'s security keys (salts) were changed or the database was copied from another site. Please reconnect with your API key to restore the dashboard connection - the cookie banner itself keeps working.', 'kukie-cookie-consent' ),
+			esc_url( admin_url( 'admin.php?page=kukie-connect' ) ),
+			esc_html__( 'Reconnect', 'kukie-cookie-consent' )
 		);
 	}
 
@@ -409,8 +442,13 @@ class Kukie_Admin {
 
 		$data = $response['data'];
 
+		$encrypted_key = Kukie_Encryption::encrypt( $api_key );
+		if ( $encrypted_key === '' ) {
+			wp_send_json_error( [ 'message' => __( 'Could not securely store the API key on this server. Please contact your host about OpenSSL support.', 'kukie-cookie-consent' ) ] );
+		}
+
 		$this->plugin->update_options( [
-			'api_key_encrypted' => Kukie_Encryption::encrypt( $api_key ),
+			'api_key_encrypted' => $encrypted_key,
 			'api_key_valid'     => true,
 			'site_key'          => sanitize_text_field( $data['site_key'] ?? '' ),
 			'site_id'           => absint( $data['site_id'] ?? 0 ),
@@ -522,6 +560,112 @@ class Kukie_Admin {
 	}
 
 	/**
+	 * The server-side config_version the admin JS loaded via GET /settings
+	 * and posted back with this save. Distinct from the LOCAL 'config_version'
+	 * option, which is a (string) time() CDN cache-buster. Null means the JS
+	 * did not send one (the PUT then takes the server's last-write-wins
+	 * path); 0 is a real, lockable version - the server compares with
+	 * array_key_exists + strict equality, so it must not be dropped.
+	 *
+	 * Callers have already passed check_ajax_referer(), hence the phpcs ignore.
+	 *
+	 * @since 1.7.0
+	 */
+	private function posted_config_version(): ?int {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return isset( $_POST['config_version'] ) ? absint( wp_unslash( $_POST['config_version'] ) ) : null;
+	}
+
+	/**
+	 * Shared pipeline for the four settings save handlers: attach the posted
+	 * config_version (optimistic lock), require a connected client, PUT to
+	 * the API, and send the JSON error on failure. Returns only on success;
+	 * callers do any local mirroring, then finish with send_settings_saved().
+	 *
+	 * @since 1.7.0
+	 * @return array{0: Kukie_Api_Client, 1: ?int} The client and the config_version that was sent.
+	 */
+	private function put_settings_or_die( array $api_data ): array {
+		$config_version = $this->posted_config_version();
+		if ( $config_version !== null ) {
+			$api_data['config_version'] = $config_version;
+		}
+
+		$client = $this->plugin->get_api_client();
+		if ( ! $client ) {
+			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
+		}
+
+		$response = $client->put( '/settings', $api_data );
+
+		if ( ! $response['success'] ) {
+			$this->send_put_settings_error( $response );
+		}
+
+		return [ $client, $config_version ];
+	}
+
+	/**
+	 * Send the JSON error for a failed PUT /settings. A 409 (optimistic-lock
+	 * conflict: the config changed elsewhere since the page loaded) is marked
+	 * with code 'version_conflict' and carries the server's current version,
+	 * so the admin JS can inform the user and offer a retry.
+	 *
+	 * @since 1.7.0
+	 */
+	private function send_put_settings_error( array $response ): void {
+		if ( $response['status'] === 409 ) {
+			delete_transient( 'kukie_settings_cache' );
+
+			wp_send_json_error( [
+				'message'         => $response['error'] ?? __( 'Settings were modified elsewhere since this page was loaded.', 'kukie-cookie-consent' ),
+				'code'            => 'version_conflict',
+				'current_version' => absint( $response['data']['current_version'] ?? 0 ),
+			] );
+		}
+
+		wp_send_json_error( [ 'message' => $response['error'] ] );
+	}
+
+	/**
+	 * Finalise a successful PUT /settings: bump the local CDN cache-buster,
+	 * refresh the settings cache from the server (the PUT bumped the server's
+	 * config_version), and return the new version so the admin JS can save
+	 * again from the same page without a spurious conflict.
+	 *
+	 * @since 1.7.0
+	 */
+	private function send_settings_saved( Kukie_Api_Client $client, string $message, ?int $sent_version = null ): void {
+		// Update config version for cache-busting (forces browser to fetch fresh CDN bundle)
+		$this->plugin->update_options( [ 'config_version' => (string) time() ] );
+
+		delete_transient( 'kukie_settings_cache' );
+
+		$payload = [ 'message' => $message ];
+
+		$refresh = $client->get( '/settings' );
+		if ( $refresh['success'] && isset( $refresh['data']['config_version'] ) ) {
+			set_transient( 'kukie_settings_cache', $refresh['data'], 10 * MINUTE_IN_SECONDS );
+			$payload['config_version'] = (int) $refresh['data']['config_version'];
+
+			// The refresh is authoritative for the admin-bar banner state:
+			// it reflects dashboard-side toggles too, not just this save.
+			if ( array_key_exists( 'banner_enabled', $refresh['data'] ) ) {
+				$this->plugin->update_option( 'banner_enabled', (bool) $refresh['data']['banner_enabled'] );
+			}
+		} elseif ( $sent_version !== null ) {
+			// The refresh failed, but the optimistic lock passed, so the
+			// server deterministically bumped the version we sent by one
+			// (PluginController::updateSettings). Returning that instead of
+			// nothing keeps the JS off the stale version, which would
+			// produce a spurious conflict on the very next save.
+			$payload['config_version'] = $sent_version + 1;
+		}
+
+		wp_send_json_success( $payload );
+	}
+
+	/**
 	 * Whitelist of language codes accepted by the "Banner language" override
 	 * dropdown. `auto` disables the override (detector falls through to
 	 * WPML / Polylang / WP core). All other entries are Kukie-format short
@@ -578,25 +722,13 @@ class Kukie_Admin {
 				: [],
 		];
 
+		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+
+		// Mirror the server state locally only AFTER the PUT succeeded, so the
+		// admin-bar status dot cannot misreport it when the save fails.
 		$this->plugin->update_option( 'banner_enabled', $api_data['banner_enabled'] );
 
-		$client = $this->plugin->get_api_client();
-		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
-		}
-
-		$response = $client->put( '/settings', $api_data );
-
-		if ( ! $response['success'] ) {
-			wp_send_json_error( [ 'message' => $response['error'] ] );
-		}
-
-		// Update config version for cache-busting (forces browser to fetch fresh CDN bundle)
-		$this->plugin->update_options( [ 'config_version' => (string) time() ] );
-
-		delete_transient( 'kukie_settings_cache' );
-
-		wp_send_json_success( [ 'message' => __( 'Settings saved.', 'kukie-cookie-consent' ) ] );
+		$this->send_settings_saved( $client, __( 'Settings saved.', 'kukie-cookie-consent' ), $config_version );
 	}
 
 	public function ajax_save_gcm(): void {
@@ -611,23 +743,9 @@ class Kukie_Admin {
 			'auto_block_scripts' => rest_sanitize_boolean( $_POST['auto_block_scripts'] ?? false ),
 		];
 
-		$client = $this->plugin->get_api_client();
-		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
-		}
+		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
 
-		$response = $client->put( '/settings', $api_data );
-
-		if ( ! $response['success'] ) {
-			wp_send_json_error( [ 'message' => $response['error'] ] );
-		}
-
-		// Update config version for cache-busting (forces browser to fetch fresh CDN bundle)
-		$this->plugin->update_options( [ 'config_version' => (string) time() ] );
-
-		delete_transient( 'kukie_settings_cache' );
-
-		wp_send_json_success( [ 'message' => __( 'Google Consent Mode settings saved.', 'kukie-cookie-consent' ) ] );
+		$this->send_settings_saved( $client, __( 'Google Consent Mode settings saved.', 'kukie-cookie-consent' ), $config_version );
 	}
 
 	public function ajax_save_uet(): void {
@@ -641,23 +759,9 @@ class Kukie_Admin {
 			'ms_uet_enabled' => rest_sanitize_boolean( $_POST['ms_uet_enabled'] ?? false ),
 		];
 
-		$client = $this->plugin->get_api_client();
-		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
-		}
+		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
 
-		$response = $client->put( '/settings', $api_data );
-
-		if ( ! $response['success'] ) {
-			wp_send_json_error( [ 'message' => $response['error'] ] );
-		}
-
-		// Update config version for cache-busting (forces browser to fetch fresh CDN bundle)
-		$this->plugin->update_options( [ 'config_version' => (string) time() ] );
-
-		delete_transient( 'kukie_settings_cache' );
-
-		wp_send_json_success( [ 'message' => __( 'Microsoft UET settings saved.', 'kukie-cookie-consent' ) ] );
+		$this->send_settings_saved( $client, __( 'Microsoft UET settings saved.', 'kukie-cookie-consent' ), $config_version );
 	}
 
 	public function ajax_save_banner_design(): void {
@@ -703,8 +807,8 @@ class Kukie_Admin {
 			'style'      => $rb_style,
 			'icon'       => $rb_icon,
 			'text'       => sanitize_text_field( $rb_raw['text'] ?? 'Cookie Settings' ),
-			'color'      => sanitize_text_field( $rb_raw['color'] ?? '' ),
-			'icon_color' => sanitize_hex_color( $rb_raw['icon_color'] ?? '' ) ?: '',
+			'color'      => $this->sanitize_banner_color( $rb_raw['color'] ?? '' ),
+			'icon_color' => $this->sanitize_banner_color( $rb_raw['icon_color'] ?? '' ),
 			'offset_x'   => max( 0, min( 200, absint( $rb_raw['offset_x'] ?? 20 ) ) ),
 			'offset_y'   => max( 0, min( 200, absint( $rb_raw['offset_y'] ?? 20 ) ) ),
 		];
@@ -715,23 +819,27 @@ class Kukie_Admin {
 			'revisit_button' => $revisit_button,
 		];
 
-		$client = $this->plugin->get_api_client();
-		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
+		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+
+		$this->send_settings_saved( $client, __( 'Banner design saved.', 'kukie-cookie-consent' ), $config_version );
+	}
+
+	/**
+	 * Coerce a banner colour to something the API accepts: a hex colour
+	 * matching the server's validation regex, or '' (the "use default"
+	 * sentinel) - never a value that would 422 the whole save. Deliberately
+	 * NOT sanitize_hex_color(): that helper rejects 4/8-digit alpha hex,
+	 * which the server accepts, so it would silently wipe a dashboard-set
+	 * alpha colour on the next plugin-side save.
+	 *
+	 * @since 1.7.0
+	 */
+	private function sanitize_banner_color( mixed $value ): string {
+		if ( ! is_string( $value ) ) {
+			return '';
 		}
-
-		$response = $client->put( '/settings', $api_data );
-
-		if ( ! $response['success'] ) {
-			wp_send_json_error( [ 'message' => $response['error'] ] );
-		}
-
-		// Update config version for cache-busting (forces browser to fetch fresh CDN bundle)
-		$this->plugin->update_options( [ 'config_version' => (string) time() ] );
-
-		delete_transient( 'kukie_settings_cache' );
-
-		wp_send_json_success( [ 'message' => __( 'Banner design saved.', 'kukie-cookie-consent' ) ] );
+		$value = trim( $value );
+		return preg_match( '/^#[0-9a-fA-F]{3,8}$/', $value ) ? $value : '';
 	}
 
 	public function ajax_trigger_scan(): void {
@@ -749,11 +857,10 @@ class Kukie_Admin {
 		$response = $client->post( '/scan' );
 
 		if ( ! $response['success'] ) {
-			$message = $response['status'] === 429
-				? __( 'A scan is already running. Please wait for it to complete.', 'kukie-cookie-consent' )
-				: ( $response['error'] ?? __( 'Could not start scan.', 'kukie-cookie-consent' ) );
-
-			wp_send_json_error( [ 'message' => $message ] );
+			// A 429 can mean scan-already-running, queue full, or rate limit -
+			// the server sends a distinct error message for each, so show it
+			// instead of assuming which case it was.
+			wp_send_json_error( [ 'message' => $response['error'] ?? __( 'Could not start scan.', 'kukie-cookie-consent' ) ] );
 		}
 
 		delete_transient( 'kukie_dashboard_data' );
@@ -773,7 +880,11 @@ class Kukie_Admin {
 			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
 		}
 
-		$response = $client->post( '/verify' );
+		// The server verify loop probes up to 3 URLs at connectTimeout 5s +
+		// timeout 10s each (worst case ~45s); a shorter client timeout would
+		// abort while the server is still checking and could report a network
+		// error even though the server ends up marking the site verified.
+		$response = $client->post( '/verify', null, 60 );
 
 		if ( ! $response['success'] ) {
 			wp_send_json_error( [ 'message' => $response['error'] ?? __( 'Verification failed.', 'kukie-cookie-consent' ) ] );

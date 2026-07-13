@@ -36,6 +36,61 @@
 	}
 
 	// ─────────────────────────────────────────
+	// Settings Save (optimistic locking)
+	// ─────────────────────────────────────────
+
+	// Server-side config version from the last kukie_get_settings load.
+	// Sent back with every save so the server can reject the write with a
+	// 409 when the settings changed elsewhere (dashboard edit, another
+	// plugin instance) instead of silently overwriting them.
+	let currentConfigVersion = null;
+
+	function rememberConfigVersion(d) {
+		if (d && typeof d.config_version === 'number') {
+			currentConfigVersion = d.config_version;
+		}
+	}
+
+	// Save with conflict handling: on a 409 the user is told their copy was
+	// superseded and asked whether to overwrite. Retries at most once per
+	// confirmation, so a conflict can never spin.
+	async function kukieSaveSettings(action, data) {
+		if (currentConfigVersion !== null) {
+			data.config_version = currentConfigVersion;
+		}
+
+		let result = await kukieAjax(action, data);
+
+		if (!result.success && result.data?.code === 'version_conflict') {
+			// 0 is a legitimate version - never a truthiness check here.
+			if (typeof result.data.current_version === 'number') {
+				currentConfigVersion = result.data.current_version;
+			}
+
+			const overwrite = window.confirm(
+				'These settings were changed elsewhere (for example in the Kukie.io dashboard) after this page was loaded.\n\n' +
+				'OK: save anyway and overwrite the other changes.\n' +
+				'Cancel: keep the other changes (reload this page to see them).'
+			);
+
+			if (!overwrite) {
+				return result;
+			}
+
+			if (currentConfigVersion !== null) {
+				data.config_version = currentConfigVersion;
+			}
+			result = await kukieAjax(action, data);
+		}
+
+		if (result.success) {
+			rememberConfigVersion(result.data);
+		}
+
+		return result;
+	}
+
+	// ─────────────────────────────────────────
 	// Toast Notifications
 	// ─────────────────────────────────────────
 
@@ -291,7 +346,7 @@
 				auto_block_scripts: form.querySelector('#kukie-auto-block')?.checked ? '1' : '0',
 			};
 
-			const result = await kukieAjax('kukie_save_gcm', data);
+			const result = await kukieSaveSettings('kukie_save_gcm', data);
 
 			setButtonLoading(saveBtn, false);
 
@@ -315,6 +370,7 @@
 		}
 
 		const d = result.data;
+		rememberConfigVersion(d);
 		setChecked('kukie-gcm-enabled', d.gcm_v2_enabled);
 		setChecked('kukie-auto-block', d.auto_block_scripts);
 	}
@@ -342,7 +398,7 @@
 				ms_uet_enabled: form.querySelector('#kukie-uet-enabled')?.checked ? '1' : '0',
 			};
 
-			const result = await kukieAjax('kukie_save_uet', data);
+			const result = await kukieSaveSettings('kukie_save_uet', data);
 
 			setButtonLoading(saveBtn, false);
 
@@ -366,6 +422,7 @@
 		}
 
 		const d = result.data;
+		rememberConfigVersion(d);
 		setChecked('kukie-uet-enabled', d.ms_uet_enabled);
 	}
 
@@ -423,7 +480,7 @@
 				enabled_languages: enabledLangs,
 			};
 
-			const result = await kukieAjax('kukie_save_settings', data);
+			const result = await kukieSaveSettings('kukie_save_settings', data);
 
 			setButtonLoading(saveBtn, false);
 
@@ -494,6 +551,7 @@
 		}
 
 		const d = result.data;
+		rememberConfigVersion(d);
 
 		// Banner enabled
 		setChecked('kukie-banner-enabled', d.banner_enabled);
@@ -685,6 +743,7 @@
 		}
 
 		const d = result.data;
+		rememberConfigVersion(d);
 
 		// Set layout
 		const layoutRadio = document.querySelector(`input[name="banner_layout"][value="${d.layout || 'popup'}"]`);
@@ -753,7 +812,7 @@
 			'revisit_button[offset_y]': document.getElementById('kukie-revisit-offset-y')?.value || '20',
 		};
 
-		const result = await kukieAjax('kukie_save_banner_design', data);
+		const result = await kukieSaveSettings('kukie_save_banner_design', data);
 
 		setButtonLoading(saveBtn, false);
 

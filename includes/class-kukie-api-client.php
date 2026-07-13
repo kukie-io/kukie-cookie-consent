@@ -13,14 +13,18 @@ class Kukie_Api_Client {
 	}
 
 	/**
+	 * @param int $timeout Request timeout in seconds. The default suits the
+	 *                     fast endpoints; slow ones (e.g. /verify, where the
+	 *                     server may probe up to 3 URLs at up to 15s each)
+	 *                     must pass a value exceeding the server worst case.
 	 * @return array{success: bool, data: array|null, error: string|null, status: int}
 	 */
-	public function request( string $method, string $endpoint, ?array $body = null ): array {
+	public function request( string $method, string $endpoint, ?array $body = null, int $timeout = 15 ): array {
 		$url = KUKIE_API_BASE . $endpoint;
 
 		$args = [
 			'method'    => strtoupper( $method ),
-			'timeout'   => 15,
+			'timeout'   => $timeout,
 			'sslverify' => true,
 			'headers'   => [
 				'X-Kukie-Api-Key' => $this->api_key,
@@ -67,8 +71,8 @@ class Kukie_Api_Client {
 		return $this->request( 'GET', $endpoint );
 	}
 
-	public function post( string $endpoint, ?array $body = null ): array {
-		return $this->request( 'POST', $endpoint, $body );
+	public function post( string $endpoint, ?array $body = null, int $timeout = 15 ): array {
+		return $this->request( 'POST', $endpoint, $body, $timeout );
 	}
 
 	public function put( string $endpoint, array $body ): array {

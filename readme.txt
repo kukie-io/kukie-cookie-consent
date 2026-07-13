@@ -1,10 +1,10 @@
 === Kukie - Cookie Banner and Consent Management (GDPR, CCPA, DSVGO, CNIL, PIPEDA) ===
 Contributors: kukieio, filesubmit
 Tags: cookie consent, gdpr, ccpa, wpml, polylang
-Requires at least: 6.0
+Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.6.3
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -163,14 +163,6 @@ Supported language sources (in priority order):
 
 Banner translations (titles, descriptions, buttons, cookie categories) are managed in the Kukie dashboard at https://app.kukie.io. The plugin ships with built-in translations for 71 languages.
 
-Developers can programmatically override the detected language via the `kukie_script_lang` filter:
-
-`add_filter( 'kukie_script_lang', function( $lang, $source ) {
-    return 'de'; // Force German regardless of WPML/Polylang state
-}, 10, 2 );`
-
-The `$source` argument is one of `forced`, `wpml`, `polylang`, `wp_core`, or `none`, letting filter callbacks decide based on where the language came from.
-
 == Installation ==
 
 1. In your WordPress dashboard, go to **Plugins > Add New**
@@ -259,7 +251,15 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 
 == Changelog ==
 
-= 1.6.3 =
+= 1.7.0 =
+* Changed: Minimum required WordPress version raised from 6.0 to 6.7.
+* Fixed: Stored API key encryption no longer uses a delimiter that a random encryption value could collide with; keys are migrated to the new format automatically and existing keys keep working.
+* Fixed: After a security-keys (salts) rotation or a database copy from another site, the plugin now detects that the stored API key can no longer be read and shows a clear reconnect notice instead of a broken "connected" dashboard. The cookie banner itself keeps working.
+* Fixed: Settings saves now use optimistic locking - if the same settings were changed in the Kukie.io dashboard after the plugin page was loaded, you are warned and can choose whether to overwrite instead of silently losing the other changes.
+* Fixed: An invalid revisit-button background colour no longer rejects the whole banner design save; it now falls back to the default like the icon colour does.
+* Fixed: The scan button now shows the actual reason a scan could not start (already running, queue full, or rate limit) instead of always reporting "a scan is already running".
+* Fixed: The banner enabled/disabled indicator in the admin bar no longer flips when a settings save fails.
+* Fixed: Site verification no longer times out on the plugin side while the server is still checking slow sites.
 * Fix: existing installs now always load the current CDN banner script; stale stored embed URLs are self-corrected on upgrade.
 
 = 1.6.2 =

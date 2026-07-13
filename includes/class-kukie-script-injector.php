@@ -13,7 +13,11 @@ class Kukie_Script_Injector {
 	}
 
 	public function init(): void {
-		if ( ! $this->plugin->is_connected() ) {
+		// The front-end banner needs only the site_key - never gate it on the
+		// API key. A salt rotation can make the stored key undecryptable
+		// (is_connected() then returns false) while the site is still
+		// connected server-side and the banner must keep working.
+		if ( empty( $this->plugin->get_option( 'site_key' ) ) ) {
 			return;
 		}
 
