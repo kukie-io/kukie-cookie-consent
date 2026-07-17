@@ -14,14 +14,13 @@ class Kukie_Script_Injector {
 
 	public function init(): void {
 		// The front-end banner needs only the site_key - never gate it on the
-		// API key. A salt rotation can make the stored key undecryptable
-		// (is_connected() then returns false) while the site is still
-		// connected server-side and the banner must keep working.
+		// API key. The API key is a MANAGEMENT credential (stats, scans,
+		// settings sync); the CDN bundle at cdn.kukie.io/s/{site_key}/c.js
+		// serves regardless of its state, so an invalid or undecryptable key
+		// (salt rotation, revoked key) must degrade the dashboard connection,
+		// never remove a live consent banner. A disconnect deletes the whole
+		// kukie_settings option, so this site_key gate is what stops injection.
 		if ( empty( $this->plugin->get_option( 'site_key' ) ) ) {
-			return;
-		}
-
-		if ( ! $this->plugin->is_api_key_valid() ) {
 			return;
 		}
 

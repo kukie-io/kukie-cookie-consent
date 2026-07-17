@@ -11,7 +11,8 @@
  * Result is normalized to Kukie's short-code convention:
  *   - lowercase
  *   - underscores replaced with hyphens
- *   - region stripped EXCEPT for zh-* (zh-cn, zh-tw preserved)
+ *   - region stripped EXCEPT for zh-* (zh-cn, zh-tw) and pt-br, which
+ *     are distinct Kukie locales and are preserved
  *
  * The detected value is passed through the `kukie_script_lang` filter
  * so third parties can override it programmatically.
@@ -77,7 +78,8 @@ class Kukie_Language_Detector {
 	 * Normalize a locale code to Kukie's short-code convention.
 	 *
 	 *   de_DE    -> de
-	 *   pt_BR    -> pt
+	 *   pt_BR    -> pt-br (distinct Kukie locale, preserved like zh-*)
+	 *   pt       -> pt
 	 *   en-GB    -> en
 	 *   zh_CN    -> zh-cn
 	 *   zh_TW    -> zh-tw
@@ -112,6 +114,13 @@ class Kukie_Language_Detector {
 		// Preserve other zh-* region codes as-is.
 		if ( strpos( $locale, 'zh-' ) === 0 ) {
 			return $locale;
+		}
+
+		// Preserve Brazilian Portuguese: Kukie ships pt-br as a locale
+		// distinct from European pt, so pt_BR / pt-BR must not collapse to
+		// pt. Bare 'pt' stays 'pt' (it does not reach this branch).
+		if ( $locale === 'pt-br' || strpos( $locale, 'pt-br-' ) === 0 ) {
+			return 'pt-br';
 		}
 
 		// All other locales: strip region.

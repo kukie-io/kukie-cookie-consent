@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kukie Cookie Consent 1.4.0\n"
 "Report-Msgid-Bugs-To: support@kukie.io\n"
-"POT-Creation-Date: 2026-03-30 00:00+0000\n"
+"POT-Creation-Date: 2026-07-17 00:00+0000\n"
 "PO-Revision-Date: 2026-03-30 00:00+0000\n"
 "Last-Translator: Kukie.io <support@kukie.io>\n"
 "Language-Team: Turkish <support@kukie.io>\n"
@@ -14,14 +14,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-
-#: includes/class-kukie-admin.php:681
-msgid "A scan is already running. Please wait for it to complete."
-msgstr "Bir tarama zaten çalışıyor. Lütfen tamamlanmasını bekleyin."
-
 #: templates/admin-connect.php:23
 msgid "API Key"
 msgstr "API Anahtarı"
+
+#: includes/class-kukie-api-client.php:99
+msgid "API error."
+msgstr ""
 
 #: templates/admin-banner-design.php:230
 msgid "Accept All"
@@ -31,51 +30,42 @@ msgstr "Tümünü Kabul Et"
 msgid "Add this code to your theme header template."
 msgstr "Bu kodu tema başlık şablonunuza ekleyin."
 
-#: templates/admin-gcm.php:66
-msgid "Advertisement (ad_storage)"
-msgstr "Reklam (ad_storage)"
-
 #: templates/admin-settings.php:86
 msgid "After opening tag"
 msgstr "Açılış etiketinden sonra"
-
-#: templates/admin-gcm.php:63
-#: templates/admin-gcm.php:68
-#: templates/admin-gcm.php:73
-#: templates/admin-gcm.php:78
-msgid "All"
-msgstr "Tümü"
-
-#: templates/admin-gcm.php:61
-msgid "Analytics (analytics_storage)"
-msgstr "Analitik (analytics_storage)"
 
 #: templates/admin-banner-design.php:143
 msgid "Auto (contrast)"
 msgstr "Otomatik (kontrast)"
 
-#: templates/admin-settings.php:125
+#: templates/admin-settings.php:164
 msgid "Auto-Translate"
 msgstr "Otomatik Çeviri"
 
-#: templates/admin-gcm.php:90
+#: templates/admin-gcm.php:67
 msgid "Auto-block third-party scripts"
 msgstr "Üçüncü taraf betikleri otomatik engelle"
 
-#: templates/admin-gcm.php:91
-msgid "Automatically block known tracking scripts until consent is given."
-msgstr "Onay verilene kadar bilinen izleme betiklerini otomatik olarak engelleyin."
-
 #: templates/admin-settings.php:126
-msgid "Automatically detect visitor language and show the banner in their language."
-msgstr "Ziyaretçi dilini otomatik olarak algılayın ve afişi kendi dilinde gösterin."
+msgid "Auto-detect (WPML / Polylang / WordPress)"
+msgstr ""
+
+#: templates/admin-gcm.php:68
+msgid "Automatically block known tracking scripts until consent is given."
+msgstr ""
+"Onay verilene kadar bilinen izleme betiklerini otomatik olarak engelleyin."
+
+#: templates/admin-settings.php:165
+msgid ""
+"Automatically detect visitor language and show the banner in their language."
+msgstr ""
+"Ziyaretçi dilini otomatik olarak algılayın ve afişi kendi dilinde gösterin."
 
 #: templates/admin-banner-design.php:132
 msgid "Background Color (empty = primary)"
 msgstr "Arka Plan Rengi (boş = birincil)"
 
-#: includes/class-kukie-admin.php:81
-#: includes/class-kukie-admin.php:82
+#: includes/class-kukie-admin.php:83 includes/class-kukie-admin.php:84
 #: templates/admin-banner-design.php:11
 msgid "Banner Design"
 msgstr "Afiş Tasarımı"
@@ -84,13 +74,18 @@ msgstr "Afiş Tasarımı"
 msgid "Banner Script"
 msgstr "Afiş Betiği"
 
-#: templates/admin-dashboard.php:28
+#: templates/admin-dashboard.php:47
 msgid "Banner Status"
 msgstr "Afiş Durumu"
 
-#: includes/class-kukie-admin.php:662
+#: includes/class-kukie-admin.php:903
 msgid "Banner design saved."
 msgstr "Afiş tasarımı kaydedildi."
+
+#: templates/admin-settings.php:124
+#, fuzzy
+msgid "Banner language"
+msgstr "Afiş Durumu"
 
 #: templates/admin-banner-design.php:45
 msgid "Bottom Bar"
@@ -100,23 +95,17 @@ msgstr "Alt Çubuk"
 msgid "Bottom Center"
 msgstr "Alt Orta"
 
-#: templates/admin-banner-design.php:76
-#: templates/admin-banner-design.php:103
+#: templates/admin-banner-design.php:76 templates/admin-banner-design.php:103
 msgid "Bottom Left"
 msgstr "Alt Sol"
 
-#: templates/admin-banner-design.php:84
-#: templates/admin-banner-design.php:104
+#: templates/admin-banner-design.php:84 templates/admin-banner-design.php:104
 msgid "Bottom Right"
 msgstr "Alt Sağ"
 
 #: templates/admin-banner-design.php:127
 msgid "Button Text"
 msgstr "Düğme Metni"
-
-#: templates/admin-gcm.php:54
-msgid "Category"
-msgstr "Kategori"
 
 #: templates/admin-banner-design.php:72
 msgid "Center"
@@ -126,17 +115,23 @@ msgstr "Orta"
 msgid "Check if the banner script is detected on your site."
 msgstr "Afiş betiğinin sitenizde algılanıp algılanmadığını kontrol edin."
 
+#: templates/admin-settings.php:159
+msgid ""
+"Choose \"Auto-detect\" (recommended) to follow WPML, Polylang, or the "
+"WordPress site language. Select a specific language to force the banner into "
+"that locale regardless of page context."
+msgstr ""
+
 #: templates/admin-banner-design.php:39
 msgid "Classic centered modal"
 msgstr "Klasik ortalanmış modal"
 
-#: includes/class-kukie-admin.php:118
-#: includes/class-kukie-admin.php:119
-#: includes/class-kukie-plugin.php:105
+#: includes/class-kukie-admin.php:120 includes/class-kukie-admin.php:121
+#: includes/class-kukie-plugin.php:268
 msgid "Connect"
 msgstr "Bağlan"
 
-#: includes/class-kukie-admin.php:191
+#: includes/class-kukie-admin.php:211
 msgid "Connect now &rarr;"
 msgstr "Şimdi bağlanın &rarr;"
 
@@ -145,14 +140,18 @@ msgid "Connect to Kukie.io"
 msgstr "Kukie.io'ya Bağlan"
 
 #: templates/admin-connect.php:17
-msgid "Connect your WordPress site to Kukie.io for automatic cookie consent management, GDPR/CCPA compliance, and consent analytics."
-msgstr "Otomatik çerez onay yönetimi, GDPR/CCPA uyumluluğu ve onay analitiği için WordPress sitenizi Kukie.io'ya bağlayın."
+msgid ""
+"Connect your WordPress site to Kukie.io for automatic cookie consent "
+"management, GDPR/CCPA compliance, and consent analytics."
+msgstr ""
+"Otomatik çerez onay yönetimi, GDPR/CCPA uyumluluğu ve onay analitiği için "
+"WordPress sitenizi Kukie.io'ya bağlayın."
 
 #: templates/admin-settings.php:32
 msgid "Connected"
 msgstr "Bağlı"
 
-#: includes/class-kukie-admin.php:395
+#: includes/class-kukie-admin.php:501
 msgid "Connected successfully!"
 msgstr "Başarıyla bağlandı!"
 
@@ -168,11 +167,11 @@ msgstr "Bağlanıyor..."
 msgid "Connection"
 msgstr "Bağlantı"
 
-#: templates/admin-dashboard.php:77
+#: templates/admin-dashboard.php:96
 msgid "Consent Overview"
 msgstr "Onay Genel Bakışı"
 
-#: templates/admin-dashboard.php:40
+#: templates/admin-dashboard.php:59
 msgid "Consents Today"
 msgstr "Bugünkü Onaylar"
 
@@ -180,23 +179,29 @@ msgstr "Bugünkü Onaylar"
 msgid "Cookie"
 msgstr "Çerez"
 
-#: templates/admin-dashboard.php:104
+#: templates/admin-dashboard.php:123
 msgid "Cookie Scan"
 msgstr "Çerez Taraması"
 
-#: includes/class-kukie-admin.php:689
+#: includes/class-kukie-admin.php:947
 msgid "Cookie scan started!"
 msgstr "Çerez taraması başlatıldı!"
 
-#: templates/admin-dashboard.php:128
+#: templates/admin-dashboard.php:147
 msgid "Cookies Found"
 msgstr "Bulunan Çerezler"
 
-#: includes/class-kukie-admin.php:371
+#: includes/class-kukie-admin.php:451
 msgid "Could not connect. Please check your API key."
 msgstr "Bağlanılamadı. Lütfen API anahtarınızı kontrol edin."
 
-#: includes/class-kukie-admin.php:682
+#: includes/class-kukie-admin.php:458
+msgid ""
+"Could not securely store the API key on this server. Please contact your "
+"host about OpenSSL support."
+msgstr ""
+
+#: includes/class-kukie-admin.php:942
 msgid "Could not start scan."
 msgstr "Tarama başlatılamadı."
 
@@ -204,55 +209,52 @@ msgstr "Tarama başlatılamadı."
 msgid "Customise"
 msgstr "Özelleştir"
 
-#: templates/admin-dashboard.php:141
+#: templates/admin-dashboard.php:160
 msgid "Customise Your Banner"
 msgstr "Afişinizi Özelleştirin"
 
-#: includes/class-kukie-admin.php:72
-#: includes/class-kukie-admin.php:73
-#: includes/class-kukie-plugin.php:104
+#: includes/class-kukie-admin.php:74 includes/class-kukie-admin.php:75
+#: includes/class-kukie-plugin.php:267
 msgid "Dashboard"
 msgstr "Pano"
 
-#: templates/admin-gcm.php:46
+#: templates/admin-gcm.php:50
 msgid "Default Consent State"
 msgstr "Varsayılan Onay Durumu"
 
-#: templates/admin-settings.php:136
+#: templates/admin-settings.php:175
 msgid "Default Language"
 msgstr "Varsayılan Dil"
 
-#: templates/admin-gcm.php:55
-msgid "Default State"
-msgstr "Varsayılan Durum"
+#: includes/class-kukie-admin.php:330
+msgid "Delay JavaScript execution"
+msgstr ""
 
-#: templates/admin-gcm.php:62
-#: templates/admin-gcm.php:67
-#: templates/admin-gcm.php:72
-msgid "Denied"
-msgstr "Reddedildi"
-
-#: templates/admin-dashboard.php:142
-msgid "Design your cookie banner, manage cookie categories, and configure consent rules in the Kukie.io dashboard."
-msgstr "Kukie.io panosunda çerez afişinizi tasarlayın, çerez kategorilerini yönetin ve onay kurallarını yapılandırın."
+#: templates/admin-dashboard.php:161
+msgid ""
+"Design your cookie banner, manage cookie categories, and configure consent "
+"rules in the Kukie.io dashboard."
+msgstr ""
+"Kukie.io panosunda çerez afişinizi tasarlayın, çerez kategorilerini yönetin "
+"ve onay kurallarını yapılandırın."
 
 #: templates/admin-settings.php:55
 msgid "Disconnect from Kukie.io"
 msgstr "Kukie.io bağlantısını kes"
 
-#: includes/class-kukie-admin.php:420
+#: includes/class-kukie-admin.php:526
 msgid "Disconnected from Kukie.io."
 msgstr "Kukie.io bağlantısı kesildi."
 
-#: includes/class-kukie-admin.php:303
+#: includes/class-kukie-admin.php:383
 msgid "Dismiss"
 msgstr "Kapat"
 
-#: templates/admin-connect.php:75
-#: templates/admin-settings.php:44
+#: templates/admin-connect.php:75 templates/admin-settings.php:44
 msgid "Domain"
 msgstr "Alan Adı"
 
+#. translators: %s: link to Kukie.io registration
 #: templates/admin-connect.php:88
 msgid "Don't have an account? %s"
 msgstr "Hesabınız yok mu? %s"
@@ -270,17 +272,29 @@ msgid "Enable GCM v2"
 msgstr "GCM v2'yi Etkinleştir"
 
 #: templates/admin-gcm.php:30
-msgid "Enable Google Consent Mode v2 to pass visitor consent choices to Google tags (Analytics, Ads, GTM). Required by Google Ads for audience building and remarketing in the EEA under Google's platform policies."
-msgstr "Ziyaretçi izin tercihlerini Google etiketlerine (Analytics, Ads, GTM) iletmek için Google Consent Mode v2'yi etkinleştirin. Google'ın platform politikalarına göre AEA'da kitle oluşturma ve yeniden pazarlama için Google Ads tarafından gereklidir."
+msgid ""
+"Enable Google Consent Mode v2 to pass visitor consent choices to Google tags "
+"(Analytics, Ads, GTM). Required by Google Ads for audience building and "
+"remarketing in the EEA under Google's platform policies."
+msgstr ""
+"Ziyaretçi izin tercihlerini Google etiketlerine (Analytics, Ads, GTM) "
+"iletmek için Google Consent Mode v2'yi etkinleştirin. Google'ın platform "
+"politikalarına göre AEA'da kitle oluşturma ve yeniden pazarlama için Google "
+"Ads tarafından gereklidir."
 
 #: templates/admin-uet.php:34
 msgid "Enable Microsoft UET consent signals"
 msgstr "Microsoft UET onay sinyallerini etkinleştir"
 
-#: templates/admin-settings.php:144
+#: templates/admin-settings.php:183
 msgid "Enabled Languages"
 msgstr "Etkin Diller"
 
+#: includes/class-kukie-admin.php:360
+msgid "Excluded JavaScript Files"
+msgstr ""
+
+#. translators: %s: link to Kukie.io dashboard
 #: templates/admin-connect.php:41
 msgid "Find your API key in %s under your site settings."
 msgstr "API anahtarınızı %s içinde, site ayarlarınızda bulabilirsiniz."
@@ -293,8 +307,7 @@ msgstr "Parmak İzi"
 msgid "Floating"
 msgstr "Kayan"
 
-#: templates/admin-gcm.php:11
-#: templates/admin-uet.php:11
+#: templates/admin-gcm.php:11 templates/admin-uet.php:11
 msgid "Full settings"
 msgstr "Tüm ayarlar"
 
@@ -306,28 +319,22 @@ msgstr "Alt kısımda tam genişlikte çubuk"
 msgid "Full-width bar at top"
 msgstr "Üst kısımda tam genişlikte çubuk"
 
-#: templates/admin-gcm.php:71
-msgid "Functional (functionality_storage)"
-msgstr "İşlevsel (functionality_storage)"
+#: includes/class-kukie-admin.php:265 templates/admin-dashboard.php:32
+msgid "Generate a new API key"
+msgstr ""
 
 #: templates/admin-connect.php:80
 msgid "Go to Dashboard"
 msgstr "Panoya Git"
 
-#: includes/class-kukie-admin.php:558
+#: includes/class-kukie-admin.php:827
 msgid "Google Consent Mode settings saved."
 msgstr "Google Consent Mode ayarları kaydedildi."
 
-#: includes/class-kukie-admin.php:90
-#: includes/class-kukie-admin.php:91
-#: templates/admin-gcm.php:9
-#: templates/admin-gcm.php:28
+#: includes/class-kukie-admin.php:92 includes/class-kukie-admin.php:93
+#: templates/admin-gcm.php:9 templates/admin-gcm.php:28
 msgid "Google Consent Mode v2"
 msgstr "Google Consent Mode v2"
-
-#: templates/admin-gcm.php:77
-msgid "Granted"
-msgstr "Verildi"
 
 #: templates/admin-banner-design.php:118
 msgid "Icon"
@@ -341,20 +348,22 @@ msgstr "Simge Rengi"
 msgid "Icon Only"
 msgstr "Yalnızca Simge"
 
-#: includes/class-kukie-admin.php:364
+#: includes/class-kukie-admin.php:444
 msgid "Invalid API key format. The key should be 64 characters."
 msgstr "Geçersiz API anahtarı biçimi. Anahtar 64 karakter olmalıdır."
 
-#: includes/class-kukie-admin.php:48
-#: includes/class-kukie-admin.php:49
-#: includes/class-kukie-admin.php:61
-#: includes/class-kukie-admin.php:62
-#: templates/admin-connect.php:8
-#: templates/admin-connect.php:13
+#: templates/admin-dashboard.php:24
+#, fuzzy
+msgid "Invalid API key."
+msgstr "API anahtarını göster/gizle"
+
+#: includes/class-kukie-admin.php:50 includes/class-kukie-admin.php:51
+#: includes/class-kukie-admin.php:63 includes/class-kukie-admin.php:64
+#: templates/admin-connect.php:8 templates/admin-connect.php:13
 msgid "Kukie.io"
 msgstr "Kukie.io"
 
-#: includes/class-kukie-admin.php:296
+#: includes/class-kukie-admin.php:376
 msgid "Kukie.io - WP Rocket detected:"
 msgstr "Kukie.io - WP Rocket algılandı:"
 
@@ -366,15 +375,20 @@ msgstr "Kukie.io Panosu"
 msgid "Kukie.io Settings"
 msgstr "Kukie.io Ayarları"
 
-#: includes/class-kukie-admin.php:189
+#: includes/class-kukie-admin.php:209
 msgid "Kukie.io cookie consent is not connected."
 msgstr "Kukie.io çerez onayı bağlı değil."
+
+#: includes/class-kukie-admin.php:234 includes/class-kukie-admin.php:262
+#, fuzzy
+msgid "Kukie:"
+msgstr "Kukie.io"
 
 #: templates/admin-settings.php:121
 msgid "Language"
 msgstr "Dil"
 
-#: templates/admin-dashboard.php:124
+#: templates/admin-dashboard.php:143
 msgid "Last Scan"
 msgstr "Son Tarama"
 
@@ -382,7 +396,7 @@ msgstr "Son Tarama"
 msgid "Layout"
 msgstr "Düzen"
 
-#: includes/class-kukie-admin.php:302
+#: includes/class-kukie-admin.php:382
 msgid "Learn more"
 msgstr "Daha fazla bilgi"
 
@@ -390,22 +404,29 @@ msgstr "Daha fazla bilgi"
 msgid "Live Preview"
 msgstr "Canlı Önizleme"
 
+#: includes/class-kukie-admin.php:323
+msgid "Load JavaScript deferred"
+msgstr ""
+
 #: templates/admin-banner-design.php:24
 msgid "Loading design settings..."
 msgstr "Tasarım ayarları yükleniyor..."
 
-#: templates/admin-gcm.php:22
-#: templates/admin-settings.php:20
+#: templates/admin-gcm.php:22 templates/admin-settings.php:20
 #: templates/admin-uet.php:22
 msgid "Loading settings..."
 msgstr "Ayarlar yükleniyor..."
+
+#: templates/admin-gcm.php:56
+#, fuzzy
+msgid "Manage region rules in the Kukie.io dashboard"
+msgstr "Kukie.io panonuz"
 
 #: templates/admin-settings.php:92
 msgid "Manual"
 msgstr "Manuel"
 
-#: includes/class-kukie-admin.php:99
-#: includes/class-kukie-admin.php:100
+#: includes/class-kukie-admin.php:101 includes/class-kukie-admin.php:102
 #: templates/admin-uet.php:9
 msgid "Microsoft UET"
 msgstr "Microsoft UET"
@@ -414,22 +435,21 @@ msgstr "Microsoft UET"
 msgid "Microsoft UET Consent Signals"
 msgstr "Microsoft UET Onay Sinyalleri"
 
-#: includes/class-kukie-admin.php:588
+#: includes/class-kukie-admin.php:843
 msgid "Microsoft UET settings saved."
 msgstr "Microsoft UET ayarları kaydedildi."
 
-#: templates/admin-gcm.php:76
-msgid "Necessary (security_storage)"
-msgstr "Gerekli (security_storage)"
+#: includes/class-kukie-admin.php:316
+msgid "Minify JavaScript files"
+msgstr ""
 
-#: includes/class-kukie-admin.php:439
-#: includes/class-kukie-admin.php:468
-#: includes/class-kukie-admin.php:513
-#: includes/class-kukie-admin.php:544
-#: includes/class-kukie-admin.php:574
-#: includes/class-kukie-admin.php:648
-#: includes/class-kukie-admin.php:674
-#: includes/class-kukie-admin.php:701
+#: includes/class-kukie-admin.php:164
+msgid "Network error. Please try again."
+msgstr ""
+
+#: includes/class-kukie-admin.php:545 includes/class-kukie-admin.php:582
+#: includes/class-kukie-admin.php:634 includes/class-kukie-admin.php:933
+#: includes/class-kukie-admin.php:959
 msgid "Not connected."
 msgstr "Bağlı değil."
 
@@ -441,11 +461,11 @@ msgstr "X Ofseti (px)"
 msgid "Offset Y (px)"
 msgstr "Y Ofseti (px)"
 
-#: templates/admin-dashboard.php:144
+#: templates/admin-dashboard.php:163
 msgid "Open Kukie.io Dashboard"
 msgstr "Kukie.io Panosunu Aç"
 
-#: includes/class-kukie-admin.php:300
+#: includes/class-kukie-admin.php:380
 msgid "Open WP Rocket Settings"
 msgstr "WP Rocket Ayarlarını Aç"
 
@@ -453,22 +473,28 @@ msgstr "WP Rocket Ayarlarını Aç"
 msgid "Open full dashboard"
 msgstr "Tam panoyu aç"
 
-#: templates/admin-connect.php:67
-#: templates/admin-settings.php:36
+#: templates/admin-connect.php:67 templates/admin-settings.php:36
 msgid "Organisation"
 msgstr "Kuruluş"
 
-#: templates/admin-dashboard.php:132
+#: templates/admin-dashboard.php:151
 msgid "Pages Scanned"
 msgstr "Taranan Sayfalar"
 
 #: templates/admin-uet.php:35
 msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking."
-msgstr "Onay sinyallerini Microsoft Advertising Universal Event Tracking'e iletin."
+msgstr ""
+"Onay sinyallerini Microsoft Advertising Universal Event Tracking'e iletin."
 
 #: templates/admin-uet.php:29
-msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking. When enabled, visitor consent choices are forwarded to Microsoft UET tags so they can adjust their data-collection behaviour."
-msgstr "Microsoft Advertising Universal Event Tracking'e izin sinyalleri gönderin. Etkinleştirildiğinde, ziyaretçi izin tercihleri Microsoft UET etiketlerine iletilir ve veri toplama davranışlarını ayarlayabilirler."
+msgid ""
+"Pass consent signals to Microsoft Advertising Universal Event Tracking. When "
+"enabled, visitor consent choices are forwarded to Microsoft UET tags so they "
+"can adjust their data-collection behaviour."
+msgstr ""
+"Microsoft Advertising Universal Event Tracking'e izin sinyalleri gönderin. "
+"Etkinleştirildiğinde, ziyaretçi izin tercihleri Microsoft UET etiketlerine "
+"iletilir ve veri toplama davranışlarını ayarlayabilirler."
 
 #: templates/admin-connect.php:29
 msgid "Paste your 64-character API key"
@@ -478,8 +504,7 @@ msgstr "64 karakterlik API anahtarınızı yapıştırın"
 msgid "Pill (Icon + Text)"
 msgstr "Hap (Simge + Metin)"
 
-#: templates/admin-connect.php:71
-#: templates/admin-dashboard.php:52
+#: templates/admin-connect.php:71 templates/admin-dashboard.php:71
 #: templates/admin-settings.php:40
 msgid "Plan"
 msgstr "Plan"
@@ -488,8 +513,7 @@ msgstr "Plan"
 msgid "Popup (Center)"
 msgstr "Açılır Pencere (Orta)"
 
-#: templates/admin-banner-design.php:68
-#: templates/admin-banner-design.php:101
+#: templates/admin-banner-design.php:68 templates/admin-banner-design.php:101
 msgid "Position"
 msgstr "Konum"
 
@@ -497,9 +521,10 @@ msgstr "Konum"
 msgid "Recommended"
 msgstr "Önerilen"
 
-#: templates/admin-gcm.php:56
-msgid "Region"
-msgstr "Bölge"
+#: includes/class-kukie-admin.php:237
+#, fuzzy
+msgid "Reconnect"
+msgstr "Bağlan"
 
 #: templates/admin-banner-design.php:229
 msgid "Reject All"
@@ -509,7 +534,7 @@ msgstr "Tümünü Reddet"
 msgid "Revisit Button"
 msgstr "Yeniden Ziyaret Düğmesi"
 
-#: templates/admin-dashboard.php:111
+#: templates/admin-dashboard.php:130
 msgid "Run New Scan"
 msgstr "Yeni Tarama Başlat"
 
@@ -517,20 +542,17 @@ msgstr "Yeni Tarama Başlat"
 msgid "Save Changes"
 msgstr "Değişiklikleri Kaydet"
 
-#: templates/admin-gcm.php:103
-#: templates/admin-settings.php:170
+#: templates/admin-gcm.php:80 templates/admin-settings.php:209
 #: templates/admin-uet.php:47
 msgid "Save Settings"
 msgstr "Ayarları Kaydet"
 
-#: templates/admin-banner-design.php:16
-#: templates/admin-gcm.php:106
-#: templates/admin-settings.php:173
-#: templates/admin-uet.php:50
+#: templates/admin-banner-design.php:16 templates/admin-gcm.php:83
+#: templates/admin-settings.php:212 templates/admin-uet.php:50
 msgid "Saving..."
 msgstr "Kaydediliyor..."
 
-#: templates/admin-gcm.php:86
+#: templates/admin-gcm.php:63
 msgid "Script Blocking"
 msgstr "Betik Engelleme"
 
@@ -538,19 +560,27 @@ msgstr "Betik Engelleme"
 msgid "Script Position"
 msgstr "Betik Konumu"
 
-#: templates/admin-settings.php:145
+#: templates/admin-settings.php:184
 msgid "Select which languages are available for your cookie banner."
 msgstr "Çerez afişiniz için hangi dillerin kullanılabilir olacağını seçin."
 
-#: includes/class-kukie-admin.php:108
-#: includes/class-kukie-admin.php:109
+#: includes/class-kukie-admin.php:110 includes/class-kukie-admin.php:111
 #: templates/admin-banner-design.php:122
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: includes/class-kukie-admin.php:527
+#: includes/class-kukie-admin.php:165
+msgid ""
+"Settings could not be loaded, so saving is disabled. Please reload the page."
+msgstr ""
+
+#: includes/class-kukie-admin.php:810
 msgid "Settings saved."
 msgstr "Ayarlar kaydedildi."
+
+#: includes/class-kukie-admin.php:659
+msgid "Settings were modified elsewhere since this page was loaded."
+msgstr ""
 
 #: templates/admin-banner-design.php:121
 msgid "Shield"
@@ -572,8 +602,7 @@ msgstr "Site Anahtarı"
 msgid "Small floating card"
 msgstr "Küçük kayan kart"
 
-#: templates/admin-dashboard.php:120
-#: templates/admin-settings.php:29
+#: templates/admin-dashboard.php:139 templates/admin-settings.php:29
 msgid "Status"
 msgstr "Durum"
 
@@ -585,19 +614,59 @@ msgstr "Stil"
 msgid "Tab (Text)"
 msgstr "Sekme (Metin)"
 
-#: templates/admin-settings.php:140
-msgid "The fallback language when auto-translate cannot determine the visitor language."
-msgstr "Otomatik çeviri ziyaretçi dilini belirleyemediğinde kullanılacak yedek dil."
+#: templates/admin-dashboard.php:25
+msgid ""
+"The dashboard connection is broken - stats, scans and settings sync are "
+"paused. The cookie banner itself keeps working on your site."
+msgstr ""
 
-#: templates/admin-gcm.php:48
-msgid "These are the default consent states before a user interacts with the banner. Managed through region rules in the Kukie.io dashboard."
-msgstr "Bunlar, kullanıcı afişle etkileşime geçmeden önceki varsayılan onay durumlarıdır. Kukie.io panosundaki bölge kuralları aracılığıyla yönetilir."
+#: templates/admin-gcm.php:52
+#, fuzzy
+msgid ""
+"The default consent states before a visitor interacts with the banner depend "
+"on the visitor's region: opt-in regions start with consent denied, opt-out "
+"regions start with consent granted. They are managed through region rules in "
+"the Kukie.io dashboard."
+msgstr ""
+"Bunlar, kullanıcı afişle etkileşime geçmeden önceki varsayılan onay "
+"durumlarıdır. Kukie.io panosundaki bölge kuralları aracılığıyla yönetilir."
 
-#: templates/admin-dashboard.php:95
+#: templates/admin-settings.php:179
+msgid ""
+"The fallback language when auto-translate cannot determine the visitor "
+"language."
+msgstr ""
+"Otomatik çeviri ziyaretçi dilini belirleyemediğinde kullanılacak yedek dil."
+
+#: includes/class-kukie-admin.php:263
+msgid ""
+"The stored API key is no longer valid, so the dashboard connection is broken "
+"- stats, scans and settings sync are paused. The cookie banner itself keeps "
+"working on your site."
+msgstr ""
+
+#: includes/class-kukie-admin.php:235
+msgid ""
+"The stored Kukie.io API key can no longer be read. This usually happens "
+"after the site's security keys (salts) were changed or the database was "
+"copied from another site. Please reconnect with your API key to restore the "
+"dashboard connection - the cookie banner itself keeps working."
+msgstr ""
+
+#: includes/class-kukie-admin.php:166
+msgid ""
+"These settings were changed elsewhere (for example in the Kukie.io "
+"dashboard) after this page was loaded.\n"
+"\n"
+"OK: save anyway and overwrite the other changes.\n"
+"Cancel: keep the other changes (reload this page to see them)."
+msgstr ""
+
+#: templates/admin-dashboard.php:114
 msgid "This Month"
 msgstr "Bu Ay"
 
-#: templates/admin-dashboard.php:91
+#: templates/admin-dashboard.php:110
 msgid "This Week"
 msgstr "Bu Hafta"
 
@@ -605,7 +674,7 @@ msgstr "Bu Hafta"
 msgid "This will remove the cookie consent banner from your site."
 msgstr "Bu işlem, çerez onay afişini sitenizden kaldıracaktır."
 
-#: templates/admin-dashboard.php:85
+#: templates/admin-dashboard.php:104
 msgid "Today"
 msgstr "Bugün"
 
@@ -621,16 +690,11 @@ msgstr "Üst Sol"
 msgid "Top Right"
 msgstr "Üst Sağ"
 
-#: includes/class-kukie-admin.php:356
-#: includes/class-kukie-admin.php:407
-#: includes/class-kukie-admin.php:429
-#: includes/class-kukie-admin.php:457
-#: includes/class-kukie-admin.php:489
-#: includes/class-kukie-admin.php:534
-#: includes/class-kukie-admin.php:565
-#: includes/class-kukie-admin.php:595
-#: includes/class-kukie-admin.php:669
-#: includes/class-kukie-admin.php:696
+#: includes/class-kukie-admin.php:436 includes/class-kukie-admin.php:513
+#: includes/class-kukie-admin.php:535 includes/class-kukie-admin.php:570
+#: includes/class-kukie-admin.php:774 includes/class-kukie-admin.php:817
+#: includes/class-kukie-admin.php:834 includes/class-kukie-admin.php:850
+#: includes/class-kukie-admin.php:928 includes/class-kukie-admin.php:954
 msgid "Unauthorised."
 msgstr "Yetkisiz."
 
@@ -638,12 +702,11 @@ msgstr "Yetkisiz."
 msgid "Updates instantly as you change settings"
 msgstr "Ayarları değiştirdikçe anında güncellenir"
 
-#: templates/admin-dashboard.php:64
-#: templates/admin-settings.php:107
+#: templates/admin-dashboard.php:83 templates/admin-settings.php:107
 msgid "Verification"
 msgstr "Doğrulama"
 
-#: includes/class-kukie-admin.php:707
+#: includes/class-kukie-admin.php:969
 msgid "Verification failed."
 msgstr "Doğrulama başarısız oldu."
 
@@ -651,38 +714,93 @@ msgstr "Doğrulama başarısız oldu."
 msgid "Verify"
 msgstr "Doğrula"
 
-#: templates/admin-dashboard.php:79
+#: templates/admin-dashboard.php:98
 msgid "View analytics"
 msgstr "Analitiği görüntüle"
 
-#: templates/admin-dashboard.php:107
+#: templates/admin-dashboard.php:126
 msgid "View cookies"
 msgstr "Çerezleri görüntüle"
 
+#. translators: %s: link to Kukie.io banner settings
 #: templates/admin-banner-design.php:171
-msgid "Want more customisation options? Edit colours, texts and advanced settings in %s."
-msgstr "Daha fazla özelleştirme seçeneği mi istiyorsunuz? Renkleri, metinleri ve gelişmiş ayarları %s üzerinden düzenleyin."
+msgid ""
+"Want more customisation options? Edit colours, texts and advanced settings "
+"in %s."
+msgstr ""
+"Daha fazla özelleştirme seçeneği mi istiyorsunuz? Renkleri, metinleri ve "
+"gelişmiş ayarları %s üzerinden düzenleyin."
 
-#: templates/admin-settings.php:157
+#. translators: %s: link to Kukie.io banner settings
+#: templates/admin-settings.php:196
 msgid "Want to customise banner texts and translations? Edit them in %s."
-msgstr "Afiş metinlerini ve çevirileri özelleştirmek mi istiyorsunuz? Bunları %s üzerinden düzenleyin."
+msgstr ""
+"Afiş metinlerini ve çevirileri özelleştirmek mi istiyorsunuz? Bunları %s "
+"üzerinden düzenleyin."
 
 #: templates/admin-banner-design.php:226
-msgid "We use cookies to enhance your browsing experience, serve personalised content, and analyse our traffic."
-msgstr "Göz atma deneyiminizi geliştirmek, kişiselleştirilmiş içerik sunmak ve trafiğimizi analiz etmek için çerezler kullanıyoruz."
+msgid ""
+"We use cookies to enhance your browsing experience, serve personalised "
+"content, and analyse our traffic."
+msgstr ""
+"Göz atma deneyiminizi geliştirmek, kişiselleştirilmiş içerik sunmak ve "
+"trafiğimizi analiz etmek için çerezler kullanıyoruz."
 
 #: templates/admin-banner-design.php:224
 msgid "We value your privacy"
 msgstr "Gizliliğinize değer veriyoruz"
 
-#: includes/class-kukie-admin.php:297
-msgid "Your cookie banner may not load correctly. Add cdn.kukie.io to the exclusion list in these WP Rocket settings:"
-msgstr "Çerez afişiniz düzgün yüklenmeyebilir. Bu WP Rocket ayarlarındaki hariç tutma listesine cdn.kukie.io adresini ekleyin:"
+#: templates/admin-dashboard.php:28
+msgid ""
+"Your API key has been regenerated or deleted in the Kukie dashboard. "
+"Generate a new API key and reconnect to restore the dashboard connection."
+msgstr ""
+
+#: includes/class-kukie-admin.php:377
+msgid ""
+"Your cookie banner may not load correctly. Add cdn.kukie.io to the exclusion "
+"list in these WP Rocket settings:"
+msgstr ""
+"Çerez afişiniz düzgün yüklenmeyebilir. Bu WP Rocket ayarlarındaki hariç "
+"tutma listesine cdn.kukie.io adresini ekleyin:"
 
 #: templates/admin-banner-design.php:172
 msgid "your Kukie.io dashboard"
 msgstr "Kukie.io panonuz"
 
-#: templates/admin-settings.php:158
+#: templates/admin-settings.php:197
 msgid "your banner settings on Kukie.io"
 msgstr "Kukie.io'daki afiş ayarlarınız"
+
+#~ msgid "A scan is already running. Please wait for it to complete."
+#~ msgstr "Bir tarama zaten çalışıyor. Lütfen tamamlanmasını bekleyin."
+
+#~ msgid "Advertisement (ad_storage)"
+#~ msgstr "Reklam (ad_storage)"
+
+#~ msgid "All"
+#~ msgstr "Tümü"
+
+#~ msgid "Analytics (analytics_storage)"
+#~ msgstr "Analitik (analytics_storage)"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid "Default State"
+#~ msgstr "Varsayılan Durum"
+
+#~ msgid "Denied"
+#~ msgstr "Reddedildi"
+
+#~ msgid "Functional (functionality_storage)"
+#~ msgstr "İşlevsel (functionality_storage)"
+
+#~ msgid "Granted"
+#~ msgstr "Verildi"
+
+#~ msgid "Necessary (security_storage)"
+#~ msgstr "Gerekli (security_storage)"
+
+#~ msgid "Region"
+#~ msgstr "Bölge"

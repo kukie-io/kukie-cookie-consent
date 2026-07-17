@@ -7,6 +7,17 @@
 	'use strict';
 
 	// ─────────────────────────────────────────
+	// i18n Helper
+	// ─────────────────────────────────────────
+
+	// Translated strings come in via wp_localize_script (kukieAdmin.i18n).
+	// The inline English fallback keeps a stale cached script from ever
+	// rendering "undefined".
+	function kukieI18n(key, fallback) {
+		return (window.kukieAdmin && kukieAdmin.i18n && kukieAdmin.i18n[key]) || fallback;
+	}
+
+	// ─────────────────────────────────────────
 	// AJAX Helper
 	// ─────────────────────────────────────────
 
@@ -31,7 +42,7 @@
 			});
 			return await response.json();
 		} catch (err) {
-			return { success: false, data: { message: 'Network error. Please try again.' } };
+			return { success: false, data: { message: kukieI18n('networkError', 'Network error. Please try again.') } };
 		}
 	}
 
@@ -55,9 +66,19 @@
 	// superseded and asked whether to overwrite. Retries at most once per
 	// confirmation, so a conflict can never spin.
 	async function kukieSaveSettings(action, data) {
-		if (currentConfigVersion !== null) {
-			data.config_version = currentConfigVersion;
+		// No successful settings load has completed on this page, so the form
+		// may hold unpopulated template defaults and there is no version for
+		// the optimistic lock - a save here would be a blind last-write-wins
+		// overwrite (it could disable the banner and wipe enabled languages).
+		// Refuse instead.
+		if (currentConfigVersion === null) {
+			return {
+				success: false,
+				data: { message: kukieI18n('saveDisabled', 'Settings could not be loaded, so saving is disabled. Please reload the page.') },
+			};
 		}
+
+		data.config_version = currentConfigVersion;
 
 		let result = await kukieAjax(action, data);
 
@@ -67,19 +88,21 @@
 				currentConfigVersion = result.data.current_version;
 			}
 
-			const overwrite = window.confirm(
+			const overwrite = window.confirm(kukieI18n(
+				'conflictPrompt',
 				'These settings were changed elsewhere (for example in the Kukie.io dashboard) after this page was loaded.\n\n' +
 				'OK: save anyway and overwrite the other changes.\n' +
 				'Cancel: keep the other changes (reload this page to see them).'
-			);
+			));
 
 			if (!overwrite) {
 				return result;
 			}
 
-			if (currentConfigVersion !== null) {
-				data.config_version = currentConfigVersion;
-			}
+			// currentConfigVersion is non-null here: the guard at the top of
+			// this function established it, and the 409 branch only ever
+			// replaces it with the server's numeric current_version.
+			data.config_version = currentConfigVersion;
 			result = await kukieAjax(action, data);
 		}
 
@@ -362,12 +385,15 @@
 		const result = await kukieAjax('kukie_get_settings');
 
 		if (loading) loading.style.display = 'none';
-		form.style.display = 'block';
 
+		// Reveal the form only after a successful load: a revealed but
+		// unpopulated form would post template defaults on Save.
 		if (!result.success) {
 			showNotice('kukie-gcm-error', result.data?.message || 'Could not load settings.');
 			return;
 		}
+
+		form.style.display = 'block';
 
 		const d = result.data;
 		rememberConfigVersion(d);
@@ -414,12 +440,14 @@
 		const result = await kukieAjax('kukie_get_settings');
 
 		if (loading) loading.style.display = 'none';
-		form.style.display = 'block';
 
+		// Reveal the form only after a successful load (see loadGcmSettings).
 		if (!result.success) {
 			showNotice('kukie-uet-error', result.data?.message || 'Could not load settings.');
 			return;
 		}
+
+		form.style.display = 'block';
 
 		const d = result.data;
 		rememberConfigVersion(d);
@@ -543,12 +571,20 @@
 		const result = await kukieAjax('kukie_get_settings');
 
 		if (loading) loading.style.display = 'none';
-		if (content) content.style.display = 'block';
 
+		// Reveal the form only after a successful load: unpopulated template
+		// defaults here mean banner_enabled unchecked and an empty language
+		// grid, so a blind Save would disable the banner and wipe languages.
+		// The server-rendered connection card (with the Disconnect button)
+		// stays reachable - only the settings form itself is withheld.
 		if (!result.success) {
 			showNotice('kukie-settings-error', result.data?.message || 'Could not load settings.');
+			form.style.display = 'none';
+			if (content) content.style.display = 'block';
 			return;
 		}
+
+		if (content) content.style.display = 'block';
 
 		const d = result.data;
 		rememberConfigVersion(d);
@@ -734,13 +770,22 @@
 	async function loadBannerDesignData(loading, content) {
 		const result = await kukieAjax('kukie_get_settings');
 
-		if (loading) loading.style.display = 'none';
-		if (content) content.style.display = 'block';
-
+		// Reveal the form only after a successful load (see loadGcmSettings).
+		// This page has no persistent notice element, so on failure repurpose
+		// the loading area to keep the message visible after the toast fades,
+		// and disable the header Save button - it sits OUTSIDE the hidden
+		// content and would otherwise float over a blank page.
 		if (!result.success) {
-			showToast(result.data?.message || 'Could not load design settings.', 'error');
+			const msg = result.data?.message || 'Could not load design settings.';
+			showToast(msg, 'error');
+			if (loading) loading.textContent = msg;
+			const saveBtn = document.getElementById('kukie-design-save');
+			if (saveBtn) saveBtn.disabled = true;
 			return;
 		}
+
+		if (loading) loading.style.display = 'none';
+		if (content) content.style.display = 'block';
 
 		const d = result.data;
 		rememberConfigVersion(d);

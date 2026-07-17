@@ -22,10 +22,10 @@ $kukie_app_url = 'https://app.kukie.io';
 		<div class="notice notice-error kukie-notice-api-key-invalid">
 			<p>
 				<strong><?php esc_html_e( 'Invalid API key.', 'kukie-cookie-consent' ); ?></strong>
-				<?php esc_html_e( 'The cookie consent banner is currently disabled on your site.', 'kukie-cookie-consent' ); ?>
+				<?php esc_html_e( 'The dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site.', 'kukie-cookie-consent' ); ?>
 			</p>
 			<p>
-				<?php esc_html_e( 'Your API key has been regenerated or deleted in the Kukie dashboard. Generate a new API key and enter it below to restore the banner.', 'kukie-cookie-consent' ); ?>
+				<?php esc_html_e( 'Your API key has been regenerated or deleted in the Kukie dashboard. Generate a new API key and reconnect to restore the dashboard connection.', 'kukie-cookie-consent' ); ?>
 			</p>
 			<p>
 				<a href="<?php echo esc_url( $kukie_key_url ); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary">

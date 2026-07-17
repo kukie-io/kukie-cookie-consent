@@ -75,6 +75,23 @@ class Kukie_Plugin {
 			}
 		}
 
+		// Heal a present-but-empty dashboard_url (pre-1.7.1 connects stored
+		// '' when the connect response omitted it, which defeats the
+		// get_option() default in every reader and renders links as
+		// href=""). Removing the key restores the default everywhere.
+		if ( isset( $settings['dashboard_url'] ) && $settings['dashboard_url'] === '' ) {
+			unset( $settings['dashboard_url'] );
+		}
+
+		// First-ever write on a fresh install: WordPress includes the plugin
+		// file (which runs this method and writes the option) BEFORE firing
+		// the activation hook, so activate() cannot detect a fresh install by
+		// option absence. Mark it here; activate() consumes the marker to set
+		// the one-time connect-page redirect.
+		if ( $settings === [] ) {
+			$settings['first_activation'] = true;
+		}
+
 		$settings['plugin_version'] = KUKIE_VERSION;
 
 		$this->settings = $settings;
@@ -86,10 +103,29 @@ class Kukie_Plugin {
 	}
 
 	public static function activate(): void {
-		// Set redirect flag so admin sees connect page on first load
-		if ( ! get_option( 'kukie_settings' ) ) {
-			update_option( 'kukie_settings', [] );
-			set_transient( 'kukie_activation_redirect', true, 30 );
+		// Redirect to the connect page exactly once, on the first-ever
+		// activation. maybe_upgrade() has already written kukie_settings by
+		// the time this hook fires (the include runs first), so we gate on
+		// the first_activation marker it sets rather than option presence.
+		$settings = get_option( 'kukie_settings', [] );
+
+		if ( is_array( $settings ) && ! empty( $settings['first_activation'] ) ) {
+			unset( $settings['first_activation'] );
+			update_option( 'kukie_settings', $settings );
+
+			// Keep the already-bootstrapped singleton's memo in sync so a
+			// later write in this request cannot re-persist the marker.
+			if ( self::$instance !== null ) {
+				self::$instance->settings = $settings;
+			}
+
+			// Redirect only when the install is not connected: a stale
+			// marker on a connected install (e.g. one that disconnected and
+			// reconnected before 1.7.1 cleared markers on connect) must not
+			// bounce a working setup to the connect page.
+			if ( empty( $settings['site_key'] ) ) {
+				set_transient( 'kukie_activation_redirect', true, 30 );
+			}
 		}
 	}
 
@@ -102,6 +138,22 @@ class Kukie_Plugin {
 		if ( $this->settings === null ) {
 			$this->settings = get_option( 'kukie_settings', [] );
 		}
+		return $this->settings;
+	}
+
+	/**
+	 * Drop the per-request memo and re-read the option from the database.
+	 * update_option()/update_options() merge into the memo, so a handler
+	 * that slept on an HTTP round-trip since bootstrap must call this before
+	 * writing, or it persists a stale snapshot over concurrent writes from
+	 * other requests (worst case: resurrecting a just-disconnected install).
+	 *
+	 * @since 1.7.1
+	 */
+	public function refresh_settings(): array {
+		wp_cache_delete( 'kukie_settings', 'options' );
+		$fresh = get_option( 'kukie_settings', [] );
+		$this->settings = is_array( $fresh ) ? $fresh : [];
 		return $this->settings;
 	}
 
@@ -185,7 +237,9 @@ class Kukie_Plugin {
 		if ( empty( $key ) ) {
 			return null;
 		}
-		return new Kukie_Api_Client( $key );
+		// Trusted: built from the STORED key, so its 401/2xx results may
+		// update the global api_key_valid state (see Kukie_Api_Client).
+		return new Kukie_Api_Client( $key, true );
 	}
 
 	public function is_api_key_valid(): bool {

@@ -42,43 +42,20 @@ $kukie_plugin = Kukie_Plugin::instance();
 		</div>
 
 		<!-- Default Consent State -->
+		<!-- Deliberately no per-category table here: the real defaults are
+		     region-rule-driven (opt-in regions deny by default, opt-out
+		     regions grant), so any static rendering would be wrong for part
+		     of every audience. The dashboard shows the live rules. -->
 		<div class="kukie-card">
 			<h2 class="kukie-card-title"><?php esc_html_e( 'Default Consent State', 'kukie-cookie-consent' ); ?></h2>
 			<p class="kukie-card-description">
-				<?php esc_html_e( 'These are the default consent states before a user interacts with the banner. Managed through region rules in the Kukie.io dashboard.', 'kukie-cookie-consent' ); ?>
+				<?php esc_html_e( 'The default consent states before a visitor interacts with the banner depend on the visitor\'s region: opt-in regions start with consent denied, opt-out regions start with consent granted. They are managed through region rules in the Kukie.io dashboard.', 'kukie-cookie-consent' ); ?>
 			</p>
-
-			<table class="kukie-consent-table">
-				<thead>
-					<tr>
-						<th><?php esc_html_e( 'Category', 'kukie-cookie-consent' ); ?></th>
-						<th><?php esc_html_e( 'Default State', 'kukie-cookie-consent' ); ?></th>
-						<th><?php esc_html_e( 'Region', 'kukie-cookie-consent' ); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><?php esc_html_e( 'Analytics (analytics_storage)', 'kukie-cookie-consent' ); ?></td>
-						<td><span class="kukie-badge kukie-badge--denied"><?php esc_html_e( 'Denied', 'kukie-cookie-consent' ); ?></span></td>
-						<td><?php esc_html_e( 'All', 'kukie-cookie-consent' ); ?></td>
-					</tr>
-					<tr>
-						<td><?php esc_html_e( 'Advertisement (ad_storage)', 'kukie-cookie-consent' ); ?></td>
-						<td><span class="kukie-badge kukie-badge--denied"><?php esc_html_e( 'Denied', 'kukie-cookie-consent' ); ?></span></td>
-						<td><?php esc_html_e( 'All', 'kukie-cookie-consent' ); ?></td>
-					</tr>
-					<tr>
-						<td><?php esc_html_e( 'Functional (functionality_storage)', 'kukie-cookie-consent' ); ?></td>
-						<td><span class="kukie-badge kukie-badge--denied"><?php esc_html_e( 'Denied', 'kukie-cookie-consent' ); ?></span></td>
-						<td><?php esc_html_e( 'All', 'kukie-cookie-consent' ); ?></td>
-					</tr>
-					<tr>
-						<td><?php esc_html_e( 'Necessary (security_storage)', 'kukie-cookie-consent' ); ?></td>
-						<td><span class="kukie-badge kukie-badge--granted"><?php esc_html_e( 'Granted', 'kukie-cookie-consent' ); ?></span></td>
-						<td><?php esc_html_e( 'All', 'kukie-cookie-consent' ); ?></td>
-					</tr>
-				</tbody>
-			</table>
+			<p>
+				<a href="<?php echo esc_url( $kukie_plugin->get_option( 'dashboard_url', 'https://app.kukie.io' ) ); ?>" target="_blank" rel="noopener noreferrer">
+					<?php esc_html_e( 'Manage region rules in the Kukie.io dashboard', 'kukie-cookie-consent' ); ?> &rarr;
+				</a>
+			</p>
 		</div>
 
 		<!-- Auto-block -->

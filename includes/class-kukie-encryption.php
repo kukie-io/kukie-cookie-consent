@@ -78,12 +78,25 @@ class Kukie_Encryption {
 		$key  = self::derive_key();
 		$data = base64_decode( $value );
 
-		if ( $data === false || strpos( $data, '::' ) === false ) {
+		// The legacy layout is raw IV_LENGTH-byte IV . '::' . base64
+		// ciphertext. Parse by FIXED OFFSET, never by delimiter search: a
+		// random IV can itself contain the '::' byte pair (~0.02% of IVs),
+		// which made explode() split inside the IV and fail decryption
+		// permanently for those installs. Base64 ciphertext can never
+		// contain ':', so the fixed-offset parse is fully deterministic.
+		if ( $data === false || strlen( $data ) <= self::IV_LENGTH + 2 ) {
 			return '';
 		}
 
-		[ $iv, $encrypted ] = explode( '::', $data, 2 );
+		if ( substr( $data, self::IV_LENGTH, 2 ) !== '::' ) {
+			return '';
+		}
 
+		$iv        = substr( $data, 0, self::IV_LENGTH );
+		$encrypted = substr( $data, self::IV_LENGTH + 2 );
+
+		// Flag 0 (base64 ciphertext input) is deliberate and load-bearing:
+		// the legacy writer base64-encoded the ciphertext separately.
 		$decrypted = openssl_decrypt( $encrypted, 'aes-256-cbc', $key, 0, $iv );
 
 		return $decrypted !== false ? $decrypted : '';

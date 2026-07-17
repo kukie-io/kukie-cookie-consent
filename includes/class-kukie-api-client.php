@@ -8,8 +8,17 @@ class Kukie_Api_Client {
 
 	private string $api_key;
 
-	public function __construct( string $api_key ) {
+	// Whether this client was built from the STORED key. Only a trusted
+	// client may mutate the global api_key_valid option: a candidate key
+	// typed into the connect form must neither poison trust on a 401 nor
+	// grant it on a 2xx (KUK-QA-2026-354). Defaults to untrusted so any
+	// future ad-hoc client is safe by default; Kukie_Plugin::get_api_client()
+	// passes true because it builds from get_api_key().
+	private bool $trusted;
+
+	public function __construct( string $api_key, bool $trusted = false ) {
 		$this->api_key = $api_key;
+		$this->trusted = $trusted;
 	}
 
 	/**
@@ -51,20 +60,43 @@ class Kukie_Api_Client {
 		$status = wp_remote_retrieve_response_code( $response );
 		$data   = json_decode( wp_remote_retrieve_body( $response ), true );
 
-		$plugin = Kukie_Plugin::instance();
+		if ( $this->trusted ) {
+			$plugin = Kukie_Plugin::instance();
 
-		if ( $status === 401 ) {
-			$plugin->set_api_key_valid( false );
-		} elseif ( $status >= 200 && $status < 300 && ! $plugin->is_api_key_valid() ) {
-			$plugin->set_api_key_valid( true );
+			if ( $status === 401 ) {
+				$plugin->set_api_key_valid( false );
+			} elseif ( $status >= 200 && $status < 300 && ! $plugin->is_api_key_valid() ) {
+				$plugin->set_api_key_valid( true );
+			}
 		}
 
 		return [
 			'success' => $status >= 200 && $status < 300,
 			'data'    => $data,
-			'error'   => $status >= 400 ? ( $data['error'] ?? 'API error.' ) : null,
+			'error'   => $status >= 400 ? $this->extract_error_message( $data ) : null,
 			'status'  => $status,
 		];
+	}
+
+	/**
+	 * Best human-readable error from an error-status response body. The
+	 * server's plugin middleware speaks a dual envelope (error + message),
+	 * but Laravel-native responses (throttle 429, validation 422) carry
+	 * only `message` - fall back to it so callers surface the real reason
+	 * instead of a generic 'API error.'. Only a non-empty string counts:
+	 * a non-JSON body (e.g. an HTML 502 from a proxy) decodes to null, and
+	 * Laravel validation bodies can nest `message` as an array.
+	 */
+	private function extract_error_message( mixed $data ): string {
+		if ( is_array( $data ) ) {
+			foreach ( [ 'error', 'message' ] as $key ) {
+				if ( isset( $data[ $key ] ) && is_string( $data[ $key ] ) && $data[ $key ] !== '' ) {
+					return $data[ $key ];
+				}
+			}
+		}
+
+		return __( 'API error.', 'kukie-cookie-consent' );
 	}
 
 	public function get( string $endpoint ): array {

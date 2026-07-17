@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,7 +41,7 @@ All features below are included in the **free plan** unless marked otherwise.
 **Cookie Scanner**
 
 * Automatic Scanning: Automated browser scanner detects every cookie on your site.
-* Auto-Categorisation: 1,500+ known cookies database across 13 pre-configured services.
+* Auto-Categorisation: a continuously updated database of thousands of known cookies across 13 pre-configured services.
 * Full Detection: Detects cookies, localStorage, and sessionStorage.
 * Scheduled Scans: Weekly, bi-weekly, or monthly automated scans (Pro plan and above).
 * New Cookie Alerts: Get notified when new cookies are detected on your site.
@@ -49,7 +49,7 @@ All features below are included in the **free plan** unless marked otherwise.
 
 **Banner Customisation**
 
-* Layout Options: 5 layouts - popup, bottom bar, top bar, floating, and side panel.
+* Layout Options: 4 layouts - popup, bottom bar, top bar, and floating.
 * Full Colour Theming: Background, text, and button colours to match your brand.
 * Custom CSS: Advanced design customisation with CSS injection (Pro plan and above).
 * Custom Banner Logo: Add your brand logo to the consent banner (Pro plan and above).
@@ -99,7 +99,7 @@ All features below are included in the **free plan** unless marked otherwise.
 
 = What's Included Free vs Paid =
 
-The free plan includes: cookie consent banner, 5 layouts, Google Consent Mode v2, GTM, Microsoft UET, 70+ languages, cookie scanner (100 pages), consent logging, geo-detection, analytics dashboard, legal document generators, iFrame blocking, Script Centre, and 12 months consent retention.
+The free plan includes: cookie consent banner, 4 layouts, Google Consent Mode v2, GTM, Microsoft UET, 70+ languages, cookie scanner (100 pages), consent logging, geo-detection, analytics dashboard, legal document generators, iFrame blocking, Script Centre, and 12 months consent retention.
 
 Paid plans add:
 
@@ -125,7 +125,7 @@ All paid plans include a 14-day free trial. [Compare all plans](https://kukie.io
 
 This plugin relies on [Kukie.io](https://kukie.io), a third-party cookie consent management service (SaaS), to provide its core functionality.
 
-By installing and configuring this plugin with your site key, you consent to connecting to the Kukie.io service.
+By installing and configuring this plugin with your API key, you consent to connecting to the Kukie.io service.
 
 **What is loaded:**
 
@@ -169,7 +169,7 @@ Banner translations (titles, descriptions, buttons, cookie categories) are manag
 2. Search for **"Kukie"**
 3. Click **Install Now** then **Activate**
 4. Go to **Kukie** in the admin sidebar
-5. Enter your site key from the [Kukie.io dashboard](https://app.kukie.io)
+5. Enter your API key from the [Kukie.io dashboard](https://app.kukie.io)
 6. Your cookie consent banner is now active
 
 Alternatively, download the plugin from [WordPress.org](https://wordpress.org/plugins/kukie-cookie-consent/) and upload the ZIP file via **Plugins > Add New > Upload Plugin**.
@@ -194,9 +194,9 @@ Yes. The plugin is free and always will be. It connects to your Kukie.io account
 
 Yes. The plugin connects to the Kukie.io platform where your banner configuration, cookie scans, and consent logs are managed. [Sign up](https://app.kukie.io/register) takes 30 seconds - no credit card required.
 
-= Where do I find my site key? =
+= Where do I find my API key? =
 
-Log in to [app.kukie.io](https://app.kukie.io), select your site, go to Settings, and copy the site key.
+Log in to [app.kukie.io](https://app.kukie.io), select your site, go to Settings, and generate or copy the API key.
 
 = Does it support Google Consent Mode v2? =
 
@@ -220,11 +220,11 @@ Yes. The banner auto-translates to 70+ languages based on the visitor's browser 
 
 = Will it slow down my site? =
 
-No. The banner script is under 5KB gzipped and loads asynchronously from our global CDN. It has zero impact on your Core Web Vitals scores.
+No. The banner script is around 23KB gzipped and loads asynchronously from our global CDN, so it does not block page rendering or hurt your Core Web Vitals scores.
 
 = Can I customise the banner design? =
 
-Yes. Choose from 5 layouts, set your brand colours, customise all text, and add custom CSS. All customisation is done through the [Kukie.io dashboard](https://app.kukie.io) with real-time preview.
+Yes. Choose from 4 layouts, set your brand colours, customise all text, and add custom CSS. All customisation is done through the [Kukie.io dashboard](https://app.kukie.io) with real-time preview.
 
 = Can I export consent logs for GDPR compliance? =
 
@@ -250,6 +250,14 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.7.1 =
+* Fixed: entering an incorrect API key when reconnecting no longer switches off the cookie banner. The banner now always keeps working while only the dashboard connection (stats, scans, settings sync) is affected by API key problems.
+* Fixed: settings pages are no longer saveable after a failed load, so a blind save can no longer disable the banner or clear your enabled languages.
+* Fixed: reconnecting keeps your Script Position choice, and failed saves no longer change local settings.
+* Fixed: Brazilian Portuguese (pt_BR) sites now get the Brazilian banner translation instead of European Portuguese.
+* Fixed: real error messages from Kukie.io are shown instead of a generic "API error." message, and a rare stored-key encoding issue is healed automatically.
+* Improved: cleaner uninstall (including multisite), translatable 1.7.0 admin strings, and various small admin polish fixes.
 
 = 1.7.0 =
 * Changed: Minimum required WordPress version raised from 6.0 to 6.7.

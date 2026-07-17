@@ -158,6 +158,13 @@ class Kukie_Admin {
 			'embedUrl'     => $this->plugin->get_option( 'embed_url', '' ),
 			'siteId'       => $this->plugin->get_option( 'site_id', 0 ),
 			'isConnected'  => $this->plugin->is_connected(),
+			// Strings admin.js renders itself (it reads these with inline
+			// English fallbacks, so a stale cached script degrades safely).
+			'i18n'         => [
+				'networkError'   => __( 'Network error. Please try again.', 'kukie-cookie-consent' ),
+				'saveDisabled'   => __( 'Settings could not be loaded, so saving is disabled. Please reload the page.', 'kukie-cookie-consent' ),
+				'conflictPrompt' => __( "These settings were changed elsewhere (for example in the Kukie.io dashboard) after this page was loaded.\n\nOK: save anyway and overwrite the other changes.\nCancel: keep the other changes (reload this page to see them).", 'kukie-cookie-consent' ),
+			],
 		] );
 	}
 
@@ -178,6 +185,10 @@ class Kukie_Admin {
 	}
 
 	public function connection_notice(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		if ( $this->plugin->is_connected() ) {
 			return;
 		}
@@ -249,7 +260,7 @@ class Kukie_Admin {
 		printf(
 			'<div class="notice notice-error"><p><strong>%s</strong> %s <a href="%s" target="_blank" rel="noopener noreferrer">%s &rarr;</a></p></div>',
 			esc_html__( 'Kukie:', 'kukie-cookie-consent' ),
-			esc_html__( 'Invalid API key - the cookie consent banner is disabled.', 'kukie-cookie-consent' ),
+			esc_html__( 'The stored API key is no longer valid, so the dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site.', 'kukie-cookie-consent' ),
 			esc_url( $key_url ),
 			esc_html__( 'Generate a new API key', 'kukie-cookie-consent' )
 		);
@@ -447,20 +458,40 @@ class Kukie_Admin {
 			wp_send_json_error( [ 'message' => __( 'Could not securely store the API key on this server. Please contact your host about OpenSSL support.', 'kukie-cookie-consent' ) ] );
 		}
 
+		// Preserve a deliberate manual/body placement across a SAME-SITE
+		// reconnect (the 1.7.0 reconnect notices funnel connected installs
+		// through here). A fresh connect, or a connect to a DIFFERENT Kukie
+		// site, defaults to 'head': keeping 'manual' there would leave the
+		// theme's hard-coded snippet serving the old site's bundle with
+		// nothing injected for the new one. Re-validate so a corrupted
+		// stored value cannot survive.
+		$stored_site_key = (string) $this->plugin->get_option( 'site_key', '' );
+		$new_site_key    = sanitize_text_field( $data['site_key'] ?? '' );
+		$script_position = ( $stored_site_key !== '' && $stored_site_key === $new_site_key )
+			? $this->sanitize_script_position( $this->plugin->get_option( 'script_position', 'head' ) )
+			: 'head';
+
 		$this->plugin->update_options( [
 			'api_key_encrypted' => $encrypted_key,
 			'api_key_valid'     => true,
-			'site_key'          => sanitize_text_field( $data['site_key'] ?? '' ),
+			'site_key'          => $new_site_key,
 			'site_id'           => absint( $data['site_id'] ?? 0 ),
 			'domain'            => sanitize_text_field( $data['domain'] ?? '' ),
 			'organisation'      => sanitize_text_field( $data['organisation'] ?? '' ),
 			'plan_name'         => sanitize_text_field( $data['plan']['name'] ?? 'Free' ),
 			'embed_url'         => esc_url_raw( $data['embed_url'] ?? '' ),
-			'dashboard_url'     => esc_url_raw( $data['dashboard_url'] ?? '' ),
+			// Never store '' here: a present-but-empty key defeats the
+			// 'https://app.kukie.io' default in every get_option() reader
+			// and renders dashboard links as href="".
+			'dashboard_url'     => esc_url_raw( $data['dashboard_url'] ?? '' ) ?: 'https://app.kukie.io',
 			'banner_enabled'    => (bool) ( $data['banner_enabled'] ?? true ),
 			'connected_at'      => current_time( 'c' ),
-			'script_position'   => 'head',
+			'script_position'   => $script_position,
 			'config_version'    => (string) time(),
+			// A connected install has no use for the one-time activation
+			// redirect; clear the marker so a post-disconnect page load
+			// cannot leave it armed for a much later reactivation.
+			'first_activation'  => false,
 		] );
 
 		delete_transient( 'kukie_dashboard_data' );
@@ -519,6 +550,13 @@ class Kukie_Admin {
 		if ( ! $response['success'] ) {
 			wp_send_json_error( [ 'message' => $response['error'] ] );
 		}
+
+		// Refresh the admin-bar dot from the fresh /status payload: it is the
+		// only path that sees dashboard-side (app.kukie.io) toggles. The
+		// transient short-circuit above means this runs at most every 5
+		// minutes - acceptable staleness for the dot; do not shorten or
+		// bypass the kukie_dashboard_data cache for it.
+		$this->mirror_banner_enabled( $response['data'] );
 
 		set_transient( 'kukie_dashboard_data', $response['data'], 5 * MINUTE_IN_SECONDS );
 
@@ -650,9 +688,7 @@ class Kukie_Admin {
 
 			// The refresh is authoritative for the admin-bar banner state:
 			// it reflects dashboard-side toggles too, not just this save.
-			if ( array_key_exists( 'banner_enabled', $refresh['data'] ) ) {
-				$this->plugin->update_option( 'banner_enabled', (bool) $refresh['data']['banner_enabled'] );
-			}
+			$this->mirror_banner_enabled( $refresh['data'] );
 		} elseif ( $sent_version !== null ) {
 			// The refresh failed, but the optimistic lock passed, so the
 			// server deterministically bumped the version we sent by one
@@ -663,6 +699,48 @@ class Kukie_Admin {
 		}
 
 		wp_send_json_success( $payload );
+	}
+
+	/**
+	 * Coerce a script_position value to the placement whitelist, defaulting
+	 * to 'head'. Single source of truth for the whitelist - used by both the
+	 * settings save and the (re)connect path so the two cannot drift.
+	 *
+	 * @since 1.7.1
+	 */
+	private function sanitize_script_position( mixed $value ): string {
+		return in_array( $value, [ 'head', 'body', 'manual' ], true ) ? $value : 'head';
+	}
+
+	/**
+	 * Mirror the server's banner_enabled into the local option that drives
+	 * the admin-bar status dot. Only ever called with data from a SUCCESSFUL
+	 * server response - a failed response must leave the mirror untouched
+	 * (the 1.7.0 discipline from the 343 fix).
+	 *
+	 * @since 1.7.1
+	 */
+	private function mirror_banner_enabled( mixed $data ): void {
+		if ( ! is_array( $data ) || ! array_key_exists( 'banner_enabled', $data ) ) {
+			return;
+		}
+
+		$value = (bool) $data['banner_enabled'];
+
+		// The memo was loaded at request bootstrap and an HTTP round-trip has
+		// passed since; re-read before the read-modify-write so this cannot
+		// persist a stale snapshot over a concurrent save - and never write
+		// at all into a just-disconnected (deleted/empty) install or when the
+		// value is unchanged (the common polling case).
+		$settings = $this->plugin->refresh_settings();
+		if ( $settings === [] || empty( $settings['site_key'] ) ) {
+			return;
+		}
+		if ( ( $settings['banner_enabled'] ?? null ) === $value ) {
+			return;
+		}
+
+		$this->plugin->update_option( 'banner_enabled', $value );
 	}
 
 	/**
@@ -696,12 +774,9 @@ class Kukie_Admin {
 			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
-		// Local-only: script_position
-		$script_position = sanitize_text_field( wp_unslash( $_POST['script_position'] ?? 'head' ) );
-		if ( ! in_array( $script_position, [ 'head', 'body', 'manual' ], true ) ) {
-			$script_position = 'head';
-		}
-		$this->plugin->update_option( 'script_position', $script_position );
+		// Local-only: script_position (validated here, committed only after
+		// the PUT below succeeds).
+		$script_position = $this->sanitize_script_position( sanitize_text_field( wp_unslash( $_POST['script_position'] ?? 'head' ) ) );
 
 		// Local-only: force_language (WPML/Polylang override dropdown).
 		// Invalid values silently fall back to 'auto' so the detector
@@ -710,7 +785,6 @@ class Kukie_Admin {
 		if ( ! in_array( $force_language, $this->allowed_force_languages(), true ) ) {
 			$force_language = 'auto';
 		}
-		$this->plugin->update_option( 'force_language', $force_language );
 
 		// API-synced settings
 		$api_data = [
@@ -724,9 +798,14 @@ class Kukie_Admin {
 
 		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
 
-		// Mirror the server state locally only AFTER the PUT succeeded, so the
-		// admin-bar status dot cannot misreport it when the save fails.
-		$this->plugin->update_option( 'banner_enabled', $api_data['banner_enabled'] );
+		// Commit local-only fields and mirror the server state only AFTER the
+		// PUT succeeded, so a failed or 409-cancelled save leaves local state
+		// (and the admin-bar status dot) unchanged.
+		$this->plugin->update_options( [
+			'script_position' => $script_position,
+			'force_language'  => $force_language,
+			'banner_enabled'  => $api_data['banner_enabled'],
+		] );
 
 		$this->send_settings_saved( $client, __( 'Settings saved.', 'kukie-cookie-consent' ), $config_version );
 	}

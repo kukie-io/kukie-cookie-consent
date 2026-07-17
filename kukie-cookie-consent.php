@@ -3,7 +3,7 @@
  * Plugin Name:       Kukie - Cookie Banner and Consent Management (GDPR, CCPA, DSVGO, CNIL, PIPEDA)
  * Plugin URI:        https://kukie.io/wordpress
  * Description:       Connect your WordPress site to Kukie.io for GDPR, CCPA, DSVGO, CNIL, LGPD, PIPEDA cookie consent management. Requires a Kukie.io account.
- * Version:           1.7.0
+ * Version:           1.7.1
  * Requires at least: 6.7
  * Requires PHP:      8.1
  * Tested up to:      7.0
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KUKIE_VERSION', '1.7.0' );
+define( 'KUKIE_VERSION', '1.7.1' );
 define( 'KUKIE_PLUGIN_FILE', __FILE__ );
 define( 'KUKIE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'KUKIE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -54,7 +54,6 @@ add_action( 'init', 'kukie_load_textdomain' );
 // Load classes
 require_once KUKIE_PLUGIN_DIR . 'includes/class-kukie-encryption.php';
 require_once KUKIE_PLUGIN_DIR . 'includes/class-kukie-api-client.php';
-require_once KUKIE_PLUGIN_DIR . 'includes/class-kukie-settings.php';
 require_once KUKIE_PLUGIN_DIR . 'includes/class-kukie-admin.php';
 require_once KUKIE_PLUGIN_DIR . 'includes/class-kukie-language-detector.php';
 require_once KUKIE_PLUGIN_DIR . 'includes/class-kukie-script-injector.php';
