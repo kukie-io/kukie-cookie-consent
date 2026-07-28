@@ -9,6 +9,12 @@ class Kukie_Plugin {
 	private static ?Kukie_Plugin $instance = null;
 	private ?array $settings = null;
 
+	// Set by Kukie_Api_Client after every HTTP round trip: the memo above
+	// was loaded before the request slept, so it may no longer reflect the
+	// database (another request may have written, or disconnected, meanwhile).
+	// get_settings() re-reads before serving or merging while this is set.
+	private bool $settings_stale = false;
+
 	// Per-request memo of the decrypted API key, keyed to the ciphertext it
 	// was derived from so a reconnect (new ciphertext) self-invalidates.
 	private ?string $api_key_plain = null;
@@ -135,6 +141,9 @@ class Kukie_Plugin {
 	}
 
 	public function get_settings(): array {
+		if ( $this->settings_stale ) {
+			return $this->refresh_settings();
+		}
 		if ( $this->settings === null ) {
 			$this->settings = get_option( 'kukie_settings', [] );
 		}
@@ -142,19 +151,95 @@ class Kukie_Plugin {
 	}
 
 	/**
+	 * Flag the per-request memo as predating an HTTP round trip. Called by
+	 * Kukie_Api_Client::request() after every wp_remote_request(), whatever
+	 * the outcome (a timeout sleeps longest of all). The next get_settings()
+	 * call - and therefore the next update_option()/update_options(), which
+	 * merge on top of get_settings() - re-reads the option first, so a
+	 * post-round-trip write merges caller values onto the FRESH database
+	 * state instead of the bootstrap snapshot. Writes nothing itself, so it
+	 * is safe to call from untrusted (candidate-key) clients too.
+	 *
+	 * @since 1.7.2
+	 */
+	public function mark_settings_stale(): void {
+		$this->settings_stale = true;
+	}
+
+	/**
 	 * Drop the per-request memo and re-read the option from the database.
-	 * update_option()/update_options() merge into the memo, so a handler
-	 * that slept on an HTTP round-trip since bootstrap must call this before
-	 * writing, or it persists a stale snapshot over concurrent writes from
-	 * other requests (worst case: resurrecting a just-disconnected install).
+	 *
+	 * Handlers rarely need to call this by hand: the API client marks the
+	 * memo stale after every round trip (mark_settings_stale()) and
+	 * get_settings() re-reads when the mark is set, while a write that runs
+	 * after a round trip MUST gate on settings_still_connected() and relies
+	 * on update_options()' ghost-row guard - see those docblocks for the
+	 * caller contract. This method is the underlying forced re-read.
+	 *
+	 * Cache layers, and which this defeats: get_option() consults the
+	 * request's alloptions snapshot FIRST for autoloaded options, and
+	 * kukie_settings is autoloaded (written with the two-argument
+	 * update_option()), so deleting only the per-option entry never
+	 * produced a fresh read on a default install - the "fresh" value was
+	 * this request's bootstrap snapshot. Evicting 'alloptions' (the same
+	 * eviction WordPress core performs inside update_option()) and
+	 * 'notoptions' forces the next read to the database on a default
+	 * install; with a persistent object cache (Redis/Memcached) the shared
+	 * entries are evicted and re-primed from the database, so both
+	 * topologies end fresh. Cost: one alloptions reload query on the next
+	 * autoloaded-option read - acceptable at this call frequency (a
+	 * handful of admin AJAX writes per request).
+	 *
+	 * What this does NOT do: serialise concurrent writers. WordPress
+	 * offers no lock here; the refresh narrows the stale window to the gap
+	 * between this read and the following write, it does not close it.
 	 *
 	 * @since 1.7.1
+	 * @since 1.7.2 actually bypasses alloptions/notoptions (previously only
+	 *              the per-option cache entry was cleared, which
+	 *              get_option() never consults for an autoloaded option, so
+	 *              on a default install the re-read served the stale
+	 *              alloptions snapshot).
 	 */
 	public function refresh_settings(): array {
+		wp_cache_delete( 'alloptions', 'options' );
+		wp_cache_delete( 'notoptions', 'options' );
 		wp_cache_delete( 'kukie_settings', 'options' );
-		$fresh = get_option( 'kukie_settings', [] );
-		$this->settings = is_array( $fresh ) ? $fresh : [];
+		$fresh                = get_option( 'kukie_settings', [] );
+		$this->settings       = is_array( $fresh ) ? $fresh : [];
+		$this->settings_stale = false;
 		return $this->settings;
+	}
+
+	/**
+	 * Whether the install is still connected: the settings carry a site_key.
+	 *
+	 * Reads through get_settings(), so after an HTTP round trip (which marks
+	 * the memo stale) the verdict comes from a fresh database read - the
+	 * strongest guarantee available without a lock. Deliberately does NOT
+	 * force a second read when the memo is already post-round-trip fresh: a
+	 * forced re-read would narrow an unclosable window by microseconds while
+	 * doubling alloptions reloads (sitewide evictions on a persistent object
+	 * cache).
+	 *
+	 * This is the shared guard for work that must not outlive a concurrent
+	 * disconnect (ajax_disconnect deletes the whole option): the trusted
+	 * client's api_key_valid write, the post-save local commits, and every
+	 * post-round-trip transient re-creation. The option writers below carry
+	 * a structural ghost-row backstop of their own (see update_options()),
+	 * so this guard is defense-in-depth plus skip-pointless-work, not the
+	 * only defense. A FRESH connect must NOT use it: ajax_connect()
+	 * legitimately writes into an empty option (its payload carries the new
+	 * site_key, which is exactly what the ghost-row guard admits).
+	 *
+	 * Deliberate narrowing: a present-but-keyless row (a connect that stored
+	 * site_key '') counts as NOT connected, so trust-state writes freeze in
+	 * that broken state until the reconnect the admin UI is already forcing.
+	 *
+	 * @since 1.7.2
+	 */
+	public function settings_still_connected(): bool {
+		return ! empty( $this->get_settings()['site_key'] );
 	}
 
 	public function get_option( string $key, mixed $default = null ): mixed {
@@ -163,14 +248,35 @@ class Kukie_Plugin {
 	}
 
 	public function update_option( string $key, mixed $value ): void {
-		$settings = $this->get_settings();
-		$settings[ $key ] = $value;
-		$this->settings = $settings;
-		update_option( 'kukie_settings', $settings );
+		$this->update_options( [ $key => $value ] );
 	}
 
+	/**
+	 * Merge values into kukie_settings and persist. The merge base comes
+	 * from get_settings(), so a caller running after an HTTP round trip
+	 * merges onto a fresh database read (the API client marks the memo
+	 * stale), never onto the bootstrap snapshot.
+	 *
+	 * Ghost-row guard: when that fresh base is EMPTY, the install was
+	 * disconnected (delete_option) or never initialised - re-creating the
+	 * option from a write that does not itself establish a connection would
+	 * leave a ghost row that maybe_upgrade() then stamps with
+	 * plugin_version, permanently disarming the one-time first_activation
+	 * redirect. Only a write carrying a site_key (ajax_connect establishing
+	 * the connection) may create the option here; maybe_upgrade() and
+	 * activate() write the raw option directly and never pass this guard.
+	 * Post-round-trip callers should still gate on
+	 * settings_still_connected() to skip pointless work and any non-option
+	 * side effects (transients, notices).
+	 *
+	 * @since 1.7.2 ghost-row guard; update_option() now delegates here.
+	 */
 	public function update_options( array $values ): void {
-		$settings = array_merge( $this->get_settings(), $values );
+		$base = $this->get_settings();
+		if ( $base === [] && empty( $values['site_key'] ) ) {
+			return;
+		}
+		$settings       = array_merge( $base, $values );
 		$this->settings = $settings;
 		update_option( 'kukie_settings', $settings );
 	}

@@ -48,6 +48,15 @@ class Kukie_Api_Client {
 
 		$response = wp_remote_request( $url, $args );
 
+		// However this round trip ended (success, error status, WP_Error -
+		// and a timeout sleeps longest of all), the plugin's per-request
+		// settings memo now predates it: another request may have written or
+		// disconnected while we slept. Mark the memo stale so the next read
+		// or read-modify-write on Kukie_Plugin re-reads the option first.
+		// Pure memo invalidation - it writes nothing, so it runs for
+		// untrusted (candidate-key) clients too.
+		Kukie_Plugin::instance()->mark_settings_stale();
+
 		if ( is_wp_error( $response ) ) {
 			return [
 				'success' => false,
@@ -63,10 +72,18 @@ class Kukie_Api_Client {
 		if ( $this->trusted ) {
 			$plugin = Kukie_Plugin::instance();
 
-			if ( $status === 401 ) {
-				$plugin->set_api_key_valid( false );
-			} elseif ( $status >= 200 && $status < 300 && ! $plugin->is_api_key_valid() ) {
-				$plugin->set_api_key_valid( true );
+			// Trust state is written only for an install that is still
+			// connected AFTER the round trip - the round trip is the very
+			// window a concurrent disconnect can land in. The stale mark
+			// above makes this a fresh read (see
+			// Kukie_Plugin::settings_still_connected()); the untrusted
+			// branch still writes nothing.
+			if ( $plugin->settings_still_connected() ) {
+				if ( $status === 401 ) {
+					$plugin->set_api_key_valid( false );
+				} elseif ( $status >= 200 && $status < 300 && ! $plugin->is_api_key_valid() ) {
+					$plugin->set_api_key_valid( true );
+				}
 			}
 		}
 

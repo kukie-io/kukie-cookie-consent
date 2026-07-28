@@ -86,9 +86,8 @@ msgid "Banner design saved."
 msgstr "Diseño del banner guardado."
 
 #: templates/admin-settings.php:124
-#, fuzzy
 msgid "Banner language"
-msgstr "Estado del banner"
+msgstr ""
 
 #: templates/admin-banner-design.php:45
 msgid "Bottom Bar"
@@ -357,9 +356,8 @@ msgid "Invalid API key format. The key should be 64 characters."
 msgstr "Formato de clave API no válido. La clave debe tener 64 caracteres."
 
 #: templates/admin-dashboard.php:24
-#, fuzzy
 msgid "Invalid API key."
-msgstr "Mostrar/ocultar clave API"
+msgstr ""
 
 #: includes/class-kukie-admin.php:50 includes/class-kukie-admin.php:51
 #: includes/class-kukie-admin.php:63 includes/class-kukie-admin.php:64
@@ -384,9 +382,8 @@ msgid "Kukie.io cookie consent is not connected."
 msgstr "El consentimiento de cookies de Kukie.io no está conectado."
 
 #: includes/class-kukie-admin.php:234 includes/class-kukie-admin.php:262
-#, fuzzy
 msgid "Kukie:"
-msgstr "Kukie.io"
+msgstr ""
 
 #: templates/admin-settings.php:121
 msgid "Language"
@@ -422,9 +419,8 @@ msgid "Loading settings..."
 msgstr "Cargando ajustes..."
 
 #: templates/admin-gcm.php:56
-#, fuzzy
 msgid "Manage region rules in the Kukie.io dashboard"
-msgstr "su escritorio de Kukie.io"
+msgstr ""
 
 #: templates/admin-settings.php:92
 msgid "Manual"
@@ -528,9 +524,8 @@ msgid "Recommended"
 msgstr "Recomendado"
 
 #: includes/class-kukie-admin.php:237
-#, fuzzy
 msgid "Reconnect"
-msgstr "Conectar"
+msgstr ""
 
 #: templates/admin-banner-design.php:229
 msgid "Reject All"
@@ -627,16 +622,12 @@ msgid ""
 msgstr ""
 
 #: templates/admin-gcm.php:52
-#, fuzzy
 msgid ""
 "The default consent states before a visitor interacts with the banner depend "
 "on the visitor's region: opt-in regions start with consent denied, opt-out "
 "regions start with consent granted. They are managed through region rules in "
 "the Kukie.io dashboard."
 msgstr ""
-"Estos son los estados de consentimiento predeterminados antes de que un "
-"usuario interactúe con el banner. Se gestionan mediante reglas por región en "
-"el escritorio de Kukie.io."
 
 #: templates/admin-settings.php:179
 msgid ""

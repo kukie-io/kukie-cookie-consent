@@ -85,9 +85,8 @@ msgid "Banner design saved."
 msgstr "Wygląd banera zapisany."
 
 #: templates/admin-settings.php:124
-#, fuzzy
 msgid "Banner language"
-msgstr "Status banera"
+msgstr ""
 
 #: templates/admin-banner-design.php:45
 msgid "Bottom Bar"
@@ -355,9 +354,8 @@ msgid "Invalid API key format. The key should be 64 characters."
 msgstr "Nieprawidłowy format klucza API. Klucz powinien mieć 64 znaki."
 
 #: templates/admin-dashboard.php:24
-#, fuzzy
 msgid "Invalid API key."
-msgstr "Pokaż/ukryj klucz API"
+msgstr ""
 
 #: includes/class-kukie-admin.php:50 includes/class-kukie-admin.php:51
 #: includes/class-kukie-admin.php:63 includes/class-kukie-admin.php:64
@@ -382,9 +380,8 @@ msgid "Kukie.io cookie consent is not connected."
 msgstr "Zgoda na pliki cookie Kukie.io nie jest połączona."
 
 #: includes/class-kukie-admin.php:234 includes/class-kukie-admin.php:262
-#, fuzzy
 msgid "Kukie:"
-msgstr "Kukie.io"
+msgstr ""
 
 #: templates/admin-settings.php:121
 msgid "Language"
@@ -420,9 +417,8 @@ msgid "Loading settings..."
 msgstr "Ładowanie ustawień..."
 
 #: templates/admin-gcm.php:56
-#, fuzzy
 msgid "Manage region rules in the Kukie.io dashboard"
-msgstr "kokpit Kukie.io"
+msgstr ""
 
 #: templates/admin-settings.php:92
 msgid "Manual"
@@ -524,9 +520,8 @@ msgid "Recommended"
 msgstr "Zalecane"
 
 #: includes/class-kukie-admin.php:237
-#, fuzzy
 msgid "Reconnect"
-msgstr "Połącz"
+msgstr ""
 
 #: templates/admin-banner-design.php:229
 msgid "Reject All"
@@ -623,15 +618,12 @@ msgid ""
 msgstr ""
 
 #: templates/admin-gcm.php:52
-#, fuzzy
 msgid ""
 "The default consent states before a visitor interacts with the banner depend "
 "on the visitor's region: opt-in regions start with consent denied, opt-out "
 "regions start with consent granted. They are managed through region rules in "
 "the Kukie.io dashboard."
 msgstr ""
-"Są to domyślne stany zgody przed interakcją użytkownika z banerem. "
-"Zarządzane przez reguły regionów w kokpicie Kukie.io."
 
 #: templates/admin-settings.php:179
 msgid ""

@@ -804,33 +804,6 @@
 	to { opacity: 0; transform: translateY(-10px); }
 }
 
-/* Consent Table (GCM) */
-.kukie-consent-table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 8px;
-}
-
-.kukie-consent-table th,
-.kukie-consent-table td {
-	padding: 10px 12px;
-	text-align: left;
-	border-bottom: 1px solid #f1f5f9;
-	font-size: 13px;
-}
-
-.kukie-consent-table th {
-	font-weight: 600;
-	color: #64748b;
-	font-size: 12px;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-}
-
-.kukie-consent-table td {
-	color: #334155;
-}
-
 /* Badges */
 .kukie-badge {
 	display: inline-flex;
@@ -839,16 +812,6 @@
 	border-radius: 12px;
 	font-size: 12px;
 	font-weight: 500;
-}
-
-.kukie-badge--denied {
-	background: #fef2f2;
-	color: #dc2626;
-}
-
-.kukie-badge--granted {
-	background: #ecfdf5;
-	color: #059669;
 }
 
 .kukie-badge--active {

@@ -85,9 +85,8 @@ msgid "Banner design saved."
 msgstr "Bannerontwerp opgeslagen."
 
 #: templates/admin-settings.php:124
-#, fuzzy
 msgid "Banner language"
-msgstr "Bannerstatus"
+msgstr ""
 
 #: templates/admin-banner-design.php:45
 msgid "Bottom Bar"
@@ -355,9 +354,8 @@ msgid "Invalid API key format. The key should be 64 characters."
 msgstr "Ongeldig API-sleutelformaat. De sleutel moet 64 tekens bevatten."
 
 #: templates/admin-dashboard.php:24
-#, fuzzy
 msgid "Invalid API key."
-msgstr "API-sleutel tonen/verbergen"
+msgstr ""
 
 #: includes/class-kukie-admin.php:50 includes/class-kukie-admin.php:51
 #: includes/class-kukie-admin.php:63 includes/class-kukie-admin.php:64
@@ -382,9 +380,8 @@ msgid "Kukie.io cookie consent is not connected."
 msgstr "Kukie.io-cookietoestemming is niet verbonden."
 
 #: includes/class-kukie-admin.php:234 includes/class-kukie-admin.php:262
-#, fuzzy
 msgid "Kukie:"
-msgstr "Kukie.io"
+msgstr ""
 
 #: templates/admin-settings.php:121
 msgid "Language"
@@ -420,9 +417,8 @@ msgid "Loading settings..."
 msgstr "Instellingen laden..."
 
 #: templates/admin-gcm.php:56
-#, fuzzy
 msgid "Manage region rules in the Kukie.io dashboard"
-msgstr "uw Kukie.io-dashboard"
+msgstr ""
 
 #: templates/admin-settings.php:92
 msgid "Manual"
@@ -526,9 +522,8 @@ msgid "Recommended"
 msgstr "Aanbevolen"
 
 #: includes/class-kukie-admin.php:237
-#, fuzzy
 msgid "Reconnect"
-msgstr "Verbinden"
+msgstr ""
 
 #: templates/admin-banner-design.php:229
 msgid "Reject All"
@@ -625,15 +620,12 @@ msgid ""
 msgstr ""
 
 #: templates/admin-gcm.php:52
-#, fuzzy
 msgid ""
 "The default consent states before a visitor interacts with the banner depend "
 "on the visitor's region: opt-in regions start with consent denied, opt-out "
 "regions start with consent granted. They are managed through region rules in "
 "the Kukie.io dashboard."
 msgstr ""
-"Dit zijn de standaard toestemmingsstatussen voordat een gebruiker interactie "
-"heeft met de banner. Beheerd via regioregels in het Kukie.io-dashboard."
 
 #: templates/admin-settings.php:179
 msgid ""

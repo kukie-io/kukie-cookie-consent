@@ -535,8 +535,10 @@ class Kukie_Admin {
 			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
+		// is_array, not !== false: a corrupted/scalar payload in the transient
+		// must fall through to a fresh fetch, never be served as status data.
 		$cached = get_transient( 'kukie_dashboard_data' );
-		if ( $cached !== false ) {
+		if ( is_array( $cached ) ) {
 			wp_send_json_success( $cached );
 		}
 
@@ -558,7 +560,13 @@ class Kukie_Admin {
 		// bypass the kukie_dashboard_data cache for it.
 		$this->mirror_banner_enabled( $response['data'] );
 
-		set_transient( 'kukie_dashboard_data', $response['data'], 5 * MINUTE_IN_SECONDS );
+		// The /status round trip is long enough for a concurrent disconnect
+		// to land, and the cached branch above serves this transient before
+		// any connection check - never re-create it for a disconnected
+		// install, and never cache a non-array body.
+		if ( is_array( $response['data'] ) && $this->plugin->settings_still_connected() ) {
+			set_transient( 'kukie_dashboard_data', $response['data'], 5 * MINUTE_IN_SECONDS );
+		}
 
 		wp_send_json_success( $response['data'] );
 	}
@@ -570,8 +578,11 @@ class Kukie_Admin {
 			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
+		// is_array, not !== false: a non-array payload would fatal on the
+		// string-offset assignments below and 500 this endpoint until the
+		// transient expired.
 		$cached = get_transient( 'kukie_settings_cache' );
-		if ( $cached !== false ) {
+		if ( is_array( $cached ) ) {
 			$cached['script_position'] = $this->plugin->get_option( 'script_position', 'head' );
 			$cached['force_language']  = $this->plugin->get_option( 'force_language', 'auto' );
 			wp_send_json_success( $cached );
@@ -588,9 +599,16 @@ class Kukie_Admin {
 			wp_send_json_error( [ 'message' => $response['error'] ] );
 		}
 
-		set_transient( 'kukie_settings_cache', $response['data'], 10 * MINUTE_IN_SECONDS );
+		// Same discipline as send_settings_saved()'s transient write: the GET
+		// slept long enough for a concurrent disconnect to land, and the
+		// cached branch above serves this transient before any connection
+		// check - never re-create it for a disconnected install, and never
+		// cache a non-array body (the cached branch would fatal on it).
+		if ( is_array( $response['data'] ) && $this->plugin->settings_still_connected() ) {
+			set_transient( 'kukie_settings_cache', $response['data'], 10 * MINUTE_IN_SECONDS );
+		}
 
-		$data                    = $response['data'];
+		$data                    = is_array( $response['data'] ) ? $response['data'] : [];
 		$data['script_position'] = $this->plugin->get_option( 'script_position', 'head' );
 		$data['force_language']  = $this->plugin->get_option( 'force_language', 'auto' );
 
@@ -674,8 +692,16 @@ class Kukie_Admin {
 	 * @since 1.7.0
 	 */
 	private function send_settings_saved( Kukie_Api_Client $client, string $message, ?int $sent_version = null ): void {
-		// Update config version for cache-busting (forces browser to fetch fresh CDN bundle)
-		$this->plugin->update_options( [ 'config_version' => (string) time() ] );
+		// Update config version for cache-busting (forces browser to fetch a
+		// fresh CDN bundle) - but only into an install still connected after
+		// the PUT round trip (a concurrent disconnect must stay
+		// disconnected; see Kukie_Plugin::settings_still_connected()).
+		// Guarding the WRITE never guards the RESPONSE: the JS still
+		// receives a usable config_version below whatever happened locally,
+		// or the very next save would produce a spurious conflict.
+		if ( $this->plugin->settings_still_connected() ) {
+			$this->plugin->update_options( [ 'config_version' => (string) time() ] );
+		}
 
 		delete_transient( 'kukie_settings_cache' );
 
@@ -683,12 +709,20 @@ class Kukie_Admin {
 
 		$refresh = $client->get( '/settings' );
 		if ( $refresh['success'] && isset( $refresh['data']['config_version'] ) ) {
-			set_transient( 'kukie_settings_cache', $refresh['data'], 10 * MINUTE_IN_SECONDS );
 			$payload['config_version'] = (int) $refresh['data']['config_version'];
 
 			// The refresh is authoritative for the admin-bar banner state:
 			// it reflects dashboard-side toggles too, not just this save.
 			$this->mirror_banner_enabled( $refresh['data'] );
+
+			// Re-creating the settings cache must not outlive a concurrent
+			// disconnect either (ajax_get_settings serves this transient
+			// before any connection check). The helper's verdict is fresh
+			// as of the GET round trip above, whichever intermediate call
+			// consumed the stale mark.
+			if ( $this->plugin->settings_still_connected() ) {
+				set_transient( 'kukie_settings_cache', $refresh['data'], 10 * MINUTE_IN_SECONDS );
+			}
 		} elseif ( $sent_version !== null ) {
 			// The refresh failed, but the optimistic lock passed, so the
 			// server deterministically bumped the version we sent by one
@@ -727,16 +761,14 @@ class Kukie_Admin {
 
 		$value = (bool) $data['banner_enabled'];
 
-		// The memo was loaded at request bootstrap and an HTTP round-trip has
-		// passed since; re-read before the read-modify-write so this cannot
-		// persist a stale snapshot over a concurrent save - and never write
-		// at all into a just-disconnected (deleted/empty) install or when the
-		// value is unchanged (the common polling case).
-		$settings = $this->plugin->refresh_settings();
-		if ( $settings === [] || empty( $settings['site_key'] ) ) {
+		// $data came from an HTTP round trip, so the connected verdict below
+		// is a fresh post-round-trip read - never write into a
+		// just-disconnected (deleted/empty) install, nor when the value is
+		// unchanged (the common polling case).
+		if ( ! $this->plugin->settings_still_connected() ) {
 			return;
 		}
-		if ( ( $settings['banner_enabled'] ?? null ) === $value ) {
+		if ( $this->plugin->get_option( 'banner_enabled' ) === $value ) {
 			return;
 		}
 
@@ -800,12 +832,16 @@ class Kukie_Admin {
 
 		// Commit local-only fields and mirror the server state only AFTER the
 		// PUT succeeded, so a failed or 409-cancelled save leaves local state
-		// (and the admin-bar status dot) unchanged.
-		$this->plugin->update_options( [
-			'script_position' => $script_position,
-			'force_language'  => $force_language,
-			'banner_enabled'  => $api_data['banner_enabled'],
-		] );
+		// (and the admin-bar status dot) unchanged - and only into an install
+		// that is still connected, so the commit cannot resurrect a
+		// concurrent disconnect that landed during the PUT round trip.
+		if ( $this->plugin->settings_still_connected() ) {
+			$this->plugin->update_options( [
+				'script_position' => $script_position,
+				'force_language'  => $force_language,
+				'banner_enabled'  => $api_data['banner_enabled'],
+			] );
+		}
 
 		$this->send_settings_saved( $client, __( 'Settings saved.', 'kukie-cookie-consent' ), $config_version );
 	}

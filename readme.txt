@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Free cookie consent plugin for WordPress. GDPR, CCPA & ePrivacy compliance with 
 
 == Description ==
 
-Kukie.io is a cookie consent management platform that helps websites comply with GDPR (DSGVO), CCPA/CPRA, ePrivacy, UK GDPR, LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa), CNIL (France), TTDSG (Germany) and other global privacy regulations.
+Kukie.io is a cookie consent management platform that helps websites comply with GDPR (DSGVO), CCPA/CPRA, ePrivacy, UK GDPR, LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa), CNIL (France), TDDDG (Germany, formerly the TTDSG) and other global privacy regulations.
 
 The plugin connects your WordPress site to your Kukie.io account, displaying a fully customisable cookie consent banner that blocks non-essential scripts until consent is given.
 
@@ -43,7 +43,7 @@ All features below are included in the **free plan** unless marked otherwise.
 * Automatic Scanning: Automated browser scanner detects every cookie on your site.
 * Auto-Categorisation: a continuously updated database of thousands of known cookies across 13 pre-configured services.
 * Full Detection: Detects cookies, localStorage, and sessionStorage.
-* Scheduled Scans: Weekly, bi-weekly, or monthly automated scans (Pro plan and above).
+* Scheduled Scans: Weekly or monthly automated scans (Pro plan and above).
 * New Cookie Alerts: Get notified when new cookies are detected on your site.
 * Scan History: Track changes between scans.
 
@@ -65,7 +65,7 @@ All features below are included in the **free plan** unless marked otherwise.
 
 * IP-Based Detection: Automatic visitor region detection via Cloudflare and MaxMind GeoLite2.
 * Per-Region Consent Models: Configure opt-in, opt-out, notice-only, or hidden mode per country.
-* Sub-Region Rules: Granular rules for TTDSG (Germany), CNIL (France), per-state CCPA, Quebec Law 25.
+* Sub-Region Rules: Granular rules for TDDDG (Germany), CNIL (France), per-state CCPA, Quebec Law 25.
 * Cookie Wall: Optional cookie wall for specific regions.
 
 **Legal Policy Tools**
@@ -105,7 +105,7 @@ Paid plans add:
 
 * **Pro** (from 9 EUR/mo): Scheduled scans, custom CSS, custom banner logo, 20 sites, 500 pages per scan, 3 team members, 24 months consent retention.
 * **Agency** (from 19 EUR/mo): Everything in Pro plus consent reports, remove branding, 100 sites, 3,000 pages per scan, 10 team members.
-* **Unlimited** (from 59 EUR/mo): Everything in Agency plus unlimited sites, pages, and team members, 36 months consent retention.
+* **Unlimited** (from 89 EUR/mo): Everything in Agency plus unlimited sites, pages, and team members, 36 months consent retention.
 
 All paid plans include a 14-day free trial. [Compare all plans](https://kukie.io/pricing).
 
@@ -161,7 +161,7 @@ Supported language sources (in priority order):
 3. Polylang current language
 4. WordPress site locale
 
-Banner translations (titles, descriptions, buttons, cookie categories) are managed in the Kukie dashboard at https://app.kukie.io. The plugin ships with built-in translations for 71 languages.
+Banner translations (titles, descriptions, buttons, cookie categories) are managed in the Kukie dashboard at https://app.kukie.io, where 70+ banner languages are available. The plugin's own admin interface ships with built-in translations for 11 languages.
 
 == Installation ==
 
@@ -212,7 +212,7 @@ Yes. The banner script loads from our CDN (cdn.kukie.io) with per-site configura
 
 = What privacy regulations does it support? =
 
-GDPR (EU and UK), CCPA/CPRA (California), ePrivacy Directive, LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa), CNIL (France), TTDSG (Germany), and more. Region-specific consent models are applied automatically via geo-detection.
+GDPR (EU and UK), CCPA/CPRA (California), ePrivacy Directive, LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa), CNIL (France), TDDDG (Germany), and more. Region-specific consent models are applied automatically via geo-detection.
 
 = Does Kukie support multilingual websites? =
 
@@ -220,7 +220,7 @@ Yes. The banner auto-translates to 70+ languages based on the visitor's browser 
 
 = Will it slow down my site? =
 
-No. The banner script is around 23KB gzipped and loads asynchronously from our global CDN, so it does not block page rendering or hurt your Core Web Vitals scores.
+No. The banner script is around 25KB gzipped and loads asynchronously from our global CDN, so it does not block page rendering or hurt your Core Web Vitals scores.
 
 = Can I customise the banner design? =
 
@@ -251,11 +251,18 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 
 == Changelog ==
 
+= 1.7.2 =
+* Fixed: disconnecting your site while another tab was still talking to Kukie.io (saving settings, loading a settings page or refreshing the dashboard) no longer silently undoes the disconnect. The site now stays disconnected and the banner stays off.
+* Fixed: the safety re-read that runs before those settings writes now genuinely reads the database on standard WordPress installs instead of a stale in-memory copy.
+* Fixed: corrected the Unlimited plan price (89 EUR/mo), removed a scheduled-scan cadence (bi-weekly) that does not exist, updated the banner script size to around 25KB gzipped, and clarified that banner translations (70+ languages) come from the Kukie.io service while the plugin's own admin interface ships in 11 languages.
+* Changed: updated the German regulation name from TTDSG to TDDDG throughout the listing.
+* Improved: removed unused admin styles and cleaned up six incorrect auto-matched translation suggestions from the bundled language files (those strings show in English until proper translations arrive).
+
 = 1.7.1 =
 * Fixed: entering an incorrect API key when reconnecting no longer switches off the cookie banner. The banner now always keeps working while only the dashboard connection (stats, scans, settings sync) is affected by API key problems.
 * Fixed: settings pages are no longer saveable after a failed load, so a blind save can no longer disable the banner or clear your enabled languages.
 * Fixed: reconnecting keeps your Script Position choice, and failed saves no longer change local settings.
-* Fixed: Brazilian Portuguese (pt_BR) sites now get the Brazilian banner translation instead of European Portuguese.
+* Fixed: WPML/Polylang language detection now reports Brazilian Portuguese (pt_BR) sites to the banner as pt-br instead of collapsing them to generic Portuguese.
 * Fixed: real error messages from Kukie.io are shown instead of a generic "API error." message, and a rare stored-key encoding issue is healed automatically.
 * Improved: cleaner uninstall (including multisite), translatable 1.7.0 admin strings, and various small admin polish fixes.
 

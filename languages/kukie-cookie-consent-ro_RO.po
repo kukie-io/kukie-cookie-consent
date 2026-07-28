@@ -85,9 +85,8 @@ msgid "Banner design saved."
 msgstr "Designul bannerului a fost salvat."
 
 #: templates/admin-settings.php:124
-#, fuzzy
 msgid "Banner language"
-msgstr "Stare banner"
+msgstr ""
 
 #: templates/admin-banner-design.php:45
 msgid "Bottom Bar"
@@ -357,9 +356,8 @@ msgid "Invalid API key format. The key should be 64 characters."
 msgstr "Format de cheie API nevalid. Cheia trebuie să aibă 64 de caractere."
 
 #: templates/admin-dashboard.php:24
-#, fuzzy
 msgid "Invalid API key."
-msgstr "Afișare/ascundere cheie API"
+msgstr ""
 
 #: includes/class-kukie-admin.php:50 includes/class-kukie-admin.php:51
 #: includes/class-kukie-admin.php:63 includes/class-kukie-admin.php:64
@@ -384,9 +382,8 @@ msgid "Kukie.io cookie consent is not connected."
 msgstr "Consimțământul pentru cookie-uri Kukie.io nu este conectat."
 
 #: includes/class-kukie-admin.php:234 includes/class-kukie-admin.php:262
-#, fuzzy
 msgid "Kukie:"
-msgstr "Kukie.io"
+msgstr ""
 
 #: templates/admin-settings.php:121
 msgid "Language"
@@ -422,9 +419,8 @@ msgid "Loading settings..."
 msgstr "Se încarcă setările..."
 
 #: templates/admin-gcm.php:56
-#, fuzzy
 msgid "Manage region rules in the Kukie.io dashboard"
-msgstr "panoul de control Kukie.io"
+msgstr ""
 
 #: templates/admin-settings.php:92
 msgid "Manual"
@@ -528,9 +524,8 @@ msgid "Recommended"
 msgstr "Recomandat"
 
 #: includes/class-kukie-admin.php:237
-#, fuzzy
 msgid "Reconnect"
-msgstr "Conectare"
+msgstr ""
 
 #: templates/admin-banner-design.php:229
 msgid "Reject All"
@@ -627,16 +622,12 @@ msgid ""
 msgstr ""
 
 #: templates/admin-gcm.php:52
-#, fuzzy
 msgid ""
 "The default consent states before a visitor interacts with the banner depend "
 "on the visitor's region: opt-in regions start with consent denied, opt-out "
 "regions start with consent granted. They are managed through region rules in "
 "the Kukie.io dashboard."
 msgstr ""
-"Acestea sunt stările implicite ale consimțământului înainte ca un utilizator "
-"să interacționeze cu bannerul. Gestionate prin regulile regionale din panoul "
-"de control Kukie.io."
 
 #: templates/admin-settings.php:179
 msgid ""
