@@ -148,7 +148,7 @@ final class SettingsSaveTest extends Kukie_Test_Case {
 		$this->seedConnectedInstall();
 		$this->postSave();
 
-		$GLOBALS['kukie_test_http_queue'][] = [ 'status' => 502, 'body' => '<html><body>Bad Gateway</body></html>' ];
+		kukie_test_queue_raw_response( 502, '<html><body>Bad Gateway</body></html>' );
 
 		$admin    = new Kukie_Admin( Kukie_Plugin::instance() );
 		$response = $this->captureJson( fn () => $admin->ajax_save_settings() );

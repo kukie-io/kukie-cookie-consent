@@ -18,11 +18,18 @@ abstract class Kukie_Test_Case extends TestCase {
 		parent::setUp();
 		kukie_test_reset();
 		self::reset_plugin_singleton();
+
+		// Handlers read both: $_POST for every save, $_GET for the
+		// activate-multi guard in maybe_redirect() and the page check in
+		// enqueue_assets(). Cleared at both ends so no test can be made to
+		// pass by a superglobal another one left behind.
 		$_POST = [];
+		$_GET  = [];
 	}
 
 	protected function tearDown(): void {
 		$_POST = [];
+		$_GET  = [];
 		self::reset_plugin_singleton();
 		parent::tearDown();
 	}

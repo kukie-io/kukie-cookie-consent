@@ -44,6 +44,15 @@ function kukie_test_queue_response( int $status, mixed $body = [] ): void {
 }
 
 /**
+ * Queue a response whose body is NOT JSON - an HTML error page from a proxy,
+ * say. Distinct from kukie_test_queue_response(), which encodes what it is
+ * given; a test needing this must not reach into the queue by hand.
+ */
+function kukie_test_queue_raw_response( int $status, string $body ): void {
+	$GLOBALS['kukie_test_http_queue'][] = [ 'status' => $status, 'body' => $body ];
+}
+
+/**
  * Queue a transport-level failure (timeout, DNS failure) rather than a status.
  */
 function kukie_test_queue_transport_error( string $message = 'cURL error 28: Operation timed out' ): void {
