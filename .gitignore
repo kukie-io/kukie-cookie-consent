@@ -1,2 +1,9 @@
 .DS_Store
 CLAUDE.md
+
+# Dev-only test tooling. composer.json/composer.lock ARE tracked (so the
+# harness installs reproducibly) but are export-ignored, so none of this
+# reaches the wordpress.org package.
+/vendor/
+/.phpunit.cache/
+.phpunit.result.cache
