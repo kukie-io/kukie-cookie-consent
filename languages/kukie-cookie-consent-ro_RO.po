@@ -401,6 +401,10 @@ msgstr "Aspect"
 msgid "Learn more"
 msgstr "Aflați mai multe"
 
+#: templates/admin-banner-design.php:124
+msgid "Lock"
+msgstr "Lacăt"
+
 #: templates/admin-banner-design.php:183
 msgid "Live Preview"
 msgstr "Previzualizare în timp real"
@@ -598,6 +602,10 @@ msgstr "Înregistrați-vă gratuit pe kukie.io"
 #: templates/admin-settings.php:48
 msgid "Site Key"
 msgstr "Cheie de site"
+
+#: templates/admin-banner-design.php:125
+msgid "Sliders"
+msgstr "Glisoare"
 
 #: templates/admin-banner-design.php:60
 msgid "Small floating card"

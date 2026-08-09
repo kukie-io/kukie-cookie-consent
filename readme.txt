@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,7 +220,7 @@ Yes. The banner auto-translates to 70+ languages based on the visitor's browser 
 
 = Will it slow down my site? =
 
-No. The banner script is around 25KB gzipped and loads asynchronously from our global CDN, so it does not block page rendering or hurt your Core Web Vitals scores.
+No. The banner script is around 26KB gzipped and loads asynchronously from our global CDN, so it does not block page rendering or hurt your Core Web Vitals scores.
 
 = Can I customise the banner design? =
 
@@ -250,6 +250,11 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.7.3 =
+* Added: two new revisit-button icon options, Lock and Sliders, matching the Kukie.io dashboard. Icons chosen there are no longer reset to Cookie when saving the Banner Design page.
+* Improved: the Shield revisit-button icon was redrawn as a crisper solid shield with a check mark.
+* Changed: updated the banner script size in this listing to around 26KB gzipped.
 
 = 1.7.2 =
 * Fixed: disconnecting your site while another tab was still talking to Kukie.io (saving settings, loading a settings page or refreshing the dashboard) no longer silently undoes the disconnect. The site now stays disconnected and the banner stays off.

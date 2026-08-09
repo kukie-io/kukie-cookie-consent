@@ -400,6 +400,10 @@ msgstr "Layout"
 msgid "Learn more"
 msgstr "Scopri di più"
 
+#: templates/admin-banner-design.php:124
+msgid "Lock"
+msgstr "Lucchetto"
+
 #: templates/admin-banner-design.php:183
 msgid "Live Preview"
 msgstr "Anteprima dal vivo"
@@ -597,6 +601,10 @@ msgstr "Registrati gratuitamente su kukie.io"
 #: templates/admin-settings.php:48
 msgid "Site Key"
 msgstr "Chiave del sito"
+
+#: templates/admin-banner-design.php:125
+msgid "Sliders"
+msgstr "Cursori"
 
 #: templates/admin-banner-design.php:60
 msgid "Small floating card"

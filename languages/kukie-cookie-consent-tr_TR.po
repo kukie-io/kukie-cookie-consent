@@ -397,6 +397,10 @@ msgstr "Düzen"
 msgid "Learn more"
 msgstr "Daha fazla bilgi"
 
+#: templates/admin-banner-design.php:124
+msgid "Lock"
+msgstr "Kilit"
+
 #: templates/admin-banner-design.php:183
 msgid "Live Preview"
 msgstr "Canlı Önizleme"
@@ -592,6 +596,10 @@ msgstr "kukie.io'da ücretsiz kaydolun"
 #: templates/admin-settings.php:48
 msgid "Site Key"
 msgstr "Site Anahtarı"
+
+#: templates/admin-banner-design.php:125
+msgid "Sliders"
+msgstr "Kaydırıcılar"
 
 #: templates/admin-banner-design.php:60
 msgid "Small floating card"

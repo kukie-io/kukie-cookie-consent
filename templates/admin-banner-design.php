@@ -121,6 +121,8 @@ $kukie_app_url = 'https://app.kukie.io';
 									<option value="shield"><?php esc_html_e( 'Shield', 'kukie-cookie-consent' ); ?></option>
 									<option value="settings"><?php esc_html_e( 'Settings', 'kukie-cookie-consent' ); ?></option>
 									<option value="fingerprint"><?php esc_html_e( 'Fingerprint', 'kukie-cookie-consent' ); ?></option>
+									<option value="lock"><?php esc_html_e( 'Lock', 'kukie-cookie-consent' ); ?></option>
+									<option value="sliders"><?php esc_html_e( 'Sliders', 'kukie-cookie-consent' ); ?></option>
 								</select>
 							</div>
 							<div class="kukie-form-group">

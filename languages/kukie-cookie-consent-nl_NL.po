@@ -399,6 +399,10 @@ msgstr "Lay-out"
 msgid "Learn more"
 msgstr "Meer informatie"
 
+#: templates/admin-banner-design.php:124
+msgid "Lock"
+msgstr "Slot"
+
 #: templates/admin-banner-design.php:183
 msgid "Live Preview"
 msgstr "Live voorbeeld"
@@ -596,6 +600,10 @@ msgstr "Gratis registreren op kukie.io"
 #: templates/admin-settings.php:48
 msgid "Site Key"
 msgstr "Sitesleutel"
+
+#: templates/admin-banner-design.php:125
+msgid "Sliders"
+msgstr "Schuifregelaars"
 
 #: templates/admin-banner-design.php:60
 msgid "Small floating card"

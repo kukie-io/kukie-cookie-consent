@@ -912,7 +912,7 @@ class Kukie_Admin {
 		}
 
 		$rb_icon = sanitize_text_field( $rb_raw['icon'] ?? 'cookie' );
-		if ( ! in_array( $rb_icon, [ 'cookie', 'shield', 'settings', 'fingerprint' ], true ) ) {
+		if ( ! in_array( $rb_icon, [ 'cookie', 'shield', 'settings', 'fingerprint', 'lock', 'sliders' ], true ) ) {
 			$rb_icon = 'cookie';
 		}
 
