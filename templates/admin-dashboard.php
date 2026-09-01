@@ -6,7 +6,7 @@ $kukie_plugin  = Kukie_Plugin::instance();
 $kukie_site_id = absint( $kukie_plugin->get_option( 'site_id', 0 ) );
 $kukie_app_url = 'https://app.kukie.io';
 ?>
-<div class="wrap kukie-wrap">
+<div class="wrap kukie-wrap kukie-wrap--wide">
 	<div class="kukie-header">
 		<h1><?php esc_html_e( 'Kukie.io Dashboard', 'kukie-cookie-consent' ); ?></h1>
 		<a href="<?php echo esc_url( $kukie_plugin->get_option( 'dashboard_url', $kukie_app_url ) ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">

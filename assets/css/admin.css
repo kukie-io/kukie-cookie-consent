@@ -179,9 +179,12 @@
 }
 
 /* Stats Grid */
+/* Five cards on the wide dashboard wrapper (1100px): ~207px each, enough
+   for the longest label ("ACCESSIBILITY WIDGET") without breaking words;
+   narrower viewports wrap to fewer columns. */
 .kukie-stats-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
 	gap: 16px;
 	margin-bottom: 16px;
 }
@@ -252,12 +255,12 @@
 }
 
 .kukie-stat-label {
-	font-size: 12px;
+	font-size: 11px;
 	color: #64748b;
 	text-transform: uppercase;
-	letter-spacing: 0.5px;
+	letter-spacing: 0.4px;
 	font-weight: 500;
-	overflow-wrap: anywhere;
+	line-height: 1.35;
 }
 
 .kukie-stat-value {
