@@ -2,6 +2,8 @@
    Kukie.io WordPress Plugin - Admin Styles
    All scoped under .kukie-wrap
    Brand colour: #0f172b
+   Form controls are 40px tall, matching the
+   WordPress 7.1 default control height.
    ───────────────────────────────────────── */
 
 /* Base */
@@ -37,11 +39,117 @@
 /* Cards */
 .kukie-card {
 	background: #fff;
-	border: 1px solid #e2e8f0;
-	border-radius: 8px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
 	padding: 24px;
 	margin-bottom: 16px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+/* Locked upsell card (Accessibility widget on a plan without it) */
+.kukie-card--locked {
+	background: #fffbeb;
+	border-color: #f59e0b;
+}
+
+.kukie-card--locked .kukie-card-description {
+	color: #1e293b;
+}
+
+/* Dimmed, inert form while locked (the fieldset is also disabled) */
+.kukie-locked .kukie-card,
+.kukie-locked .kukie-cta-banner {
+	opacity: 0.55;
+}
+
+.kukie-text-warning {
+	color: #92400e;
+}
+
+.kukie-card-description--last {
+	margin-bottom: 0;
+}
+
+/* Header-row inside a card with no bottom border (single-toggle cards) */
+.kukie-form-row--flush {
+	padding: 0;
+	border-bottom: none;
+}
+
+.kukie-form-row--last {
+	border-bottom: none;
+}
+
+/* Button rows */
+.kukie-card-actions-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	margin: 0;
+}
+
+.kukie-card-actions-row--center {
+	justify-content: center;
+}
+
+/* Feature list (intro card) */
+.kukie-feature-list {
+	margin: 0 0 16px;
+	padding-left: 18px;
+	list-style: disc;
+	color: #334155;
+	font-size: 13px;
+	line-height: 1.6;
+}
+
+.kukie-feature-list li {
+	margin-bottom: 4px;
+}
+
+/* Fieldsets used as accessible groups - no chrome of their own */
+.kukie-fieldset {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	min-width: 0;
+}
+
+.kukie-fieldset:disabled {
+	cursor: not-allowed;
+}
+
+.kukie-legend {
+	display: block;
+	font-weight: 500;
+	color: #334155;
+	margin-bottom: 6px;
+	font-size: 13px;
+	padding: 0;
+}
+
+/* Inherit-colour swatch */
+.kukie-swatch {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border-radius: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	vertical-align: middle;
+	margin-left: 4px;
+}
+
+/* WP-native tab strip on the Cookie banner page */
+.kukie-tabs {
+	margin-bottom: 20px;
+}
+
+.kukie-dashicon-inline {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+	text-decoration: none;
+	vertical-align: text-bottom;
 }
 
 .kukie-card-title {
@@ -73,7 +181,7 @@
 /* Stats Grid */
 .kukie-stats-grid {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
 	gap: 16px;
 	margin-bottom: 16px;
 }
@@ -86,8 +194,8 @@
 
 .kukie-stat-card {
 	background: #fff;
-	border: 1px solid #e2e8f0;
-	border-radius: 8px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
 	padding: 20px;
 	display: flex;
 	align-items: flex-start;
@@ -129,6 +237,11 @@
 .kukie-stat-icon--verify {
 	background: #f0fdf4;
 	color: #16a34a;
+}
+
+.kukie-stat-icon--a11y {
+	background: #eff6ff;
+	color: #2563eb;
 }
 
 .kukie-stat-content {
@@ -289,14 +402,27 @@
 	background: #0f172b;
 	color: #fff;
 	border: none;
-	border-radius: 6px;
-	padding: 10px 20px;
+	border-radius: 4px;
+	min-height: 40px;
+	padding: 8px 20px;
 	font-size: 14px;
 	font-weight: 500;
 	cursor: pointer;
 	text-decoration: none;
 	transition: background 0.15s;
 	line-height: 1.4;
+}
+
+.kukie-btn-primary:focus-visible,
+.kukie-btn-secondary:focus-visible,
+.kukie-btn-danger:focus-visible,
+.kukie-btn-icon:focus-visible,
+.kukie-checkbox-item:has(input:focus-visible),
+.kukie-layout-option:has(input:focus-visible),
+.kukie-position-pill:has(input:focus-visible),
+.kukie-radio:has(input:focus-visible) {
+	outline: 2px solid #2271b1;
+	outline-offset: 1px;
 }
 
 .kukie-btn-primary:hover,
@@ -319,7 +445,8 @@
 	background: #fff;
 	color: #0f172b;
 	border: 1px solid #0f172b;
-	border-radius: 6px;
+	border-radius: 4px;
+	min-height: 40px;
 	padding: 8px 16px;
 	font-size: 13px;
 	font-weight: 500;
@@ -344,7 +471,8 @@
 	background: #fff;
 	color: #dc2626;
 	border: 1px solid #dc2626;
-	border-radius: 6px;
+	border-radius: 4px;
+	min-height: 40px;
 	padding: 8px 16px;
 	font-size: 13px;
 	font-weight: 500;
@@ -378,8 +506,14 @@
 }
 
 .kukie-btn-sm {
-	padding: 6px 12px;
+	min-height: 32px;
+	padding: 4px 12px;
 	font-size: 12px;
+}
+
+.kukie-btn-loading[hidden],
+.kukie-btn-text[hidden] {
+	display: none;
 }
 
 .kukie-btn-loading {
@@ -433,10 +567,11 @@
 .kukie-input {
 	display: block;
 	width: 100%;
+	min-height: 40px;
 	padding: 8px 12px;
 	font-size: 14px;
-	border: 1px solid #cbd5e1;
-	border-radius: 6px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
 	background: #fff;
 	color: #0f172a;
 	transition: border-color 0.15s;
@@ -471,10 +606,11 @@
 .kukie-select {
 	display: block;
 	width: 100%;
+	min-height: 40px;
 	padding: 8px 32px 8px 12px;
 	font-size: 14px;
-	border: 1px solid #cbd5e1;
-	border-radius: 6px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
 	background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
 	color: #0f172a;
 	appearance: none;
@@ -531,6 +667,9 @@
 .kukie-form-actions {
 	margin-top: 8px;
 	margin-bottom: 24px;
+	display: flex;
+	gap: 10px;
+	align-items: center;
 }
 
 /* Help Text */
@@ -539,6 +678,10 @@
 	color: #64748b;
 	margin: 6px 0 0;
 	line-height: 1.4;
+}
+
+.kukie-help-text--above {
+	margin: 0 0 6px;
 }
 
 .kukie-help-text a {
@@ -598,7 +741,14 @@
 }
 
 .kukie-toggle input:focus-visible + .kukie-toggle-slider {
-	box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+.kukie-fieldset:disabled .kukie-toggle,
+.kukie-fieldset:disabled .kukie-position-pill,
+.kukie-fieldset:disabled .kukie-checkbox-item {
+	cursor: not-allowed;
 }
 
 /* Radio Group */
@@ -744,25 +894,26 @@
 	color: #1d4ed8;
 }
 
-/* Notices */
-.kukie-notice {
-	padding: 12px 16px;
-	border-radius: 6px;
-	margin-bottom: 16px;
-	font-size: 13px;
-	line-height: 1.5;
+/* Notices: WordPress-native .notice markup, kept inline in the page flow */
+.kukie-wrap .notice.kukie-notice {
+	margin: 0 0 16px;
 }
 
-.kukie-notice-error {
-	background: #fef2f2;
-	color: #dc2626;
-	border: 1px solid #fecaca;
+.kukie-wrap .notice.kukie-notice[hidden] {
+	display: none;
 }
 
-.kukie-notice-success {
-	background: #ecfdf5;
-	color: #059669;
-	border: 1px solid #a7f3d0;
+.kukie-notice-list {
+	list-style: disc;
+	margin: 0 0 8px 20px;
+}
+
+.kukie-notice-link {
+	margin-left: 8px;
+}
+
+#kukie-wp-rocket-notice .kukie-dismiss-btn {
+	margin-left: 12px;
 }
 
 /* Toast */
@@ -835,12 +986,16 @@
 }
 
 /* Connect Box */
+.kukie-form-group--left {
+	text-align: left;
+}
+
 .kukie-connect-box {
 	max-width: 480px;
 	margin: 60px auto;
 	background: #fff;
-	border: 1px solid #e2e8f0;
-	border-radius: 12px;
+	border: 1px solid #c3c4c7;
+	border-radius: 8px;
 	padding: 40px;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
 	text-align: center;
@@ -1246,6 +1401,18 @@
 	border-radius: 50%;
 }
 
+.kukie-preview-dot--red {
+	background: #ff5f57;
+}
+
+.kukie-preview-dot--amber {
+	background: #ffbd2e;
+}
+
+.kukie-preview-dot--green {
+	background: #28c840;
+}
+
 .kukie-preview-url-bar {
 	flex: 1;
 	background: #fff;
@@ -1473,11 +1640,11 @@
 }
 
 .kukie-color-field input[type="color"] {
-	width: 36px;
-	height: 36px;
+	width: 40px;
+	height: 40px;
 	padding: 2px;
-	border: 1px solid #cbd5e1;
-	border-radius: 6px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
 	cursor: pointer;
 	background: #fff;
 	flex-shrink: 0;
@@ -1506,18 +1673,22 @@
 }
 
 .kukie-color-input-group input[type="color"] {
-	width: 36px;
-	height: 36px;
+	width: 40px;
+	height: 40px;
 	padding: 2px;
-	border: 1px solid #cbd5e1;
-	border-radius: 6px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
 	cursor: pointer;
 	background: #fff;
 	flex-shrink: 0;
 }
 
 .kukie-color-input-group .kukie-input {
-	width: 100px;
+	width: 120px;
+}
+
+.kukie-color-input-group {
+	margin-top: 8px;
 }
 
 /* Preview note */

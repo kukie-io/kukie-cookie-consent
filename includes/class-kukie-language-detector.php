@@ -139,7 +139,7 @@ class Kukie_Language_Detector {
 	 * The plugin stores settings under the `kukie_settings` option key
 	 * (see Kukie_Plugin::get_settings()), so we read directly from that
 	 * option without depending on the Kukie_Plugin instance being
-	 * bootstrapped — this keeps the detector callable from anywhere,
+	 * bootstrapped - this keeps the detector callable from anywhere,
 	 * including unit tests.
 	 *
 	 * @return string

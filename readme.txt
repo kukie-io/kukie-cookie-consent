@@ -2,9 +2,9 @@
 Contributors: kukieio, filesubmit
 Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.7
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.7.3
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,7 @@ All features below are included in the **free plan** unless marked otherwise.
 * Auto-Translation: Banner translates to 70+ languages based on visitor browser settings.
 * RTL Support: Full right-to-left language support (Arabic, Hebrew, etc.).
 * Accessibility: Banner UI follows WCAG 2.1 AA guidelines.
+* Accessibility Widget: an optional floating button that opens a panel of reading, contrast and navigation aids for your visitors - bigger text, text spacing, dyslexia-friendly font, high contrast, hide images, pause animations, read aloud, one-tap profiles and more. Delivered inside the same banner script, so there is nothing extra to install; the panel is available in 70+ languages and is configured from the plugin's Accessibility widget page or the Kukie.io dashboard. Available on selected plans. It helps visitors, but does not by itself make a website compliant with any accessibility law.
 
 **Geo-Detection and Region Rules**
 
@@ -107,7 +108,7 @@ Paid plans add:
 * **Agency** (from 19 EUR/mo): Everything in Pro plus consent reports, remove branding, 100 sites, 3,000 pages per scan, 10 team members.
 * **Unlimited** (from 89 EUR/mo): Everything in Agency plus unlimited sites, pages, and team members, 36 months consent retention.
 
-All paid plans include a 14-day free trial. [Compare all plans](https://kukie.io/pricing).
+The accessibility widget is a plan feature - the plugin page shows which plan includes it. All paid plans include a 14-day free trial. [Compare all plans](https://kukie.io/pricing).
 
 = Useful Links =
 
@@ -172,6 +173,8 @@ Banner translations (titles, descriptions, buttons, cookie categories) are manag
 5. Enter your API key from the [Kukie.io dashboard](https://app.kukie.io)
 6. Your cookie consent banner is now active
 
+The plugin adds four admin pages under **Kukie**: **Dashboard** (status, consent counts, scans), **Cookie banner** (Design, Google Consent Mode v2 and Microsoft UET tabs), **Accessibility widget** and **Settings** (script position, languages, connection).
+
 Alternatively, download the plugin from [WordPress.org](https://wordpress.org/plugins/kukie-cookie-consent/) and upload the ZIP file via **Plugins > Add New > Upload Plugin**.
 
 For detailed setup instructions, visit the [WordPress plugin documentation](https://kukie.io/docs/wordpress-plugin/install-wordpress-plugin).
@@ -220,7 +223,11 @@ Yes. The banner auto-translates to 70+ languages based on the visitor's browser 
 
 = Will it slow down my site? =
 
-No. The banner script is around 26KB gzipped and loads asynchronously from our global CDN, so it does not block page rendering or hurt your Core Web Vitals scores.
+No. The banner script is under 30KB gzipped and loads asynchronously from our global CDN, so it does not block page rendering or hurt your Core Web Vitals scores. The optional accessibility widget adds about 15KB gzipped, and only for sites that switch it on.
+
+= Does the plugin include an accessibility widget? =
+
+Yes, as a plan feature. The Accessibility widget page in the plugin lets you switch on a floating button that opens a panel of reading, contrast and navigation aids for visitors (bigger text, dyslexia-friendly font, high contrast, read aloud, one-tap profiles and more). It ships inside the same banner script - no second embed or plugin - makes no third-party requests, and its panel is available in 70+ languages. On plans without it the page shows what the widget does and which plan includes it. Please note: the widget helps visitors with reading and navigation, but no widget on its own makes a website compliant with the European Accessibility Act, WCAG, the ADA or any other accessibility law - that still depends on your content, your theme and your own testing.
 
 = Can I customise the banner design? =
 
@@ -250,6 +257,16 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.8.0 =
+* Added: Accessibility widget page. Switch on the Kukie accessibility widget for this site and configure its position, colour, button size, mobile visibility, modules, languages and accessibility-statement link from WordPress. Settings are read from and saved to your Kukie.io account, so the plugin and the dashboard never disagree. On plans without the widget the page explains what it does and which plan includes it.
+* Changed: the admin menu is now Dashboard, Cookie banner, Accessibility widget and Settings. Banner Design, Google Consent Mode v2 and Microsoft UET moved into tabs of the single Cookie banner page; old bookmarks to the previous pages redirect to the matching tab.
+* Changed: the dashboard shows the accessibility widget state alongside the banner, consent and verification cards.
+* Improved: refreshed admin styling - WordPress-native notices and tabs, 40px form controls matching WordPress 7.1, proper labels and descriptions on every field for screen readers, consistent save buttons.
+* Improved: the Dashboard's status badges and the Settings page's verification and disconnect messages are now translatable.
+* Fixed: hidden admin pages no longer trigger PHP 8.1+ deprecation notices, and the WP Rocket notice no longer prints an inline script.
+* Compatibility: tested with WordPress 7.1 (always-iframed post editor, jQuery UI 1.14 - the plugin uses neither).
+* Changed: updated the banner script size in this listing (under 30KB gzipped).
 
 = 1.7.3 =
 * Added: two new revisit-button icon options, Lock and Sliders, matching the Kukie.io dashboard. Icons chosen there are no longer reset to Cookie when saving the Banner Design page.

@@ -11,7 +11,7 @@ $kukie_app_url = 'https://app.kukie.io';
 		<h1><?php esc_html_e( 'Kukie.io Dashboard', 'kukie-cookie-consent' ); ?></h1>
 		<a href="<?php echo esc_url( $kukie_plugin->get_option( 'dashboard_url', $kukie_app_url ) ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
 			<?php esc_html_e( 'Open full dashboard', 'kukie-cookie-consent' ); ?>
-			<span class="dashicons dashicons-external"></span>
+			<span class="dashicons dashicons-external" aria-hidden="true"></span>
 		</a>
 	</div>
 	<hr class="wp-header-end">
@@ -19,7 +19,7 @@ $kukie_app_url = 'https://app.kukie.io';
 	<?php if ( $kukie_plugin->is_connected() && ! $kukie_plugin->is_api_key_valid() ) :
 		$kukie_key_url = 'https://app.kukie.io/sites/' . rawurlencode( (string) $kukie_site_id );
 	?>
-		<div class="notice notice-error kukie-notice-api-key-invalid">
+		<div class="notice notice-error inline kukie-notice-api-key-invalid">
 			<p>
 				<strong><?php esc_html_e( 'Invalid API key.', 'kukie-cookie-consent' ); ?></strong>
 				<?php esc_html_e( 'The dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site.', 'kukie-cookie-consent' ); ?>
@@ -35,12 +35,13 @@ $kukie_app_url = 'https://app.kukie.io';
 		</div>
 	<?php endif; ?>
 
-	<div id="kukie-dashboard-error" class="kukie-notice kukie-notice-error" style="display:none;"></div>
+	<div id="kukie-dashboard-error" class="notice notice-error inline kukie-notice" role="alert" hidden><p></p></div>
 
 	<!-- Overview Cards -->
-	<div class="kukie-stats-grid" id="kukie-overview-cards">
+	<h2 class="screen-reader-text"><?php esc_html_e( 'Overview', 'kukie-cookie-consent' ); ?></h2>
+	<div class="kukie-stats-grid" id="kukie-overview-cards" aria-live="polite">
 		<div class="kukie-stat-card">
-			<div class="kukie-stat-icon kukie-stat-icon--banner">
+			<div class="kukie-stat-icon kukie-stat-icon--banner" aria-hidden="true">
 				<span class="dashicons dashicons-shield"></span>
 			</div>
 			<div class="kukie-stat-content">
@@ -52,7 +53,7 @@ $kukie_app_url = 'https://app.kukie.io';
 		</div>
 
 		<div class="kukie-stat-card">
-			<div class="kukie-stat-icon kukie-stat-icon--consent">
+			<div class="kukie-stat-icon kukie-stat-icon--consent" aria-hidden="true">
 				<span class="dashicons dashicons-chart-bar"></span>
 			</div>
 			<div class="kukie-stat-content">
@@ -64,7 +65,7 @@ $kukie_app_url = 'https://app.kukie.io';
 		</div>
 
 		<a href="<?php echo esc_url( $kukie_app_url . '/billing' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-stat-card kukie-stat-card--link">
-			<div class="kukie-stat-icon kukie-stat-icon--plan">
+			<div class="kukie-stat-icon kukie-stat-icon--plan" aria-hidden="true">
 				<span class="dashicons dashicons-awards"></span>
 			</div>
 			<div class="kukie-stat-content">
@@ -76,7 +77,7 @@ $kukie_app_url = 'https://app.kukie.io';
 		</a>
 
 		<div class="kukie-stat-card">
-			<div class="kukie-stat-icon kukie-stat-icon--verify">
+			<div class="kukie-stat-icon kukie-stat-icon--verify" aria-hidden="true">
 				<span class="dashicons dashicons-yes-alt"></span>
 			</div>
 			<div class="kukie-stat-content">
@@ -86,6 +87,18 @@ $kukie_app_url = 'https://app.kukie.io';
 				</span>
 			</div>
 		</div>
+
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . Kukie_Admin::PAGE_ACCESSIBILITY ) ); ?>" class="kukie-stat-card kukie-stat-card--link">
+			<div class="kukie-stat-icon kukie-stat-icon--a11y" aria-hidden="true">
+				<span class="dashicons dashicons-universal-access-alt"></span>
+			</div>
+			<div class="kukie-stat-content">
+				<span class="kukie-stat-label"><?php esc_html_e( 'Accessibility widget', 'kukie-cookie-consent' ); ?></span>
+				<span class="kukie-stat-value" id="kukie-stat-a11y">
+					<span class="kukie-skeleton"></span>
+				</span>
+			</div>
+		</a>
 	</div>
 
 	<!-- Two Column Section -->
@@ -96,7 +109,7 @@ $kukie_app_url = 'https://app.kukie.io';
 				<h2 class="kukie-card-title"><?php esc_html_e( 'Consent Overview', 'kukie-cookie-consent' ); ?></h2>
 				<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/analytics' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
 					<?php esc_html_e( 'View analytics', 'kukie-cookie-consent' ); ?>
-					<span class="dashicons dashicons-external"></span>
+					<span class="dashicons dashicons-external" aria-hidden="true"></span>
 				</a>
 			</div>
 			<div class="kukie-consent-overview" id="kukie-consent-overview">
@@ -124,12 +137,12 @@ $kukie_app_url = 'https://app.kukie.io';
 				<div class="kukie-card-actions">
 					<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/cookies' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
 						<?php esc_html_e( 'View cookies', 'kukie-cookie-consent' ); ?>
-						<span class="dashicons dashicons-external"></span>
+						<span class="dashicons dashicons-external" aria-hidden="true"></span>
 					</a>
 					<button type="button" id="kukie-trigger-scan" class="kukie-btn-secondary kukie-btn-sm">
 						<span class="kukie-btn-text"><?php esc_html_e( 'Run New Scan', 'kukie-cookie-consent' ); ?></span>
-						<span class="kukie-btn-loading" style="display:none;">
-							<span class="kukie-spinner"></span>
+						<span class="kukie-btn-loading" hidden>
+							<span class="kukie-spinner" aria-hidden="true"></span>
 						</span>
 					</button>
 				</div>
@@ -158,10 +171,15 @@ $kukie_app_url = 'https://app.kukie.io';
 	<!-- CTA Section -->
 	<div class="kukie-card kukie-cta-card">
 		<h2 class="kukie-card-title"><?php esc_html_e( 'Customise Your Banner', 'kukie-cookie-consent' ); ?></h2>
-		<p><?php esc_html_e( 'Design your cookie banner, manage cookie categories, and configure consent rules in the Kukie.io dashboard.', 'kukie-cookie-consent' ); ?></p>
-		<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-btn-primary">
-			<?php esc_html_e( 'Open Kukie.io Dashboard', 'kukie-cookie-consent' ); ?>
-			<span class="dashicons dashicons-external"></span>
-		</a>
+		<p><?php esc_html_e( 'Choose the layout and revisit button here in WordPress, or design every colour, text, category and consent rule in the Kukie.io dashboard.', 'kukie-cookie-consent' ); ?></p>
+		<p class="kukie-card-actions-row kukie-card-actions-row--center">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . Kukie_Admin::PAGE_BANNER ) ); ?>" class="kukie-btn-secondary">
+				<?php esc_html_e( 'Cookie banner settings', 'kukie-cookie-consent' ); ?>
+			</a>
+			<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-btn-primary">
+				<?php esc_html_e( 'Open Kukie.io Dashboard', 'kukie-cookie-consent' ); ?>
+				<span class="dashicons dashicons-external" aria-hidden="true"></span>
+			</a>
+		</p>
 	</div>
 </div>

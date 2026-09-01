@@ -6,6 +6,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Kukie_Admin {
 
+	/**
+	 * Admin page slugs. The four visible entries are Dashboard, Cookie banner
+	 * (one page, three tabs), Accessibility widget and Settings (since 1.8.0);
+	 * the connect page is hidden and the three LEGACY slugs stay registered as
+	 * hidden pages whose only job is to redirect old bookmarks and inter-page
+	 * links to the matching Cookie banner tab (see redirect_legacy_page()).
+	 *
+	 * @since 1.8.0
+	 */
+	public const PAGE_DASHBOARD     = 'kukie';
+	public const PAGE_BANNER        = 'kukie-banner';
+	public const PAGE_ACCESSIBILITY = 'kukie-accessibility';
+	public const PAGE_SETTINGS      = 'kukie-settings';
+	public const PAGE_CONNECT       = 'kukie-connect';
+
+	/** Legacy slug => Cookie banner tab it now lives on. */
+	public const LEGACY_PAGES = [
+		'kukie-design' => 'design',
+		'kukie-gcm'    => 'gcm',
+		'kukie-uet'    => 'uet',
+	];
+
+	/** Tabs of the Cookie banner page, in display order. */
+	public const BANNER_TABS = [ 'design', 'gcm', 'uet' ];
+
+	/** Accessibility widget whitelists - mirrors the server's, which is authoritative. */
+	public const A11Y_POSITIONS = [ 'bottom-right', 'bottom-left' ];
+	public const A11Y_SIZES     = [ 44, 52, 60 ];
+
 	private Kukie_Plugin $plugin;
 
 	public function __construct( Kukie_Plugin $plugin ) {
@@ -31,6 +60,7 @@ class Kukie_Admin {
 		add_action( 'wp_ajax_kukie_save_gcm', [ $this, 'ajax_save_gcm' ] );
 		add_action( 'wp_ajax_kukie_save_uet', [ $this, 'ajax_save_uet' ] );
 		add_action( 'wp_ajax_kukie_save_banner_design', [ $this, 'ajax_save_banner_design' ] );
+		add_action( 'wp_ajax_kukie_save_a11y', [ $this, 'ajax_save_a11y' ] );
 		add_action( 'wp_ajax_kukie_trigger_scan', [ $this, 'ajax_trigger_scan' ] );
 		add_action( 'wp_ajax_kukie_verify', [ $this, 'ajax_verify' ] );
 	}
@@ -50,7 +80,7 @@ class Kukie_Admin {
 				__( 'Kukie.io', 'kukie-cookie-consent' ),
 				__( 'Kukie.io', 'kukie-cookie-consent' ),
 				'manage_options',
-				'kukie-connect',
+				self::PAGE_CONNECT,
 				[ $this, 'render_connect_page' ],
 				$icon,
 				100
@@ -58,71 +88,128 @@ class Kukie_Admin {
 			return;
 		}
 
-		// Main menu → Dashboard
+		// Main menu -> Dashboard
 		add_menu_page(
 			__( 'Kukie.io', 'kukie-cookie-consent' ),
 			__( 'Kukie.io', 'kukie-cookie-consent' ),
 			'manage_options',
-			'kukie',
+			self::PAGE_DASHBOARD,
 			[ $this, 'render_dashboard_page' ],
 			$icon,
 			100
 		);
 
 		add_submenu_page(
-			'kukie',
+			self::PAGE_DASHBOARD,
 			__( 'Dashboard', 'kukie-cookie-consent' ),
 			__( 'Dashboard', 'kukie-cookie-consent' ),
 			'manage_options',
-			'kukie',
+			self::PAGE_DASHBOARD,
 			[ $this, 'render_dashboard_page' ]
 		);
 
 		add_submenu_page(
-			'kukie',
-			__( 'Banner Design', 'kukie-cookie-consent' ),
-			__( 'Banner Design', 'kukie-cookie-consent' ),
+			self::PAGE_DASHBOARD,
+			__( 'Cookie banner', 'kukie-cookie-consent' ),
+			__( 'Cookie banner', 'kukie-cookie-consent' ),
 			'manage_options',
-			'kukie-design',
-			[ $this, 'render_banner_design_page' ]
+			self::PAGE_BANNER,
+			[ $this, 'render_banner_page' ]
 		);
 
 		add_submenu_page(
-			'kukie',
-			__( 'Google Consent Mode v2', 'kukie-cookie-consent' ),
-			__( 'Google Consent Mode v2', 'kukie-cookie-consent' ),
+			self::PAGE_DASHBOARD,
+			__( 'Accessibility widget', 'kukie-cookie-consent' ),
+			__( 'Accessibility widget', 'kukie-cookie-consent' ),
 			'manage_options',
-			'kukie-gcm',
-			[ $this, 'render_gcm_page' ]
+			self::PAGE_ACCESSIBILITY,
+			[ $this, 'render_accessibility_page' ]
 		);
 
 		add_submenu_page(
-			'kukie',
-			__( 'Microsoft UET', 'kukie-cookie-consent' ),
-			__( 'Microsoft UET', 'kukie-cookie-consent' ),
-			'manage_options',
-			'kukie-uet',
-			[ $this, 'render_uet_page' ]
-		);
-
-		add_submenu_page(
-			'kukie',
+			self::PAGE_DASHBOARD,
 			__( 'Settings', 'kukie-cookie-consent' ),
 			__( 'Settings', 'kukie-cookie-consent' ),
 			'manage_options',
-			'kukie-settings',
+			self::PAGE_SETTINGS,
 			[ $this, 'render_settings_page' ]
 		);
 
-		// Hidden connect page (for reconnecting)
+		// Hidden connect page (for reconnecting). An EMPTY parent slug
+		// registers the page without a menu entry; the historical null
+		// parent reaches plugin_basename()'s string functions and raises
+		// PHP 8.1+ deprecation notices on every admin request.
 		add_submenu_page(
-			null,
+			'',
 			__( 'Connect', 'kukie-cookie-consent' ),
 			__( 'Connect', 'kukie-cookie-consent' ),
 			'manage_options',
-			'kukie-connect',
+			self::PAGE_CONNECT,
 			[ $this, 'render_connect_page' ]
 		);
+
+		// Legacy slugs (pre-1.8.0 Banner Design / GCM / UET pages): still
+		// registered so bookmarks pass WordPress's page-access check, then
+		// redirected to the matching Cookie banner tab before any output.
+		// The render callback is only a fallback for a redirect that could
+		// not fire; load-{hook} runs first on every normal request.
+		foreach ( array_keys( self::LEGACY_PAGES ) as $legacy_slug ) {
+			$hook = add_submenu_page(
+				'',
+				__( 'Cookie banner', 'kukie-cookie-consent' ),
+				__( 'Cookie banner', 'kukie-cookie-consent' ),
+				'manage_options',
+				$legacy_slug,
+				[ $this, 'render_banner_page' ]
+			);
+			if ( is_string( $hook ) && $hook !== '' ) {
+				add_action( 'load-' . $hook, [ $this, 'redirect_legacy_page' ] );
+			}
+		}
+	}
+
+	/**
+	 * Requested tab of the Cookie banner page, whitelisted to BANNER_TABS
+	 * (default: design). Read by the page template and by the legacy redirect.
+	 *
+	 * @since 1.8.0
+	 */
+	public static function current_banner_tab(): string {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only tab selector on an admin page
+		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+
+		return in_array( $tab, self::BANNER_TABS, true ) ? $tab : 'design';
+	}
+
+	/**
+	 * URL of one Cookie banner tab (or of the page itself for the default tab).
+	 *
+	 * @since 1.8.0
+	 */
+	public static function banner_tab_url( string $tab ): string {
+		$args = [ 'page' => self::PAGE_BANNER ];
+		if ( $tab !== 'design' && in_array( $tab, self::BANNER_TABS, true ) ) {
+			$args['tab'] = $tab;
+		}
+
+		return add_query_arg( $args, admin_url( 'admin.php' ) );
+	}
+
+	/**
+	 * Redirect a pre-1.8.0 page slug to its Cookie banner tab. Runs on the
+	 * legacy page's load-{hook} action - after WordPress's page-access check
+	 * and before any output - so an old bookmark or inter-plugin link lands
+	 * on the right tab instead of a "not allowed" screen.
+	 *
+	 * @since 1.8.0
+	 */
+	public function redirect_legacy_page(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress admin menu page parameter
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		$tab  = self::LEGACY_PAGES[ $page ] ?? 'design';
+
+		wp_safe_redirect( self::banner_tab_url( $tab ) );
+		exit;
 	}
 
 	// ─────────────────────────────────────────
@@ -132,7 +219,7 @@ class Kukie_Admin {
 	public function enqueue_assets( string $hook ): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress admin menu page parameter
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
-		if ( ! in_array( $page, [ 'kukie', 'kukie-connect', 'kukie-design', 'kukie-gcm', 'kukie-uet', 'kukie-settings' ], true ) ) {
+		if ( ! in_array( $page, [ self::PAGE_DASHBOARD, self::PAGE_CONNECT, self::PAGE_BANNER, self::PAGE_ACCESSIBILITY, self::PAGE_SETTINGS ], true ) ) {
 			return;
 		}
 
@@ -152,18 +239,54 @@ class Kukie_Admin {
 		);
 
 		wp_localize_script( 'kukie-admin', 'kukieAdmin', [
-			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
-			'nonce'        => wp_create_nonce( 'kukie_admin' ),
-			'dashboardUrl' => $this->plugin->get_option( 'dashboard_url', 'https://app.kukie.io' ),
-			'embedUrl'     => $this->plugin->get_option( 'embed_url', '' ),
-			'siteId'       => $this->plugin->get_option( 'site_id', 0 ),
-			'isConnected'  => $this->plugin->is_connected(),
+			'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
+			'nonce'            => wp_create_nonce( 'kukie_admin' ),
+			'dashboardUrl'     => $this->plugin->get_option( 'dashboard_url', 'https://app.kukie.io' ),
+			'billingUrl'       => 'https://app.kukie.io/billing',
+			'embedUrl'         => $this->plugin->get_option( 'embed_url', '' ),
+			'siteId'           => $this->plugin->get_option( 'site_id', 0 ),
+			'isConnected'      => $this->plugin->is_connected(),
+			'a11yPageUrl'      => admin_url( 'admin.php?page=' . self::PAGE_ACCESSIBILITY ),
+			// The WP Rocket notice's dismiss handler lives in admin.js since
+			// 1.8.0 (no inline <script> in PHP output); it needs its own nonce.
+			'rocketDismissNonce' => wp_create_nonce( 'kukie_dismiss_wp_rocket_notice' ),
 			// Strings admin.js renders itself (it reads these with inline
 			// English fallbacks, so a stale cached script degrades safely).
-			'i18n'         => [
-				'networkError'   => __( 'Network error. Please try again.', 'kukie-cookie-consent' ),
-				'saveDisabled'   => __( 'Settings could not be loaded, so saving is disabled. Please reload the page.', 'kukie-cookie-consent' ),
-				'conflictPrompt' => __( "These settings were changed elsewhere (for example in the Kukie.io dashboard) after this page was loaded.\n\nOK: save anyway and overwrite the other changes.\nCancel: keep the other changes (reload this page to see them).", 'kukie-cookie-consent' ),
+			'i18n'             => [
+				'networkError'      => __( 'Network error. Please try again.', 'kukie-cookie-consent' ),
+				'saveDisabled'      => __( 'Settings could not be loaded, so saving is disabled. Please reload the page.', 'kukie-cookie-consent' ),
+				'conflictPrompt'    => __( "These settings were changed elsewhere (for example in the Kukie.io dashboard) after this page was loaded.\n\nOK: save anyway and overwrite the other changes.\nCancel: keep the other changes (reload this page to see them).", 'kukie-cookie-consent' ),
+				'couldNotLoad'      => __( 'Could not load settings.', 'kukie-cookie-consent' ),
+				'failedToSave'      => __( 'Failed to save.', 'kukie-cookie-consent' ),
+				'active'            => __( 'Active', 'kukie-cookie-consent' ),
+				'inactive'          => __( 'Inactive', 'kukie-cookie-consent' ),
+				'off'               => __( 'Off', 'kukie-cookie-consent' ),
+				'notInPlan'         => __( 'Not in plan', 'kukie-cookie-consent' ),
+				'verified'          => __( 'Verified', 'kukie-cookie-consent' ),
+				'notVerified'       => __( 'Not verified', 'kukie-cookie-consent' ),
+				/* translators: %s: date and time */
+				'verifiedOn'        => __( 'Verified on %s', 'kukie-cookie-consent' ),
+				'verifiedToast'     => __( 'Banner script verified on your site!', 'kukie-cookie-consent' ),
+				'verifiedDetected'  => __( 'Verified! Banner script detected.', 'kukie-cookie-consent' ),
+				'notFound'          => __( 'Banner script not found.', 'kukie-cookie-consent' ),
+				'noDataYet'         => __( 'No data yet', 'kukie-cookie-consent' ),
+				'noScansYet'        => __( 'No scans yet', 'kukie-cookie-consent' ),
+				'accepted'          => __( 'Accepted', 'kukie-cookie-consent' ),
+				'rejected'          => __( 'Rejected', 'kukie-cookie-consent' ),
+				'custom'            => __( 'Custom', 'kukie-cookie-consent' ),
+				/* translators: %s: number of trial days remaining */
+				'trialDays'         => __( '(Trial: %sd)', 'kukie-cookie-consent' ),
+				'disconnectConfirm' => __( 'Are you sure you want to disconnect from Kukie.io? The cookie consent banner will be removed from your site.', 'kukie-cookie-consent' ),
+				'disconnecting'     => __( 'Disconnecting...', 'kukie-cookie-consent' ),
+				'disconnectLabel'   => __( 'Disconnect from Kukie.io', 'kukie-cookie-consent' ),
+				'failedDisconnect'  => __( 'Failed to disconnect.', 'kukie-cookie-consent' ),
+				'a11yNoBlock'       => __( 'The Kukie.io service did not return accessibility widget settings. Please try again in a few minutes.', 'kukie-cookie-consent' ),
+				/* translators: %s: plan name */
+				'a11yRequiredPlan'  => __( 'The accessibility widget is available on the %s plan and above.', 'kukie-cookie-consent' ),
+				'a11yNotIncluded'   => __( 'The accessibility widget is not included in your plan.', 'kukie-cookie-consent' ),
+				'a11yStillOn'       => __( 'This site still has the widget switched on from an earlier plan. Visitors do not see it until the plan includes it again; the setting is kept so nothing needs re-doing after an upgrade.', 'kukie-cookie-consent' ),
+				'autoDetect'        => __( 'Auto-detect (recommended)', 'kukie-cookie-consent' ),
+				'checkingAgain'     => __( 'Checking...', 'kukie-cookie-consent' ),
 			],
 		] );
 	}
@@ -362,17 +485,18 @@ class Kukie_Admin {
 
 		$rocket_settings_url = admin_url( 'options-general.php?page=wprocket#file_optimization' );
 		$help_url            = 'https://kukie.io/docs/wordpress-plugin/troubleshoot-wordpress-plugin';
-		$dismiss_nonce       = wp_create_nonce( 'kukie_dismiss_wp_rocket_notice' );
 
+		// The dismiss click is handled by admin.js (enqueued on every Kukie
+		// page, which is the only place this notice renders) - no inline
+		// <script> in PHP output since 1.8.0.
 		printf(
 			'<div class="notice notice-warning kukie-notice" id="kukie-wp-rocket-notice"><p>'
 			. '<strong>%s</strong> %s'
-			. '</p><ul style="list-style:disc;margin-left:20px;">%s</ul>'
+			. '</p><ul class="kukie-notice-list">%s</ul>'
 			. '<p><a href="%s" class="button button-small">%s</a> '
-			. '<a href="%s" target="_blank" rel="noopener noreferrer" style="margin-left:8px;">%s</a>'
-			. '<button type="button" class="kukie-dismiss-btn" style="margin-left:12px;background:none;border:none;color:#787c82;cursor:pointer;text-decoration:underline;padding:0;font-size:13px;">%s</button>'
-			. '</p></div>'
-			. '<script>document.querySelector("#kukie-wp-rocket-notice .kukie-dismiss-btn")?.addEventListener("click",function(){var n=this.closest(".notice");n&&(n.style.display="none");var x=new XMLHttpRequest();x.open("POST","%s");x.setRequestHeader("Content-Type","application/x-www-form-urlencoded");x.send("action=kukie_dismiss_wp_rocket_notice&nonce=%s");});</script>',
+			. '<a href="%s" target="_blank" rel="noopener noreferrer" class="kukie-notice-link">%s</a>'
+			. '<button type="button" class="button-link kukie-dismiss-btn">%s</button>'
+			. '</p></div>',
 			esc_html__( 'Kukie.io - WP Rocket detected:', 'kukie-cookie-consent' ),
 			esc_html__( 'Your cookie banner may not load correctly. Add cdn.kukie.io to the exclusion list in these WP Rocket settings:', 'kukie-cookie-consent' ),
 			$issue_list,
@@ -380,9 +504,7 @@ class Kukie_Admin {
 			esc_html__( 'Open WP Rocket Settings', 'kukie-cookie-consent' ),
 			esc_url( $help_url ),
 			esc_html__( 'Learn more', 'kukie-cookie-consent' ),
-			esc_html__( 'Dismiss', 'kukie-cookie-consent' ),
-			esc_url( admin_url( 'admin-ajax.php' ) ),
-			esc_attr( $dismiss_nonce )
+			esc_html__( 'Dismiss', 'kukie-cookie-consent' )
 		);
 	}
 
@@ -409,16 +531,23 @@ class Kukie_Admin {
 		require KUKIE_PLUGIN_DIR . 'templates/admin-dashboard.php';
 	}
 
-	public function render_banner_design_page(): void {
-		require KUKIE_PLUGIN_DIR . 'templates/admin-banner-design.php';
+	/**
+	 * The Cookie banner page: one page, three tabs (design / gcm / uet). The
+	 * former per-page templates render as tab partials - only the active
+	 * tab's partial is included, so each partial's page-init hook in admin.js
+	 * (keyed on its root element id) fires for exactly one tab.
+	 *
+	 * @since 1.8.0
+	 */
+	public function render_banner_page(): void {
+		require KUKIE_PLUGIN_DIR . 'templates/admin-banner.php';
 	}
 
-	public function render_gcm_page(): void {
-		require KUKIE_PLUGIN_DIR . 'templates/admin-gcm.php';
-	}
-
-	public function render_uet_page(): void {
-		require KUKIE_PLUGIN_DIR . 'templates/admin-uet.php';
+	/**
+	 * @since 1.8.0
+	 */
+	public function render_accessibility_page(): void {
+		require KUKIE_PLUGIN_DIR . 'templates/admin-accessibility.php';
 	}
 
 	public function render_settings_page(): void {
@@ -578,10 +707,18 @@ class Kukie_Admin {
 			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
+		// fresh=1 bypasses the 10-minute settings cache. The Accessibility
+		// widget page sends it on load: its locked/unlocked state follows the
+		// PLAN flag, which changes on the Kukie.io side (an upgrade), and a
+		// stale cached "not available" after an upgrade is the one case a
+		// user cannot reason about. One uncached GET per page load.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- check_ajax_referer() ran above
+		$fresh = ! empty( $_POST['fresh'] );
+
 		// is_array, not !== false: a non-array payload would fatal on the
 		// string-offset assignments below and 500 this endpoint until the
 		// transient expired.
-		$cached = get_transient( 'kukie_settings_cache' );
+		$cached = $fresh ? false : get_transient( 'kukie_settings_cache' );
 		if ( is_array( $cached ) ) {
 			$cached['script_position'] = $this->plugin->get_option( 'script_position', 'head' );
 			$cached['force_language']  = $this->plugin->get_option( 'force_language', 'auto' );
@@ -670,6 +807,22 @@ class Kukie_Admin {
 	 * @since 1.7.0
 	 */
 	private function send_put_settings_error( array $response ): void {
+		// A plan-gated write (accessibility widget on a plan without it) is a
+		// structured 403 the page turns into an upgrade CTA instead of a
+		// bare error toast. Nothing was persisted server-side.
+		if ( $response['status'] === 403 && is_array( $response['data'] ) && ( $response['data']['code'] ?? '' ) === 'plan_upgrade_required' ) {
+			delete_transient( 'kukie_settings_cache' );
+
+			$upgrade_url = esc_url_raw( (string) ( $response['data']['upgrade_url'] ?? '' ) );
+
+			wp_send_json_error( [
+				'message'       => $response['error'] ?? __( 'The accessibility widget is not included in your plan.', 'kukie-cookie-consent' ),
+				'code'          => 'plan_upgrade_required',
+				'required_plan' => sanitize_text_field( (string) ( $response['data']['required_plan'] ?? '' ) ),
+				'upgrade_url'   => $upgrade_url !== '' ? $upgrade_url : 'https://app.kukie.io/billing',
+			] );
+		}
+
 		if ( $response['status'] === 409 ) {
 			delete_transient( 'kukie_settings_cache' );
 
@@ -782,7 +935,7 @@ class Kukie_Admin {
 	 * codes matching the banner script's translations map.
 	 *
 	 * This list is an escape hatch for manual override, not the canonical
-	 * language catalogue — the full 71-language Kukie set is still honored
+	 * language catalogue - the full 71-language Kukie set is still honored
 	 * via auto-detect. Values must already be Kukie-normalized (lowercase,
 	 * hyphen-separated).
 	 *
@@ -955,6 +1108,113 @@ class Kukie_Admin {
 		}
 		$value = trim( $value );
 		return preg_match( '/^#[0-9a-fA-F]{3,8}$/', $value ) ? $value : '';
+	}
+
+	/**
+	 * Save the Accessibility widget page. Every value is sanitised to the
+	 * server's whitelists here so a stray form value can never 422 the whole
+	 * save (the sanitize_banner_color() discipline), and the whole block is
+	 * forwarded as `accessibility_widget` on PUT /settings - the API stores
+	 * it on the site's banner config and rebakes the CDN bundle. Nothing is
+	 * mirrored locally: app.kukie.io is the only source of truth for these
+	 * settings, and the page re-reads them on every load.
+	 *
+	 * A plan without the widget answers with a structured 403 that
+	 * send_put_settings_error() turns into an upgrade CTA.
+	 *
+	 * @since 1.8.0
+	 */
+	public function ajax_save_a11y(): void {
+		check_ajax_referer( 'kukie_admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+		}
+
+		$position = sanitize_text_field( wp_unslash( $_POST['position'] ?? 'bottom-right' ) );
+		if ( ! in_array( $position, self::A11Y_POSITIONS, true ) ) {
+			$position = 'bottom-right';
+		}
+
+		$size = absint( wp_unslash( $_POST['size'] ?? 44 ) );
+		if ( ! in_array( $size, self::A11Y_SIZES, true ) ) {
+			$size = 44;
+		}
+
+		// http(s) only - anything else becomes '' (= no custom link), which the
+		// server stores as null and falls back to the published statement.
+		$statement_url = esc_url_raw( sanitize_text_field( wp_unslash( $_POST['statement_url'] ?? '' ) ) );
+		if ( $statement_url !== '' && ! preg_match( '#^https?://#i', $statement_url ) ) {
+			$statement_url = '';
+		}
+
+		$api_data = [
+			'accessibility_widget' => [
+				'enabled'           => rest_sanitize_boolean( $_POST['enabled'] ?? false ),
+				'position'          => $position,
+				// '' means "inherit the banner theme colour" (server stores null).
+				'color'             => $this->sanitize_a11y_color( $_POST['color'] ?? '' ),
+				'size'              => $size,
+				'hide_mobile'       => rest_sanitize_boolean( $_POST['hide_mobile'] ?? false ),
+				'hidden_modules'    => $this->sanitize_a11y_tokens( $_POST['hidden_modules'] ?? [] ),
+				'statement_enabled' => rest_sanitize_boolean( $_POST['statement_enabled'] ?? true ),
+				'statement_url'     => $statement_url,
+				'languages'         => $this->sanitize_a11y_tokens( $_POST['languages'] ?? [] ),
+				'default_language'  => $this->sanitize_a11y_token( $_POST['default_language'] ?? '' ),
+			],
+		];
+
+		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+
+		$this->send_settings_saved( $client, __( 'Accessibility widget settings saved.', 'kukie-cookie-consent' ), $config_version );
+	}
+
+	/**
+	 * Widget accent colour: the server accepts #rrggbb only (six hex digits,
+	 * the dashboard's ColorInput format) or null. Anything else becomes ''
+	 * (inherit) rather than a value that would 422 the whole save.
+	 *
+	 * @since 1.8.0
+	 */
+	private function sanitize_a11y_color( mixed $value ): string {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+		$value = trim( $value );
+		return preg_match( '/^#[0-9a-fA-F]{6}$/', $value ) ? $value : '';
+	}
+
+	/**
+	 * A module key ('textSize') or a locale code ('pt-br'): letters, digits,
+	 * hyphen and underscore, CASE PRESERVED - sanitize_key() would lowercase
+	 * the camelCase module keys and every one would then fail the server's
+	 * whitelist. The server validates the values themselves.
+	 *
+	 * @since 1.8.0
+	 */
+	private function sanitize_a11y_token( mixed $value ): string {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+		return (string) preg_replace( '/[^A-Za-z0-9_-]/', '', wp_unslash( $value ) );
+	}
+
+	/**
+	 * @since 1.8.0
+	 * @return string[] Unique, non-empty tokens in submission order.
+	 */
+	private function sanitize_a11y_tokens( mixed $values ): array {
+		if ( ! is_array( $values ) ) {
+			return [];
+		}
+		$clean = [];
+		foreach ( $values as $value ) {
+			$token = $this->sanitize_a11y_token( $value );
+			if ( $token !== '' && ! in_array( $token, $clean, true ) ) {
+				$clean[] = $token;
+			}
+		}
+		return $clean;
 	}
 
 	public function ajax_trigger_scan(): void {

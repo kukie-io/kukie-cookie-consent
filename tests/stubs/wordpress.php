@@ -369,6 +369,30 @@ function absint( mixed $value ): int {
 	return abs( (int) $value );
 }
 
+function sanitize_key( mixed $key ): string {
+	$key = is_scalar( $key ) ? strtolower( (string) $key ) : '';
+	return (string) preg_replace( '/[^a-z0-9_\-]/', '', $key );
+}
+
+/**
+ * Only the two-argument form the plugin uses (array of args, base URL).
+ */
+function add_query_arg( mixed ...$args ): string {
+	if ( count( $args ) === 2 && is_array( $args[0] ) ) {
+		[ $params, $url ] = $args;
+	} else {
+		[ $key, $value, $url ] = array_pad( $args, 3, '' );
+		$params              = [ $key => $value ];
+	}
+	$parts = explode( '?', (string) $url, 2 );
+	$query = [];
+	if ( isset( $parts[1] ) ) {
+		parse_str( $parts[1], $query );
+	}
+	$query = array_merge( $query, $params );
+	return $parts[0] . ( $query ? '?' . http_build_query( $query ) : '' );
+}
+
 function rest_sanitize_boolean( mixed $value ): bool {
 	if ( is_string( $value ) ) {
 		return ! in_array( strtolower( $value ), [ '', '0', 'false', 'no' ], true );
@@ -423,6 +447,14 @@ function esc_html__( string $text, string $domain = 'default' ): string {
 }
 
 function esc_html_e( string $text, string $domain = 'default' ): void {
+	echo htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+}
+
+function esc_attr__( string $text, string $domain = 'default' ): string {
+	return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+}
+
+function esc_attr_e( string $text, string $domain = 'default' ): void {
 	echo htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
 }
 

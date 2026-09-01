@@ -47,15 +47,20 @@ final class BlindSaveGuardTest extends Kukie_Test_Case {
 			'A save action reaching kukieAjax() directly skips the blind-save and conflict handling.'
 		);
 
-		preg_match_all( "/kukieSaveSettings\(\s*'(kukie_save_[a-z_]+)'/", $js, $matches );
+		// [a-z0-9_]: kukie_save_a11y carries digits (the pre-1.8.0 class
+		// silently dropped it from the guarded set).
+		preg_match_all( "/kukieSaveSettings\(\s*'(kukie_save_[a-z0-9_]+)'/", $js, $matches );
 
 		$guarded = array_unique( $matches[1] );
 		sort( $guarded );
 
+		// Five since 1.8.0: the Accessibility widget page saves through the
+		// same wrapper (its whole block is server-owned, so a blind save
+		// there would post template defaults over the dashboard's values).
 		$this->assertSame(
-			[ 'kukie_save_banner_design', 'kukie_save_gcm', 'kukie_save_settings', 'kukie_save_uet' ],
+			[ 'kukie_save_a11y', 'kukie_save_banner_design', 'kukie_save_gcm', 'kukie_save_settings', 'kukie_save_uet' ],
 			$guarded,
-			'All four save handlers must go through the guarded wrapper.'
+			'All five save handlers must go through the guarded wrapper.'
 		);
 	}
 
