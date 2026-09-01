@@ -14,7 +14,7 @@
  */
 // Playwright comes from the Laravel repo's node_modules (a production dep
 // there); point KUKIE_PLAYWRIGHT at another install if needed.
-const pwPath = process.env.KUKIE_PLAYWRIGHT || new URL('../../../kukie/node_modules/playwright/index.mjs', import.meta.url).pathname;
+const pwPath = process.env.KUKIE_PLAYWRIGHT || new URL('../../../../kukie/node_modules/playwright/index.mjs', import.meta.url).pathname;
 const { chromium } = await import(pwPath);
 import fs from 'node:fs';
 import path from 'node:path';
