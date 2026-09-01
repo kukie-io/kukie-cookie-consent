@@ -41,7 +41,7 @@ $kukie_plugin = Kukie_Plugin::instance();
 					printf(
 						/* translators: %s: link to Kukie.io dashboard */
 						esc_html__( 'Find your API key in %s under your site settings.', 'kukie-cookie-consent' ),
-						'<a href="https://app.kukie.io" target="_blank" rel="noopener noreferrer">app.kukie.io <span class="dashicons dashicons-external kukie-dashicon-inline" aria-hidden="true"></span></a>'
+						'<a href="https://app.kukie.io" target="_blank" rel="noopener noreferrer">app.kukie.io' . Kukie_Admin::new_tab_marker() . '</a>'
 					);
 					?>
 				</p>
@@ -88,7 +88,7 @@ $kukie_plugin = Kukie_Plugin::instance();
 			printf(
 				/* translators: %s: link to Kukie.io registration */
 				esc_html__( "Don't have an account? %s", 'kukie-cookie-consent' ),
-				'<a href="https://app.kukie.io/register" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Sign up free at kukie.io', 'kukie-cookie-consent' ) . '</a>'
+				'<a href="https://app.kukie.io/register" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Sign up free at kukie.io', 'kukie-cookie-consent' ) . Kukie_Admin::new_tab_marker() . '</a>'
 			);
 			?>
 		</p>

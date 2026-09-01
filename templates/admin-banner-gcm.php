@@ -44,7 +44,8 @@ $kukie_plugin = Kukie_Plugin::instance();
 		</p>
 		<p>
 			<a href="<?php echo esc_url( $kukie_plugin->get_option( 'dashboard_url', 'https://app.kukie.io' ) ); ?>" target="_blank" rel="noopener noreferrer">
-				<?php esc_html_e( 'Manage region rules in the Kukie.io dashboard', 'kukie-cookie-consent' ); ?> &rarr;
+				<?php esc_html_e( 'Manage region rules in the Kukie.io dashboard', 'kukie-cookie-consent' ); ?>
+				<?php echo Kukie_Admin::new_tab_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper ?>
 			</a>
 		</p>
 	</div>

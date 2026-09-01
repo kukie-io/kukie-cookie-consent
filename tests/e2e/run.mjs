@@ -142,7 +142,17 @@ for (const [scenario, expected] of [['entitled', 'Active'], ['locked', 'Not in p
   const { page, errors } = await open(browser, 'admin-dashboard.html', scenario);
   const txt = await page.evaluate(() => document.getElementById('kukie-stat-a11y').textContent.trim());
   check(`dashboard ${scenario}: a11y card = "${expected}"`, txt === expected, `got "${txt}" errors=${errors.join('|')}`);
-  if (scenario === 'entitled') await page.screenshot({ path: path.join(E2E, 'shot-dashboard.png'), fullPage: true });
+  if (scenario === 'entitled') {
+    const dash = await page.evaluate(() => ({
+      order: Array.from(document.querySelectorAll('#kukie-overview-cards .kukie-stat-label')).map(e => e.textContent.trim()),
+      linkCards: Array.from(document.querySelectorAll('#kukie-overview-cards a.kukie-stat-card--link')).map(a => ({ label: a.querySelector('.kukie-stat-label').textContent.trim(), newTab: a.target === '_blank', marker: !!a.querySelector('.kukie-stat-card-go'), sr: !!a.querySelector('.screen-reader-text') })),
+      externalWithoutSr: Array.from(document.querySelectorAll('a[target="_blank"]')).filter(a => !a.querySelector('.screen-reader-text')).length,
+    }));
+    check('dashboard: card order', JSON.stringify(dash.order) === JSON.stringify(['Cookie Banner Status', 'Accessibility widget', 'Verification', 'Consents Today', 'Plan']), JSON.stringify(dash.order));
+    check('dashboard: link cards marked (a11y same-tab arrow, plan new-tab icon + sr text)', dash.linkCards.length === 2 && dash.linkCards.every(c => c.marker) && dash.linkCards[1].newTab && dash.linkCards[1].sr && !dash.linkCards[0].newTab, JSON.stringify(dash.linkCards));
+    check('dashboard: every new-tab link carries screen-reader text', dash.externalWithoutSr === 0, String(dash.externalWithoutSr));
+    await page.screenshot({ path: path.join(E2E, 'shot-dashboard.png'), fullPage: true });
+  }
   await page.close();
 }
 // 5. Settings page renders; screenshot the script position picker

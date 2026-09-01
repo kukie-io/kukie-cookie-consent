@@ -281,6 +281,74 @@
 	color: inherit;
 }
 
+/* Link cards: a corner marker (arrow for same-tab, external icon for a new
+   tab) plus the hover/focus lift make the clickable cards unmistakable. */
+.kukie-stat-card--link {
+	position: relative;
+	padding-right: 36px;
+	color: #1e3a8a;
+}
+
+.kukie-stat-card--link .kukie-stat-card-go {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	color: #94a3b8;
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	transition: color 0.15s, transform 0.15s;
+}
+
+.kukie-stat-card--link .kukie-stat-card-go .kukie-ext {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	margin: 0;
+	vertical-align: top;
+}
+
+.kukie-stat-card--link:hover .kukie-stat-card-go,
+.kukie-stat-card--link:focus-visible .kukie-stat-card-go {
+	color: #2563eb;
+	transform: translateX(2px);
+}
+
+.kukie-stat-card--link:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+.kukie-stat-card--link .kukie-stat-label {
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	text-underline-offset: 3px;
+	transition: text-decoration-color 0.15s;
+}
+
+.kukie-stat-card--link:hover .kukie-stat-label {
+	text-decoration-color: currentColor;
+}
+
+/* Inline "opens in a new tab" marker after links */
+.kukie-ext {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+	line-height: 14px;
+	margin-left: 3px;
+	vertical-align: text-bottom;
+	text-decoration: none;
+}
+
+.kukie-btn-primary .kukie-ext,
+.kukie-btn-secondary .kukie-ext,
+.button .kukie-ext {
+	margin-left: 4px;
+	vertical-align: middle;
+}
+
 /* Card Actions */
 .kukie-card-actions {
 	display: flex;

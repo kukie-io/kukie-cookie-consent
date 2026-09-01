@@ -203,7 +203,7 @@ $kukie_app_url = 'https://app.kukie.io';
 								printf(
 									/* translators: %s: link to Kukie.io banner settings */
 									esc_html__( 'Want to customise banner texts and translations? Edit them in %s.', 'kukie-cookie-consent' ),
-									'<a href="' . esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'your banner settings on Kukie.io', 'kukie-cookie-consent' ) . '</a>'
+									'<a href="' . esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'your banner settings on Kukie.io', 'kukie-cookie-consent' ) . Kukie_Admin::new_tab_marker() . '</a>'
 								);
 								?>
 							</p>

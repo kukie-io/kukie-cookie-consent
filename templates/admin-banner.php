@@ -25,7 +25,7 @@ $kukie_tabs    = [
 		<h1><?php esc_html_e( 'Consent banner', 'kukie-cookie-consent' ); ?></h1>
 		<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
 			<?php esc_html_e( 'Open the banner editor on Kukie.io', 'kukie-cookie-consent' ); ?>
-			<span class="dashicons dashicons-external" aria-hidden="true"></span>
+			<?php echo Kukie_Admin::new_tab_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper ?>
 		</a>
 	</div>
 	<hr class="wp-header-end">

@@ -292,6 +292,24 @@ class Kukie_Admin {
 	}
 
 	/**
+	 * Marker appended to every link that opens a new tab: the external-link
+	 * dashicon plus screen-reader text, so sighted and non-sighted users both
+	 * know the link leaves the current page. Sanitised here so templates can
+	 * echo it directly.
+	 *
+	 * @since 1.8.0
+	 */
+	public static function new_tab_marker(): string {
+		return wp_kses(
+			'<span class="dashicons dashicons-external kukie-ext" aria-hidden="true"></span>'
+			. '<span class="screen-reader-text">' . esc_html__( '(opens in a new tab)', 'kukie-cookie-consent' ) . '</span>',
+			[
+				'span' => [ 'class' => [], 'aria-hidden' => [] ],
+			]
+		);
+	}
+
+	/**
 	 * Cache-busting version for an admin asset: the plugin version plus the
 	 * file's modification time. A bare KUKIE_VERSION only changes on a
 	 * release, so a re-uploaded build of the SAME version kept serving the

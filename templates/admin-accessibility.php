@@ -22,7 +22,7 @@ $kukie_app_url = 'https://app.kukie.io';
 		<h1><?php esc_html_e( 'Accessibility widget', 'kukie-cookie-consent' ); ?></h1>
 		<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/accessibility' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
 			<?php esc_html_e( 'Open on Kukie.io', 'kukie-cookie-consent' ); ?>
-			<span class="dashicons dashicons-external" aria-hidden="true"></span>
+			<?php echo Kukie_Admin::new_tab_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper ?>
 		</a>
 	</div>
 	<hr class="wp-header-end">
@@ -47,7 +47,7 @@ $kukie_app_url = 'https://app.kukie.io';
 			<p class="kukie-card-actions-row">
 				<a id="kukie-a11y-upgrade" href="<?php echo esc_url( $kukie_app_url . '/billing' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-btn-primary">
 					<?php esc_html_e( 'Upgrade on Kukie.io', 'kukie-cookie-consent' ); ?>
-					<span class="dashicons dashicons-external" aria-hidden="true"></span>
+					<?php echo Kukie_Admin::new_tab_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper ?>
 				</a>
 				<button type="button" id="kukie-a11y-recheck" class="kukie-btn-secondary">
 					<span class="kukie-btn-text"><?php esc_html_e( 'Already upgraded? Check again', 'kukie-cookie-consent' ); ?></span>
@@ -211,7 +211,7 @@ $kukie_app_url = 'https://app.kukie.io';
 							printf(
 								/* translators: %s: link to the site's Legal Documents page on Kukie.io */
 								esc_html__( 'Leave empty to link the statement generated and published from the site\'s %s on Kukie.io.', 'kukie-cookie-consent' ),
-								'<a href="' . esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/legal-documents' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Legal Documents page', 'kukie-cookie-consent' ) . '</a>'
+								'<a href="' . esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/legal-documents' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Legal Documents page', 'kukie-cookie-consent' ) . Kukie_Admin::new_tab_marker() . '</a>'
 							);
 							?>
 						</p>
@@ -225,7 +225,7 @@ $kukie_app_url = 'https://app.kukie.io';
 						printf(
 							/* translators: %s: link to the accessibility widget page on Kukie.io */
 							esc_html__( 'Every text in the panel can be reworded per language in %s.', 'kukie-cookie-consent' ),
-							'<a href="' . esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/accessibility' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'your Kukie.io dashboard', 'kukie-cookie-consent' ) . '</a>'
+							'<a href="' . esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/accessibility' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'your Kukie.io dashboard', 'kukie-cookie-consent' ) . Kukie_Admin::new_tab_marker() . '</a>'
 						);
 						?>
 					</p>
