@@ -257,6 +257,7 @@
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	font-weight: 500;
+	overflow-wrap: anywhere;
 }
 
 .kukie-stat-value {
@@ -285,14 +286,14 @@
    tab) plus the hover/focus lift make the clickable cards unmistakable. */
 .kukie-stat-card--link {
 	position: relative;
-	padding-right: 36px;
 	color: #1e3a8a;
 }
 
+/* Bottom-right corner: the label row is the tight one on narrow cards. */
 .kukie-stat-card--link .kukie-stat-card-go {
 	position: absolute;
-	top: 12px;
 	right: 12px;
+	bottom: 12px;
 	color: #94a3b8;
 	font-size: 18px;
 	width: 18px;
@@ -1906,4 +1907,19 @@
 .kukie-wrap [hidden],
 #kukie-wp-rocket-notice[hidden] {
 	display: none !important;
+}
+
+/* WordPress core defines .screen-reader-text in wp-admin; declared here too
+   so the marker text stays invisible wherever admin.css loads on its own. */
+.kukie-wrap .screen-reader-text {
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	margin: -1px !important;
+	padding: 0 !important;
+	border: 0 !important;
+	overflow: hidden !important;
+	clip: rect(1px, 1px, 1px, 1px) !important;
+	clip-path: inset(50%) !important;
+	word-wrap: normal !important;
 }
