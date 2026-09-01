@@ -227,14 +227,14 @@ class Kukie_Admin {
 			'kukie-admin',
 			KUKIE_PLUGIN_URL . 'assets/css/admin.css',
 			[],
-			KUKIE_VERSION
+			self::asset_version( 'assets/css/admin.css' )
 		);
 
 		wp_enqueue_script(
 			'kukie-admin',
 			KUKIE_PLUGIN_URL . 'assets/js/admin.js',
 			[],
-			KUKIE_VERSION,
+			self::asset_version( 'assets/js/admin.js' ),
 			true
 		);
 
@@ -289,6 +289,22 @@ class Kukie_Admin {
 				'checkingAgain'     => __( 'Checking...', 'kukie-cookie-consent' ),
 			],
 		] );
+	}
+
+	/**
+	 * Cache-busting version for an admin asset: the plugin version plus the
+	 * file's modification time. A bare KUKIE_VERSION only changes on a
+	 * release, so a re-uploaded build of the SAME version kept serving the
+	 * browser's (or a CDN's) cached copy of admin.css/admin.js - the 1.8.0
+	 * review round showed a stale stylesheet for a whole session.
+	 *
+	 * @since 1.8.0
+	 */
+	private static function asset_version( string $relative_path ): string {
+		$path  = KUKIE_PLUGIN_DIR . $relative_path;
+		$mtime = file_exists( $path ) ? filemtime( $path ) : false;
+
+		return $mtime ? KUKIE_VERSION . '.' . $mtime : KUKIE_VERSION;
 	}
 
 	// ─────────────────────────────────────────

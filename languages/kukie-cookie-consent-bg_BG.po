@@ -55,15 +55,15 @@ msgstr "Декларация за достъпност"
 #: includes/class-kukie-admin.php:122 includes/class-kukie-admin.php:123
 #: templates/admin-accessibility.php:22 templates/admin-dashboard.php:96
 msgid "Accessibility widget"
-msgstr "Джаджа за достъпност"
+msgstr "Банер за достъпност"
 
 #: templates/admin-accessibility.php:77
 msgid "Accessibility widget settings"
-msgstr "Настройки на джаджата за достъпност"
+msgstr "Настройки на банера за достъпност"
 
 #: includes/class-kukie-admin.php:1169
 msgid "Accessibility widget settings saved."
-msgstr "Настройките на джаджата за достъпност са запазени."
+msgstr "Настройките на банера за достъпност са запазени."
 
 #: includes/class-kukie-admin.php:261
 msgid "Active"
@@ -395,7 +395,7 @@ msgstr "Активиране на сигналите за съгласие на 
 
 #: templates/admin-accessibility.php:83
 msgid "Enable accessibility widget"
-msgstr "Активиране на джаджата за достъпност"
+msgstr "Активиране на банера за достъпност"
 
 #: templates/admin-settings.php:182
 msgid "Enabled Languages"
@@ -471,7 +471,7 @@ msgstr "Скриване на мобилни устройства"
 
 #: templates/admin-accessibility.php:140
 msgid "Hides the widget button on screens narrower than 768px. Adjustments a visitor already applied stay applied."
-msgstr "Скрива бутона на джаджата на екрани, по-тесни от 768px. Корекциите, които посетителят вече е приложил, остават активни."
+msgstr "Скрива бутона за достъпност на екрани, по-тесни от 768px. Корекциите, които посетителят вече е приложил, остават активни."
 
 #: templates/admin-banner-design.php:113
 msgid "Icon"
@@ -587,7 +587,7 @@ msgstr "Отложено зареждане на JavaScript"
 
 #: templates/admin-accessibility.php:34
 msgid "Loading accessibility widget settings..."
-msgstr "Зареждане на настройките на джаджата за достъпност..."
+msgstr "Зареждане на настройките на банера за достъпност..."
 
 #: templates/admin-banner-design.php:15
 msgid "Loading design settings..."
@@ -836,7 +836,7 @@ msgstr "Показва се в долната част на панела."
 
 #: templates/admin-accessibility.php:84
 msgid "Shows the widget button on every public page of this site."
-msgstr "Показва бутона на джаджата на всяка публична страница на този сайт."
+msgstr "Показва бутона за достъпност на всяка публична страница на този сайт."
 
 #: templates/admin-connect.php:91
 msgid "Sign up free at kukie.io"
@@ -876,17 +876,17 @@ msgstr "Раздел (Текст)"
 
 #: includes/class-kukie-admin.php:283
 msgid "The Kukie.io service did not return accessibility widget settings. Please try again in a few minutes."
-msgstr "Услугата Kukie.io не върна настройки на джаджата за достъпност. Моля, опитайте отново след няколко минути."
+msgstr "Услугата Kukie.io не върна настройки на банера за достъпност. Моля, опитайте отново след няколко минути."
 
 #. translators: %s: plan name
 #: includes/class-kukie-admin.php:285
 #, php-format
 msgid "The accessibility widget is available on the %s plan and above."
-msgstr "Джаджата за достъпност е достъпна в план %s и по-високите."
+msgstr "Банерът за достъпност е достъпна в план %s и по-високите."
 
 #: includes/class-kukie-admin.php:286 includes/class-kukie-admin.php:819
 msgid "The accessibility widget is not included in your plan."
-msgstr "Джаджата за достъпност не е включена във Вашия план."
+msgstr "Банерът за достъпност не е включена във Вашия план."
 
 #: templates/admin-dashboard.php:25
 msgid "The dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site."
@@ -914,7 +914,7 @@ msgstr "Съхраненият API ключ на Kukie.io вече не може
 
 #: templates/admin-accessibility.php:44
 msgid "The widget adds a floating button to your site that opens a panel of reading, contrast and navigation aids for visitors - bigger text, a dyslexia-friendly font, high contrast, read aloud, one-tap profiles and more - delivered inside the same Kukie script as your cookie banner."
-msgstr "Джаджата добавя плаващ бутон на Вашия сайт, който отваря панел с помощни средства за четене, контраст и навигация - по-голям текст, шрифт за дислексия, висок контраст, четене на глас, профили с едно докосване и други - доставени в същия скрипт на Kukie като Вашия куки банер."
+msgstr "Банерът за достъпност добавя плаващ бутон на Вашия сайт, който отваря панел с помощни средства за четене, контраст и навигация - по-голям текст, шрифт за дислексия, висок контраст, четене на глас, профили с едно докосване и други - доставени в същия скрипт на Kukie като Вашия куки банер."
 
 #: includes/class-kukie-admin.php:258
 msgid ""
@@ -938,7 +938,7 @@ msgstr "Тази седмица"
 
 #: includes/class-kukie-admin.php:287
 msgid "This site still has the widget switched on from an earlier plan. Visitors do not see it until the plan includes it again; the setting is kept so nothing needs re-doing after an upgrade."
-msgstr "Джаджата на този сайт все още е включена от предишен план. Посетителите не я виждат, докато планът не я включи отново; настройката се запазва, за да не се налага повторна конфигурация след надграждане."
+msgstr "Банерът за достъпност на този сайт все още е включена от предишен план. Посетителите не я виждат, докато планът не я включи отново; настройката се запазва, за да не се налага повторна конфигурация след надграждане."
 
 #: templates/admin-settings.php:56
 msgid "This will remove the cookie consent banner from your site."
@@ -971,7 +971,7 @@ msgstr "Неоторизиран достъп."
 
 #: templates/admin-accessibility.php:152
 msgid "Untick a tool and visitors never see it. A hidden module is fully inactive, and new tools added to the widget later appear automatically unless you hide them."
-msgstr "Премахнете отметката на даден инструмент и посетителите никога няма да го видят. Скритият модул е напълно неактивен, а новите инструменти, добавени към джаджата по-късно, се появяват автоматично, освен ако не ги скриете."
+msgstr "Премахнете отметката на даден инструмент и посетителите никога няма да го видят. Скритият модул е напълно неактивен, а новите инструменти, добавени към банера за достъпност по-късно, се появяват автоматично, освен ако не ги скриете."
 
 #: templates/admin-banner-design.php:245
 msgid "Updates instantly as you change settings"
