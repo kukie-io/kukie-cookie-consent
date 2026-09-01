@@ -61,7 +61,7 @@ msgstr "Банер за достъпност"
 msgid "Accessibility widget settings"
 msgstr "Настройки на банера за достъпност"
 
-#: includes/class-kukie-admin.php:1169
+#: includes/class-kukie-admin.php:1185
 msgid "Accessibility widget settings saved."
 msgstr "Настройките на банера за достъпност са запазени."
 
@@ -69,17 +69,17 @@ msgstr "Настройките на банера за достъпност са 
 msgid "Active"
 msgstr "Активен"
 
-#: templates/admin-settings.php:101
+#: templates/admin-settings.php:111
 msgid "Add this code to your theme header template."
 msgstr "Добавете този код в шаблона за заглавната част на темата."
+
+#: templates/admin-settings.php:66
+msgid "Adds the Kukie consent banner to every public page of this site."
+msgstr "Добавя банера за съгласие на Kukie на всяка публична страница на този сайт."
 
 #: templates/admin-accessibility.php:154
 msgid "Adjustments"
 msgstr "Корекции"
-
-#: templates/admin-settings.php:85
-msgid "After opening tag"
-msgstr "След отварящия таг"
 
 #: templates/admin-accessibility.php:53
 msgid "Already upgraded? Check again"
@@ -93,11 +93,15 @@ msgstr "Външен вид"
 msgid "Are you sure you want to disconnect from Kukie.io? The cookie consent banner will be removed from your site."
 msgstr "Сигурни ли сте, че искате да прекъснете връзката с Kukie.io? Банерът за съгласие за бисквитки ще бъде премахнат от Вашия сайт."
 
+#: templates/admin-settings.php:91
+msgid "At the end of the page"
+msgstr "В края на страницата"
+
 #: templates/admin-banner-design.php:140
 msgid "Auto (contrast)"
 msgstr "Автоматичен (контраст)"
 
-#: templates/admin-settings.php:163
+#: templates/admin-settings.php:173
 msgid "Auto-Translate"
 msgstr "Автоматичен превод"
 
@@ -105,7 +109,7 @@ msgstr "Автоматичен превод"
 msgid "Auto-block third-party scripts"
 msgstr "Автоматично блокиране на скриптове от трети страни"
 
-#: templates/admin-settings.php:125
+#: templates/admin-settings.php:135
 msgid "Auto-detect (WPML / Polylang / WordPress)"
 msgstr "Автоматично разпознаване (WPML / Polylang / WordPress)"
 
@@ -117,7 +121,7 @@ msgstr "Автоматично разпознаване (препоръчите�
 msgid "Automatically block known tracking scripts until consent is given."
 msgstr "Автоматично блокиране на известни проследяващи скриптове до получаване на съгласие."
 
-#: templates/admin-settings.php:164
+#: templates/admin-settings.php:174
 msgid "Automatically detect visitor language and show the banner in their language."
 msgstr "Автоматично разпознаване на езика на посетителя и показване на банера на неговия език."
 
@@ -125,7 +129,7 @@ msgstr "Автоматично разпознаване на езика на п�
 msgid "Background Color (empty = primary)"
 msgstr "Цвят на фона (празно = основен)"
 
-#: templates/admin-settings.php:64
+#: templates/admin-settings.php:65
 msgid "Banner Script"
 msgstr "Скрипт на банера"
 
@@ -133,11 +137,11 @@ msgstr "Скрипт на банера"
 msgid "Banner Status"
 msgstr "Статус на банера"
 
-#: includes/class-kukie-admin.php:1092
+#: includes/class-kukie-admin.php:1108
 msgid "Banner design saved."
 msgstr "Дизайнът на банера е запазен."
 
-#: templates/admin-settings.php:123
+#: templates/admin-settings.php:133
 msgid "Banner language"
 msgstr "Език на банера"
 
@@ -195,7 +199,7 @@ msgstr "Център"
 msgid "Changes take effect once the banner script cache refreshes - usually within a minute or two. If you still see the previous version, do a hard refresh in your browser."
 msgstr "Промените влизат в сила, след като кешът на скрипта на банера се обнови - обикновено до минута-две. Ако все още виждате предишната версия, презаредете страницата с изчистване на кеша на браузъра."
 
-#: templates/admin-settings.php:107
+#: templates/admin-settings.php:117
 msgid "Check if the banner script is detected on your site."
 msgstr "Проверете дали скриптът на банера е открит на Вашия сайт."
 
@@ -203,7 +207,7 @@ msgstr "Проверете дали скриптът на банера е отк
 msgid "Checking..."
 msgstr "Проверка..."
 
-#: templates/admin-settings.php:158
+#: templates/admin-settings.php:168
 msgid "Choose \"Auto-detect\" (recommended) to follow WPML, Polylang, or the WordPress site language. Select a specific language to force the banner into that locale regardless of page context."
 msgstr "Изберете \"Автоматично разпознаване\" (препоръчително), за да се следва WPML, Polylang или езикът на сайта в WordPress. Изберете конкретен език, за да наложите този език на банера независимо от контекста на страницата."
 
@@ -224,7 +228,7 @@ msgstr "Класически центриран модален прозорец"
 msgid "Connect"
 msgstr "Свързване"
 
-#: includes/class-kukie-admin.php:334
+#: includes/class-kukie-admin.php:350
 msgid "Connect now &rarr;"
 msgstr "Свържете се сега &rarr;"
 
@@ -240,7 +244,7 @@ msgstr "Свържете Вашия WordPress сайт с Kukie.io за авто
 msgid "Connected"
 msgstr "Свързано"
 
-#: includes/class-kukie-admin.php:630
+#: includes/class-kukie-admin.php:646
 msgid "Connected successfully!"
 msgstr "Успешно свързване!"
 
@@ -286,7 +290,7 @@ msgstr "Бисквитка"
 msgid "Cookie Scan"
 msgstr "Сканиране за бисквитки"
 
-#: includes/class-kukie-admin.php:1243
+#: includes/class-kukie-admin.php:1259
 msgid "Cookie scan started!"
 msgstr "Сканирането за бисквитки започна!"
 
@@ -294,7 +298,7 @@ msgstr "Сканирането за бисквитки започна!"
 msgid "Cookies Found"
 msgstr "Открити бисквитки"
 
-#: includes/class-kukie-admin.php:580
+#: includes/class-kukie-admin.php:596
 msgid "Could not connect. Please check your API key."
 msgstr "Неуспешно свързване. Моля, проверете Вашия API ключ."
 
@@ -302,11 +306,11 @@ msgstr "Неуспешно свързване. Моля, проверете Ва
 msgid "Could not load settings."
 msgstr "Настройките не можаха да бъдат заредени."
 
-#: includes/class-kukie-admin.php:587
+#: includes/class-kukie-admin.php:603
 msgid "Could not securely store the API key on this server. Please contact your host about OpenSSL support."
 msgstr "API ключът не можа да бъде съхранен сигурно на този сървър. Моля, свържете се с Вашия хостинг относно поддръжката на OpenSSL."
 
-#: includes/class-kukie-admin.php:1238
+#: includes/class-kukie-admin.php:1254
 msgid "Could not start scan."
 msgstr "Сканирането не можа да бъде стартирано."
 
@@ -331,7 +335,7 @@ msgstr "Табло"
 msgid "Default Consent State"
 msgstr "Състояние на съгласието по подразбиране"
 
-#: templates/admin-settings.php:174
+#: templates/admin-settings.php:184
 msgid "Default Language"
 msgstr "Език по подразбиране"
 
@@ -339,7 +343,7 @@ msgstr "Език по подразбиране"
 msgid "Default language"
 msgstr "Език по подразбиране"
 
-#: includes/class-kukie-admin.php:453
+#: includes/class-kukie-admin.php:469
 msgid "Delay JavaScript execution"
 msgstr "Отлагане на изпълнението на JavaScript"
 
@@ -351,7 +355,7 @@ msgstr "Дизайн"
 msgid "Disconnect from Kukie.io"
 msgstr "Прекъсване на връзката с Kukie.io"
 
-#: includes/class-kukie-admin.php:655
+#: includes/class-kukie-admin.php:671
 msgid "Disconnected from Kukie.io."
 msgstr "Връзката с Kukie.io е прекъсната."
 
@@ -359,7 +363,7 @@ msgstr "Връзката с Kukie.io е прекъсната."
 msgid "Disconnecting..."
 msgstr "Прекъсване на връзката..."
 
-#: includes/class-kukie-admin.php:507
+#: includes/class-kukie-admin.php:523
 msgid "Dismiss"
 msgstr "Отхвърляне"
 
@@ -373,12 +377,8 @@ msgstr "Домейн"
 msgid "Don't have an account? %s"
 msgstr "Нямате акаунт? %s"
 
-#: templates/admin-settings.php:99
+#: templates/admin-settings.php:109
 msgid "Embed Code"
-msgstr "Код за вграждане"
-
-#: templates/admin-settings.php:92
-msgid "Embed code"
 msgstr "Код за вграждане"
 
 #: templates/admin-banner-gcm.php:27
@@ -397,7 +397,7 @@ msgstr "Активиране на сигналите за съгласие на 
 msgid "Enable accessibility widget"
 msgstr "Активиране на банера за достъпност"
 
-#: templates/admin-settings.php:182
+#: templates/admin-settings.php:192
 msgid "Enabled Languages"
 msgstr "Активирани езици"
 
@@ -407,7 +407,7 @@ msgstr "Активирани езици"
 msgid "Every text in the panel can be reworded per language in %s."
 msgstr "Всеки текст в панела може да бъде променен за всеки език в %s."
 
-#: includes/class-kukie-admin.php:483
+#: includes/class-kukie-admin.php:499
 msgid "Excluded JavaScript Files"
 msgstr "Изключени JavaScript файлове"
 
@@ -449,7 +449,7 @@ msgstr "Лента на цял екран в горната част"
 msgid "Fully self-hosted inside the Kukie script: no third-party requests, and visitor preferences stay in their own browser."
 msgstr "Изцяло вграден в скрипта на Kukie: без заявки към трети страни, а предпочитанията на посетителите остават в техния браузър."
 
-#: includes/class-kukie-admin.php:388 templates/admin-dashboard.php:32
+#: includes/class-kukie-admin.php:404 templates/admin-dashboard.php:32
 msgid "Generate a new API key"
 msgstr "Генериране на нов API ключ"
 
@@ -457,7 +457,7 @@ msgstr "Генериране на нов API ключ"
 msgid "Go to Dashboard"
 msgstr "Към таблото"
 
-#: includes/class-kukie-admin.php:1016
+#: includes/class-kukie-admin.php:1032
 msgid "Google Consent Mode settings saved."
 msgstr "Настройките на Google Consent Mode са запазени."
 
@@ -493,6 +493,10 @@ msgstr "Цвят на иконата (hex)"
 msgid "If your cookie banner's revisit button uses the same corner, the two stack neatly instead of overlapping."
 msgstr "Ако бутонът за повторно посещение на куки банера използва същия ъгъл, двата се подреждат един над друг, вместо да се припокриват."
 
+#: templates/admin-settings.php:82
+msgid "In the page head"
+msgstr "В началото на страницата"
+
 #: includes/class-kukie-admin.php:262
 msgid "Inactive"
 msgstr "Неактивен"
@@ -505,7 +509,7 @@ msgstr "Включено в по-високите планове"
 msgid "Inherit the banner theme's primary colour"
 msgstr "Наследяване на основния цвят от темата на банера"
 
-#: includes/class-kukie-admin.php:573
+#: includes/class-kukie-admin.php:589
 msgid "Invalid API key format. The key should be 64 characters."
 msgstr "Невалиден формат на API ключа. Ключът трябва да бъде 64 символа."
 
@@ -519,7 +523,7 @@ msgstr "Невалиден API ключ."
 msgid "Kukie.io"
 msgstr "Kukie.io"
 
-#: includes/class-kukie-admin.php:500
+#: includes/class-kukie-admin.php:516
 msgid "Kukie.io - WP Rocket detected:"
 msgstr "Kukie.io - Открит е WP Rocket:"
 
@@ -531,15 +535,15 @@ msgstr "Табло на Kukie.io"
 msgid "Kukie.io Settings"
 msgstr "Настройки на Kukie.io"
 
-#: includes/class-kukie-admin.php:332
+#: includes/class-kukie-admin.php:348
 msgid "Kukie.io cookie consent is not connected."
 msgstr "Съгласието за бисквитки на Kukie.io не е свързано."
 
-#: includes/class-kukie-admin.php:357 includes/class-kukie-admin.php:385
+#: includes/class-kukie-admin.php:373 includes/class-kukie-admin.php:401
 msgid "Kukie:"
 msgstr "Kukie:"
 
-#: templates/admin-settings.php:120
+#: templates/admin-settings.php:130
 msgid "Language"
 msgstr "Език"
 
@@ -559,7 +563,7 @@ msgstr "Последно сканиране"
 msgid "Layout"
 msgstr "Оформление"
 
-#: includes/class-kukie-admin.php:506
+#: includes/class-kukie-admin.php:522
 msgid "Learn more"
 msgstr "Научете повече"
 
@@ -581,7 +585,7 @@ msgstr "Връзка към декларация за достъпност от 
 msgid "Live Preview"
 msgstr "Преглед на живо"
 
-#: includes/class-kukie-admin.php:446
+#: includes/class-kukie-admin.php:462
 msgid "Load JavaScript deferred"
 msgstr "Отложено зареждане на JavaScript"
 
@@ -598,6 +602,10 @@ msgstr "Зареждане на настройките за дизайн..."
 msgid "Loading settings..."
 msgstr "Зареждане на настройките..."
 
+#: templates/admin-settings.php:83
+msgid "Loads before the rest of the page, so cookies are blocked as early as possible."
+msgstr "Зарежда се преди останалото съдържание, така че бисквитките се блокират възможно най-рано."
+
 #: templates/admin-banner-design.php:119
 msgid "Lock"
 msgstr "Катинар"
@@ -606,9 +614,9 @@ msgstr "Катинар"
 msgid "Manage region rules in the Kukie.io dashboard"
 msgstr "Управление на правилата за региони в таблото на Kukie.io"
 
-#: templates/admin-settings.php:91
-msgid "Manual"
-msgstr "Ръчно"
+#: templates/admin-settings.php:100
+msgid "Manual embed"
+msgstr "Ръчно вграждане"
 
 #: templates/admin-banner.php:20
 msgid "Microsoft UET"
@@ -618,11 +626,11 @@ msgstr "Microsoft UET"
 msgid "Microsoft UET Consent Signals"
 msgstr "Сигнали за съгласие на Microsoft UET"
 
-#: includes/class-kukie-admin.php:1032
+#: includes/class-kukie-admin.php:1048
 msgid "Microsoft UET settings saved."
 msgstr "Настройките на Microsoft UET са запазени."
 
-#: includes/class-kukie-admin.php:439
+#: includes/class-kukie-admin.php:455
 msgid "Minify JavaScript files"
 msgstr "Минимизиране на JavaScript файловете"
 
@@ -642,9 +650,9 @@ msgstr "Все още няма данни"
 msgid "No scans yet"
 msgstr "Все още няма сканирания"
 
-#: includes/class-kukie-admin.php:676 includes/class-kukie-admin.php:730
-#: includes/class-kukie-admin.php:789 includes/class-kukie-admin.php:1229
-#: includes/class-kukie-admin.php:1255
+#: includes/class-kukie-admin.php:692 includes/class-kukie-admin.php:746
+#: includes/class-kukie-admin.php:805 includes/class-kukie-admin.php:1245
+#: includes/class-kukie-admin.php:1271
 msgid "Not connected."
 msgstr "Няма връзка."
 
@@ -676,7 +684,7 @@ msgstr "Отместване Y (px)"
 msgid "Open Kukie.io Dashboard"
 msgstr "Отваряне на таблото на Kukie.io"
 
-#: includes/class-kukie-admin.php:504
+#: includes/class-kukie-admin.php:520
 msgid "Open WP Rocket Settings"
 msgstr "Отваряне на настройките на WP Rocket"
 
@@ -754,11 +762,11 @@ msgstr "Изскачащ прозорец (Център)"
 msgid "Position"
 msgstr "Позиция"
 
-#: templates/admin-settings.php:78
+#: templates/admin-settings.php:82
 msgid "Recommended"
 msgstr "Препоръчително"
 
-#: includes/class-kukie-admin.php:360
+#: includes/class-kukie-admin.php:376
 msgid "Reconnect"
 msgstr "Повторно свързване"
 
@@ -783,13 +791,13 @@ msgid "Save Changes"
 msgstr "Запазване на промените"
 
 #: templates/admin-accessibility.php:237 templates/admin-banner-gcm.php:69
-#: templates/admin-banner-uet.php:38 templates/admin-settings.php:208
+#: templates/admin-banner-uet.php:38 templates/admin-settings.php:218
 msgid "Save Settings"
 msgstr "Запазване на настройките"
 
 #: templates/admin-accessibility.php:240 templates/admin-banner-design.php:166
 #: templates/admin-banner-gcm.php:72 templates/admin-banner-uet.php:41
-#: templates/admin-settings.php:211
+#: templates/admin-settings.php:221
 msgid "Saving..."
 msgstr "Запазване..."
 
@@ -797,11 +805,11 @@ msgstr "Запазване..."
 msgid "Script Blocking"
 msgstr "Блокиране на скриптове"
 
-#: templates/admin-settings.php:72
+#: templates/admin-settings.php:75
 msgid "Script Position"
 msgstr "Позиция на скрипта"
 
-#: templates/admin-settings.php:183
+#: templates/admin-settings.php:193
 msgid "Select which languages are available for your cookie banner."
 msgstr "Изберете кои езици да бъдат достъпни за Вашия банер за бисквитки."
 
@@ -814,11 +822,11 @@ msgstr "Настройки"
 msgid "Settings could not be loaded, so saving is disabled. Please reload the page."
 msgstr "Настройките не можаха да бъдат заредени, затова запазването е деактивирано. Моля, презаредете страницата."
 
-#: includes/class-kukie-admin.php:999
+#: includes/class-kukie-admin.php:1015
 msgid "Settings saved."
 msgstr "Настройките са запазени."
 
-#: includes/class-kukie-admin.php:830
+#: includes/class-kukie-admin.php:846
 msgid "Settings were modified elsewhere since this page was loaded."
 msgstr "Настройките са били променени другаде, след като тази страница беше заредена."
 
@@ -884,7 +892,7 @@ msgstr "Услугата Kukie.io не върна настройки на бан
 msgid "The accessibility widget is available on the %s plan and above."
 msgstr "Банерът за достъпност е достъпна в план %s и по-високите."
 
-#: includes/class-kukie-admin.php:286 includes/class-kukie-admin.php:819
+#: includes/class-kukie-admin.php:286 includes/class-kukie-admin.php:835
 msgid "The accessibility widget is not included in your plan."
 msgstr "Банерът за достъпност не е включена във Вашия план."
 
@@ -896,7 +904,7 @@ msgstr "Връзката с таблото е прекъсната - стати�
 msgid "The default consent states before a visitor interacts with the banner depend on the visitor's region: opt-in regions start with consent denied, opt-out regions start with consent granted. They are managed through region rules in the Kukie.io dashboard."
 msgstr "Състоянията на съгласието по подразбиране, преди посетителят да взаимодейства с банера, зависят от неговия регион: регионите с изрично съгласие (opt-in) започват с отказано съгласие, регионите с отказ (opt-out) започват с дадено съгласие. Управляват се чрез правилата за региони в таблото на Kukie.io."
 
-#: templates/admin-settings.php:178
+#: templates/admin-settings.php:188
 msgid "The fallback language when auto-translate cannot determine the visitor language."
 msgstr "Резервният език, когато автоматичният превод не може да определи езика на посетителя."
 
@@ -904,11 +912,15 @@ msgstr "Резервният език, когато автоматичният �
 msgid "The panel opens in the visitor's language, with 70+ built-in translations, and respects their system preferences for reduced motion and contrast."
 msgstr "Панелът се отваря на езика на посетителя с 70+ вградени превода и зачита системните му предпочитания за намалено движение и контраст."
 
-#: includes/class-kukie-admin.php:386
+#: templates/admin-settings.php:101
+msgid "The plugin adds nothing. Paste the embed code below into your theme yourself."
+msgstr "Плъгинът не добавя нищо. Поставете кода за вграждане по-долу в темата си сами."
+
+#: includes/class-kukie-admin.php:402
 msgid "The stored API key is no longer valid, so the dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site."
 msgstr "Съхраненият API ключ вече не е валиден, затова връзката с таблото е прекъсната - статистиките, сканиранията и синхронизацията на настройките са спрени. Самият банер за бисквитки продължава да работи на Вашия сайт."
 
-#: includes/class-kukie-admin.php:358
+#: includes/class-kukie-admin.php:374
 msgid "The stored Kukie.io API key can no longer be read. This usually happens after the site's security keys (salts) were changed or the database was copied from another site. Please reconnect with your API key to restore the dashboard connection - the cookie banner itself keeps working."
 msgstr "Съхраненият API ключ на Kukie.io вече не може да бъде прочетен. Това обикновено се случва след промяна на ключовете за сигурност (salts) на сайта или след копиране на базата данни от друг сайт. Моля, свържете се отново с Вашия API ключ, за да възстановите връзката с таблото - самият банер за бисквитки продължава да работи."
 
@@ -960,12 +972,12 @@ msgstr "Горе вляво"
 msgid "Top Right"
 msgstr "Горе вдясно"
 
-#: includes/class-kukie-admin.php:565 includes/class-kukie-admin.php:642
-#: includes/class-kukie-admin.php:664 includes/class-kukie-admin.php:707
-#: includes/class-kukie-admin.php:959 includes/class-kukie-admin.php:1006
-#: includes/class-kukie-admin.php:1023 includes/class-kukie-admin.php:1039
-#: includes/class-kukie-admin.php:1131 includes/class-kukie-admin.php:1224
-#: includes/class-kukie-admin.php:1250
+#: includes/class-kukie-admin.php:581 includes/class-kukie-admin.php:658
+#: includes/class-kukie-admin.php:680 includes/class-kukie-admin.php:723
+#: includes/class-kukie-admin.php:975 includes/class-kukie-admin.php:1022
+#: includes/class-kukie-admin.php:1039 includes/class-kukie-admin.php:1055
+#: includes/class-kukie-admin.php:1147 includes/class-kukie-admin.php:1240
+#: includes/class-kukie-admin.php:1266
 msgid "Unauthorised."
 msgstr "Неоторизиран достъп."
 
@@ -981,15 +993,19 @@ msgstr "Актуализира се моментално при промяна �
 msgid "Upgrade on Kukie.io"
 msgstr "Надграждане в Kukie.io"
 
+#: templates/admin-settings.php:92
+msgid "Use it only if another script in the head interferes with the banner. The banner appears a moment later."
+msgstr "Използвайте само ако друг скрипт в началото на страницата пречи на банера. Банерът се появява малко по-късно."
+
 #: templates/admin-accessibility.php:187
 msgid "Used when the visitor's language cannot be detected. Auto-detection always wins when it resolves."
 msgstr "Използва се, когато езикът на посетителя не може да бъде разпознат. Автоматичното разпознаване винаги има предимство, когато успее."
 
-#: templates/admin-dashboard.php:84 templates/admin-settings.php:106
+#: templates/admin-dashboard.php:84 templates/admin-settings.php:116
 msgid "Verification"
 msgstr "Проверка"
 
-#: includes/class-kukie-admin.php:1265
+#: includes/class-kukie-admin.php:1281
 msgid "Verification failed."
 msgstr "Проверката е неуспешна."
 
@@ -1007,7 +1023,7 @@ msgstr "Проверено на %s"
 msgid "Verified! Banner script detected."
 msgstr "Проверено! Скриптът на банера е открит."
 
-#: templates/admin-settings.php:110
+#: templates/admin-settings.php:120
 msgid "Verify"
 msgstr "Проверка"
 
@@ -1026,7 +1042,7 @@ msgid "Want more customisation options? Edit colours, texts and advanced setting
 msgstr "Искате повече опции за персонализиране? Редактирайте цветове, текстове и разширени настройки в %s."
 
 #. translators: %s: link to Kukie.io banner settings
-#: templates/admin-settings.php:195
+#: templates/admin-settings.php:205
 #, php-format
 msgid "Want to customise banner texts and translations? Edit them in %s."
 msgstr "Искате да персонализирате текстовете и преводите на банера? Редактирайте ги в %s."
@@ -1043,11 +1059,15 @@ msgstr "Ние ценим Вашата поверителност"
 msgid "What your visitors get"
 msgstr "Какво получават Вашите посетители"
 
+#: templates/admin-settings.php:76
+msgid "Where the plugin adds the banner script to your pages. The page head is right for almost every site."
+msgstr "Къде плъгинът добавя скрипта на банера във Вашите страници. За почти всеки сайт правилният избор е началото на страницата."
+
 #: templates/admin-dashboard.php:28
 msgid "Your API key has been regenerated or deleted in the Kukie dashboard. Generate a new API key and reconnect to restore the dashboard connection."
 msgstr "Вашият API ключ е бил генериран наново или изтрит в таблото на Kukie. Генерирайте нов API ключ и се свържете отново, за да възстановите връзката с таблото."
 
-#: includes/class-kukie-admin.php:501
+#: includes/class-kukie-admin.php:517
 msgid "Your cookie banner may not load correctly. Add cdn.kukie.io to the exclusion list in these WP Rocket settings:"
 msgstr "Банерът за бисквитки може да не се зареди правилно. Добавете cdn.kukie.io в списъка с изключения в тези настройки на WP Rocket:"
 
@@ -1055,7 +1075,7 @@ msgstr "Банерът за бисквитки може да не се заре�
 msgid "your Kukie.io dashboard"
 msgstr "Вашето табло на Kukie.io"
 
-#: templates/admin-settings.php:196
+#: templates/admin-settings.php:206
 msgid "your banner settings on Kukie.io"
 msgstr "настройките на банера в Kukie.io"
 
@@ -1064,6 +1084,9 @@ msgstr "настройките на банера в Kukie.io"
 
 #~ msgid "Advertisement (ad_storage)"
 #~ msgstr "Реклама (ad_storage)"
+
+#~ msgid "After opening tag"
+#~ msgstr "След отварящия таг"
 
 #~ msgid "All"
 #~ msgstr "Всички"
@@ -1082,6 +1105,9 @@ msgstr "настройките на банера в Kukie.io"
 
 #~ msgid "Design your cookie banner, manage cookie categories, and configure consent rules in the Kukie.io dashboard."
 #~ msgstr "Проектирайте банера за бисквитки, управлявайте категориите бисквитки и конфигурирайте правилата за съгласие в таблото на Kukie.io."
+
+#~ msgid "Embed code"
+#~ msgstr "Код за вграждане"
 
 #~ msgid "Full settings"
 #~ msgstr "Пълни настройки"

@@ -420,10 +420,7 @@
 .kukie-checkbox-item:has(input:focus-visible),
 .kukie-layout-option:has(input:focus-visible),
 .kukie-position-pill:has(input:focus-visible),
-.kukie-choice:has(input:focus-visible) {
-	outline: 2px solid #2271b1;
-	outline-offset: 1px;
-}
+
 
 .kukie-btn-primary:hover,
 .kukie-btn-primary:focus {
@@ -751,52 +748,55 @@
 	cursor: not-allowed;
 }
 
-/* Choice cards (Script position): icon tile + title + hint + a check mark
-   on the selected card. The native radio keeps keyboard/screen-reader
-   behaviour but is clipped away with !important so no admin stylesheet
-   can draw it back (WordPress restyles input[type=radio] globally). */
-.kukie-choice-grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 12px;
+/* Option rows (Script position): a page schematic showing WHERE the script
+   goes, a plain-language title + one-line explanation, a Recommended badge
+   and a check mark on the selected row. The native radio keeps keyboard and
+   screen-reader behaviour but is clipped away with !important so no admin
+   stylesheet (WordPress restyles input[type=radio] globally) can draw it
+   back into the row. */
+.kukie-option-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
 
-@media (max-width: 960px) {
-	.kukie-choice-grid {
-		grid-template-columns: 1fr;
-	}
-}
-
-.kukie-choice {
+/* Two classes on purpose: the generic `.kukie-form-group label` rule
+   (display:block, 13px, margin-bottom) would otherwise outrank a single
+   class and stack the figure above the text. */
+.kukie-option-list .kukie-option {
 	position: relative;
 	display: flex;
 	align-items: center;
-	gap: 14px;
-	padding: 16px 48px 16px 16px;
+	gap: 16px;
+	margin: 0;
+	padding: 14px 52px 14px 16px;
 	border: 1.5px solid #e2e8f0;
 	border-radius: 8px;
 	background: #fff;
+	color: #0f172a;
+	font-size: 14px;
+	font-weight: 400;
 	cursor: pointer;
 	transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
 }
 
-.kukie-choice:hover {
+.kukie-option:hover {
 	border-color: #94a3b8;
 	background: #f8fafc;
 }
 
-.kukie-choice:has(input:checked) {
+.kukie-option:has(input:checked) {
 	border-color: #2563eb;
 	background: #eff6ff;
 	box-shadow: 0 0 0 1px #2563eb;
 }
 
-.kukie-choice:has(input:focus-visible) {
+.kukie-option:has(input:focus-visible) {
 	outline: 2px solid #2271b1;
 	outline-offset: 2px;
 }
 
-.kukie-choice input[type="radio"] {
+.kukie-option input[type="radio"] {
 	position: absolute !important;
 	width: 1px !important;
 	height: 1px !important;
@@ -811,70 +811,112 @@
 	white-space: nowrap;
 }
 
-.kukie-choice input[type="radio"]::before {
+.kukie-option input[type="radio"]::before {
 	content: none !important;
 }
 
-.kukie-choice-icon {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-	width: 40px;
-	height: 40px;
-	border-radius: 8px;
-	background: #f1f5f9;
-	color: #475569;
-	transition: background 0.15s, color 0.15s;
-}
-
-.kukie-choice-icon .dashicons {
-	font-size: 20px;
-	width: 20px;
-	height: 20px;
-}
-
-.kukie-choice:has(input:checked) .kukie-choice-icon {
-	background: #2563eb;
-	color: #fff;
-}
-
-.kukie-choice-body {
+/* Mini page: four content lines; the highlighted line is where the script lands */
+.kukie-option-figure {
 	display: flex;
 	flex-direction: column;
-	gap: 3px;
+	justify-content: center;
+	gap: 5px;
+	flex-shrink: 0;
+	width: 46px;
+	height: 56px;
+	padding: 8px 7px;
+	border: 1.5px solid #cbd5e1;
+	border-radius: 6px;
+	background: #fff;
+	box-sizing: border-box;
+	transition: border-color 0.15s;
+}
+
+.kukie-option-figure > span {
+	display: block;
+	height: 5px;
+	border-radius: 3px;
+	background: #e2e8f0;
+}
+
+.kukie-option-figure--head > span:first-child,
+.kukie-option-figure--body > span:last-child {
+	background: #2563eb;
+	box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+.kukie-option-figure--manual {
+	align-items: center;
+	color: #475569;
+	border-style: dashed;
+}
+
+.kukie-option-figure--manual .dashicons {
+	font-size: 22px;
+	width: 22px;
+	height: 22px;
+}
+
+.kukie-option:has(input:checked) .kukie-option-figure {
+	border-color: #2563eb;
+}
+
+.kukie-option:has(input:checked) .kukie-option-figure--manual {
+	color: #2563eb;
+}
+
+.kukie-option-body {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
 	min-width: 0;
 }
 
-.kukie-choice-body strong {
+.kukie-option-title {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
 	font-size: 14px;
 	font-weight: 600;
 	color: #0f172a;
 	line-height: 1.3;
 }
 
-.kukie-choice-body code {
-	font-size: 13px;
+.kukie-option-title code {
+	font-size: 12px;
+	font-weight: 500;
 	padding: 1px 6px;
 	border-radius: 3px;
 	background: #e2e8f0;
-	color: #0f172a;
+	color: #334155;
 }
 
-.kukie-choice:has(input:checked) .kukie-choice-body code {
+.kukie-option:has(input:checked) .kukie-option-title code {
 	background: #dbeafe;
+	color: #1e3a8a;
 }
 
-.kukie-choice-hint {
-	font-size: 12px;
+.kukie-option-badge {
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.5;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: #dcfce7;
+	color: #166534;
+}
+
+.kukie-option-desc {
+	font-size: 12.5px;
 	color: #64748b;
-	line-height: 1.4;
+	line-height: 1.45;
 }
 
-.kukie-choice-check {
+.kukie-option-check {
 	position: absolute;
 	top: 50%;
-	right: 14px;
+	right: 16px;
 	transform: translateY(-50%);
 	display: none;
 	align-items: center;
@@ -886,13 +928,13 @@
 	color: #fff;
 }
 
-.kukie-choice-check .dashicons {
+.kukie-option-check .dashicons {
 	font-size: 16px;
 	width: 16px;
 	height: 16px;
 }
 
-.kukie-choice:has(input:checked) .kukie-choice-check {
+.kukie-option:has(input:checked) .kukie-option-check {
 	display: flex;
 }
 

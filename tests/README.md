@@ -39,6 +39,19 @@ harness is scoped to it rather than to line coverage.
 concurrent-disconnect hardening: a response landing after another request
 disconnected must never re-create the deleted option.
 
+## Headless browser check (tests/e2e, since 1.8.0)
+
+`node tests/e2e/run.mjs` renders the Accessibility widget, Dashboard and
+Settings templates with the WordPress stubs, loads them in headless Chromium
+(Playwright from the Laravel repo's `node_modules`, override with
+`KUKIE_PLAYWRIGHT`; PHP binary via `KUKIE_PHP`) with the real `admin.css` +
+`admin.js`, and answers `admin-ajax.php` from `tests/e2e/fixtures/` - genuine
+`GET /settings` / `GET /status` payloads captured from the Laravel suite for
+an entitled and a locked plan. It asserts the unlocked, locked and
+pre-1.8.0-service (no block) states, the dashboard card and the Settings
+option rows, and writes screenshots to `tests/e2e/out/` (gitignored). This
+is the behavioural coverage `BlindSaveGuardTest` cannot give admin.js.
+
 ## Proving it is not tautological
 
 The suite was written after the fixes shipped, so "it passes" proves nothing on

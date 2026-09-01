@@ -1,0 +1,466 @@
+{
+    "banner_enabled": true,
+    "layout": "popup",
+    "position": "center",
+    "gcm_v2_enabled": true,
+    "gtm_enabled": false,
+    "gtm_container_id": null,
+    "ms_uet_enabled": false,
+    "auto_block_scripts": true,
+    "auto_translate": false,
+    "default_language": "en",
+    "enabled_languages": [
+        "en",
+        "bg"
+    ],
+    "revisit_button": {
+        "enabled": true,
+        "position": "bottom_left",
+        "style": "icon",
+        "icon": "cookie",
+        "text": "Cookie Settings",
+        "color": null,
+        "icon_color": null,
+        "offset_x": 20,
+        "offset_y": 20
+    },
+    "default_consent_model": "opt_in",
+    "verified_at": "2026-09-01T20:49:31+00:00",
+    "available_languages": [
+        {
+            "locale": "bg",
+            "name": "Български",
+            "is_rtl": false
+        },
+        {
+            "locale": "de",
+            "name": "Deutsch",
+            "is_rtl": false
+        },
+        {
+            "locale": "en",
+            "name": "English",
+            "is_rtl": false
+        }
+    ],
+    "accessibility_widget": {
+        "available": false,
+        "enabled": true,
+        "position": "bottom-left",
+        "color": null,
+        "size": 52,
+        "hide_mobile": false,
+        "hidden_modules": [
+            "tts"
+        ],
+        "statement_enabled": true,
+        "statement_url": null,
+        "languages": [
+            "bg",
+            "de"
+        ],
+        "default_language": "bg",
+        "statement_published_url": null,
+        "banner_theme_primary": "#2563eb",
+        "required_plan": "Test Plan",
+        "upgrade_url": "http:\/\/app.kukie.local\/billing",
+        "positions": [
+            "bottom-right",
+            "bottom-left"
+        ],
+        "sizes": [
+            44,
+            52,
+            60
+        ],
+        "modules": [
+            {
+                "key": "textSize",
+                "label": "Bigger Text",
+                "group": false
+            },
+            {
+                "key": "spacing",
+                "label": "Text Spacing",
+                "group": false
+            },
+            {
+                "key": "lineHeight",
+                "label": "Line Height",
+                "group": false
+            },
+            {
+                "key": "dyslexia",
+                "label": "Dyslexia Friendly",
+                "group": false
+            },
+            {
+                "key": "bold",
+                "label": "Bold Text",
+                "group": false
+            },
+            {
+                "key": "contrast",
+                "label": "Contrast",
+                "group": false
+            },
+            {
+                "key": "sat",
+                "label": "Saturation",
+                "group": false
+            },
+            {
+                "key": "align",
+                "label": "Text Align",
+                "group": false
+            },
+            {
+                "key": "scale",
+                "label": "Content Scaling",
+                "group": false
+            },
+            {
+                "key": "links",
+                "label": "Highlight Links",
+                "group": false
+            },
+            {
+                "key": "titles",
+                "label": "Highlight Titles",
+                "group": false
+            },
+            {
+                "key": "motion",
+                "label": "Pause Animations",
+                "group": false
+            },
+            {
+                "key": "images",
+                "label": "Hide Images",
+                "group": false
+            },
+            {
+                "key": "sound",
+                "label": "Mute Sounds",
+                "group": false
+            },
+            {
+                "key": "cursor",
+                "label": "Big Cursor",
+                "group": false
+            },
+            {
+                "key": "guide",
+                "label": "Reading Guide",
+                "group": false
+            },
+            {
+                "key": "tts",
+                "label": "Read Aloud",
+                "group": false
+            },
+            {
+                "key": "profiles",
+                "label": "Quick Profiles",
+                "group": true
+            },
+            {
+                "key": "structure",
+                "label": "Page Structure",
+                "group": true
+            },
+            {
+                "key": "language",
+                "label": "Language",
+                "group": true
+            }
+        ],
+        "available_locales": [
+            {
+                "code": "ar",
+                "name": "AR"
+            },
+            {
+                "code": "az",
+                "name": "AZ"
+            },
+            {
+                "code": "be",
+                "name": "BE"
+            },
+            {
+                "code": "bn",
+                "name": "BN"
+            },
+            {
+                "code": "bs",
+                "name": "BS"
+            },
+            {
+                "code": "ca",
+                "name": "CA"
+            },
+            {
+                "code": "cs",
+                "name": "CS"
+            },
+            {
+                "code": "cy",
+                "name": "CY"
+            },
+            {
+                "code": "da",
+                "name": "DA"
+            },
+            {
+                "code": "de",
+                "name": "Deutsch"
+            },
+            {
+                "code": "el",
+                "name": "EL"
+            },
+            {
+                "code": "en",
+                "name": "English"
+            },
+            {
+                "code": "es",
+                "name": "ES"
+            },
+            {
+                "code": "es-ar",
+                "name": "ES-AR"
+            },
+            {
+                "code": "es-mx",
+                "name": "ES-MX"
+            },
+            {
+                "code": "et",
+                "name": "ET"
+            },
+            {
+                "code": "eu",
+                "name": "EU"
+            },
+            {
+                "code": "fa",
+                "name": "FA"
+            },
+            {
+                "code": "fi",
+                "name": "FI"
+            },
+            {
+                "code": "fr",
+                "name": "FR"
+            },
+            {
+                "code": "ga",
+                "name": "GA"
+            },
+            {
+                "code": "gl",
+                "name": "GL"
+            },
+            {
+                "code": "he",
+                "name": "HE"
+            },
+            {
+                "code": "hi",
+                "name": "HI"
+            },
+            {
+                "code": "hr",
+                "name": "HR"
+            },
+            {
+                "code": "ht",
+                "name": "HT"
+            },
+            {
+                "code": "hu",
+                "name": "HU"
+            },
+            {
+                "code": "hy",
+                "name": "HY"
+            },
+            {
+                "code": "id",
+                "name": "ID"
+            },
+            {
+                "code": "is",
+                "name": "IS"
+            },
+            {
+                "code": "it",
+                "name": "IT"
+            },
+            {
+                "code": "ja",
+                "name": "JA"
+            },
+            {
+                "code": "ka",
+                "name": "KA"
+            },
+            {
+                "code": "kk",
+                "name": "KK"
+            },
+            {
+                "code": "km",
+                "name": "KM"
+            },
+            {
+                "code": "ko",
+                "name": "KO"
+            },
+            {
+                "code": "lb",
+                "name": "LB"
+            },
+            {
+                "code": "lt",
+                "name": "LT"
+            },
+            {
+                "code": "lv",
+                "name": "LV"
+            },
+            {
+                "code": "mi",
+                "name": "MI"
+            },
+            {
+                "code": "mk",
+                "name": "MK"
+            },
+            {
+                "code": "mn",
+                "name": "MN"
+            },
+            {
+                "code": "ms",
+                "name": "MS"
+            },
+            {
+                "code": "mt",
+                "name": "MT"
+            },
+            {
+                "code": "my",
+                "name": "MY"
+            },
+            {
+                "code": "ne",
+                "name": "NE"
+            },
+            {
+                "code": "nl",
+                "name": "NL"
+            },
+            {
+                "code": "no",
+                "name": "NO"
+            },
+            {
+                "code": "pl",
+                "name": "PL"
+            },
+            {
+                "code": "pt",
+                "name": "PT"
+            },
+            {
+                "code": "pt-br",
+                "name": "PT-BR"
+            },
+            {
+                "code": "qu",
+                "name": "QU"
+            },
+            {
+                "code": "ro",
+                "name": "RO"
+            },
+            {
+                "code": "ru",
+                "name": "RU"
+            },
+            {
+                "code": "si",
+                "name": "SI"
+            },
+            {
+                "code": "sk",
+                "name": "SK"
+            },
+            {
+                "code": "sl",
+                "name": "SL"
+            },
+            {
+                "code": "sm",
+                "name": "SM"
+            },
+            {
+                "code": "sq",
+                "name": "SQ"
+            },
+            {
+                "code": "sr",
+                "name": "SR"
+            },
+            {
+                "code": "sv",
+                "name": "SV"
+            },
+            {
+                "code": "th",
+                "name": "TH"
+            },
+            {
+                "code": "tl",
+                "name": "TL"
+            },
+            {
+                "code": "tr",
+                "name": "TR"
+            },
+            {
+                "code": "uk",
+                "name": "UK"
+            },
+            {
+                "code": "ur",
+                "name": "UR"
+            },
+            {
+                "code": "uz",
+                "name": "UZ"
+            },
+            {
+                "code": "vi",
+                "name": "VI"
+            },
+            {
+                "code": "zh",
+                "name": "ZH"
+            },
+            {
+                "code": "zh-tw",
+                "name": "ZH-TW"
+            },
+            {
+                "code": "bg",
+                "name": "Български"
+            }
+        ]
+    },
+    "config_version": 7
+}

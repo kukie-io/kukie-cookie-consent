@@ -61,42 +61,46 @@ $kukie_app_url = 'https://app.kukie.io';
 		<form id="kukie-settings-form">
 			<div class="kukie-card">
 				<div class="kukie-card-header">
-					<h2 class="kukie-card-title" id="kukie-banner-enabled-label"><?php esc_html_e( 'Banner Script', 'kukie-cookie-consent' ); ?></h2>
+					<div class="kukie-form-row-label">
+						<h2 class="kukie-card-title" id="kukie-banner-enabled-label"><?php esc_html_e( 'Banner Script', 'kukie-cookie-consent' ); ?></h2>
+						<span class="kukie-form-row-hint" id="kukie-banner-enabled-hint"><?php esc_html_e( 'Adds the Kukie consent banner to every public page of this site.', 'kukie-cookie-consent' ); ?></span>
+					</div>
 					<label class="kukie-toggle">
-						<input type="checkbox" role="switch" name="banner_enabled" id="kukie-banner-enabled" value="1" aria-labelledby="kukie-banner-enabled-label">
+						<input type="checkbox" role="switch" name="banner_enabled" id="kukie-banner-enabled" value="1" aria-labelledby="kukie-banner-enabled-label" aria-describedby="kukie-banner-enabled-hint">
 						<span class="kukie-toggle-slider" aria-hidden="true"></span>
 					</label>
 				</div>
 
 				<fieldset class="kukie-fieldset kukie-form-group">
 					<legend class="kukie-legend"><?php esc_html_e( 'Script Position', 'kukie-cookie-consent' ); ?></legend>
-					<div class="kukie-choice-grid">
-						<label class="kukie-choice">
-							<input type="radio" name="script_position" value="head" checked>
-							<span class="kukie-choice-icon" aria-hidden="true"><span class="dashicons dashicons-editor-code"></span></span>
-							<span class="kukie-choice-body">
-								<strong><code>&lt;head&gt;</code></strong>
-								<span class="kukie-choice-hint"><?php esc_html_e( 'Recommended', 'kukie-cookie-consent' ); ?></span>
+					<p class="kukie-help-text kukie-help-text--above" id="kukie-script-position-hint"><?php esc_html_e( 'Where the plugin adds the banner script to your pages. The page head is right for almost every site.', 'kukie-cookie-consent' ); ?></p>
+					<div class="kukie-option-list">
+						<label class="kukie-option">
+							<input type="radio" name="script_position" value="head" checked aria-describedby="kukie-script-position-hint">
+							<span class="kukie-option-figure kukie-option-figure--head" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+							<span class="kukie-option-body">
+								<span class="kukie-option-title"><?php esc_html_e( 'In the page head', 'kukie-cookie-consent' ); ?> <code>&lt;head&gt;</code> <span class="kukie-option-badge"><?php esc_html_e( 'Recommended', 'kukie-cookie-consent' ); ?></span></span>
+								<span class="kukie-option-desc"><?php esc_html_e( 'Loads before the rest of the page, so cookies are blocked as early as possible.', 'kukie-cookie-consent' ); ?></span>
 							</span>
-							<span class="kukie-choice-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
+							<span class="kukie-option-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
 						</label>
-						<label class="kukie-choice">
-							<input type="radio" name="script_position" value="body">
-							<span class="kukie-choice-icon" aria-hidden="true"><span class="dashicons dashicons-align-wide"></span></span>
-							<span class="kukie-choice-body">
-								<strong><code>&lt;body&gt;</code></strong>
-								<span class="kukie-choice-hint"><?php esc_html_e( 'After opening tag', 'kukie-cookie-consent' ); ?></span>
+						<label class="kukie-option">
+							<input type="radio" name="script_position" value="body" aria-describedby="kukie-script-position-hint">
+							<span class="kukie-option-figure kukie-option-figure--body" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+							<span class="kukie-option-body">
+								<span class="kukie-option-title"><?php esc_html_e( 'At the end of the page', 'kukie-cookie-consent' ); ?> <code>&lt;body&gt;</code></span>
+								<span class="kukie-option-desc"><?php esc_html_e( 'Use it only if another script in the head interferes with the banner. The banner appears a moment later.', 'kukie-cookie-consent' ); ?></span>
 							</span>
-							<span class="kukie-choice-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
+							<span class="kukie-option-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
 						</label>
-						<label class="kukie-choice">
-							<input type="radio" name="script_position" value="manual">
-							<span class="kukie-choice-icon" aria-hidden="true"><span class="dashicons dashicons-clipboard"></span></span>
-							<span class="kukie-choice-body">
-								<strong><?php esc_html_e( 'Manual', 'kukie-cookie-consent' ); ?></strong>
-								<span class="kukie-choice-hint"><?php esc_html_e( 'Embed code', 'kukie-cookie-consent' ); ?></span>
+						<label class="kukie-option">
+							<input type="radio" name="script_position" value="manual" aria-describedby="kukie-script-position-hint">
+							<span class="kukie-option-figure kukie-option-figure--manual" aria-hidden="true"><span class="dashicons dashicons-editor-code"></span></span>
+							<span class="kukie-option-body">
+								<span class="kukie-option-title"><?php esc_html_e( 'Manual embed', 'kukie-cookie-consent' ); ?></span>
+								<span class="kukie-option-desc"><?php esc_html_e( 'The plugin adds nothing. Paste the embed code below into your theme yourself.', 'kukie-cookie-consent' ); ?></span>
 							</span>
-							<span class="kukie-choice-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
+							<span class="kukie-option-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
 						</label>
 					</div>
 				</fieldset>

@@ -1,0 +1,29 @@
+{
+    "plan": {
+        "name": "Test Plan",
+        "trial": false,
+        "trial_days_remaining": null
+    },
+    "consent_stats": {
+        "today": {
+            "accept_all": 0,
+            "reject_all": 0,
+            "custom_consent": 0
+        },
+        "this_week": {
+            "total": 0
+        },
+        "this_month": {
+            "total": 0
+        }
+    },
+    "last_scan": null,
+    "banner_enabled": true,
+    "script_verified": true,
+    "accessibility_widget": {
+        "available": false,
+        "enabled": true,
+        "position": "bottom-left",
+        "color": null
+    }
+}

@@ -62,7 +62,7 @@ msgstr ""
 msgid "Accessibility widget settings"
 msgstr ""
 
-#: includes/class-kukie-admin.php:1169
+#: includes/class-kukie-admin.php:1185
 msgid "Accessibility widget settings saved."
 msgstr ""
 
@@ -70,17 +70,17 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: templates/admin-settings.php:101
+#: templates/admin-settings.php:111
 msgid "Add this code to your theme header template."
 msgstr "このコードをテーマのヘッダーテンプレートに追加してください。"
+
+#: templates/admin-settings.php:66
+msgid "Adds the Kukie consent banner to every public page of this site."
+msgstr ""
 
 #: templates/admin-accessibility.php:154
 msgid "Adjustments"
 msgstr ""
-
-#: templates/admin-settings.php:85
-msgid "After opening tag"
-msgstr "開始タグの後"
 
 #: templates/admin-accessibility.php:53
 msgid "Already upgraded? Check again"
@@ -94,11 +94,15 @@ msgstr ""
 msgid "Are you sure you want to disconnect from Kukie.io? The cookie consent banner will be removed from your site."
 msgstr ""
 
+#: templates/admin-settings.php:91
+msgid "At the end of the page"
+msgstr ""
+
 #: templates/admin-banner-design.php:140
 msgid "Auto (contrast)"
 msgstr "自動（コントラスト）"
 
-#: templates/admin-settings.php:163
+#: templates/admin-settings.php:173
 msgid "Auto-Translate"
 msgstr "自動翻訳"
 
@@ -106,7 +110,7 @@ msgstr "自動翻訳"
 msgid "Auto-block third-party scripts"
 msgstr "サードパーティスクリプトの自動ブロック"
 
-#: templates/admin-settings.php:125
+#: templates/admin-settings.php:135
 msgid "Auto-detect (WPML / Polylang / WordPress)"
 msgstr ""
 
@@ -118,7 +122,7 @@ msgstr ""
 msgid "Automatically block known tracking scripts until consent is given."
 msgstr "同意が得られるまで、既知のトラッキングスクリプトを自動的にブロックします。"
 
-#: templates/admin-settings.php:164
+#: templates/admin-settings.php:174
 msgid "Automatically detect visitor language and show the banner in their language."
 msgstr "訪問者の言語を自動的に検出し、その言語でバナーを表示します。"
 
@@ -126,7 +130,7 @@ msgstr "訪問者の言語を自動的に検出し、その言語でバナーを
 msgid "Background Color (empty = primary)"
 msgstr "背景色（空欄 = プライマリ）"
 
-#: templates/admin-settings.php:64
+#: templates/admin-settings.php:65
 msgid "Banner Script"
 msgstr "バナースクリプト"
 
@@ -134,11 +138,11 @@ msgstr "バナースクリプト"
 msgid "Banner Status"
 msgstr "バナーステータス"
 
-#: includes/class-kukie-admin.php:1092
+#: includes/class-kukie-admin.php:1108
 msgid "Banner design saved."
 msgstr "バナーデザインを保存しました。"
 
-#: templates/admin-settings.php:123
+#: templates/admin-settings.php:133
 msgid "Banner language"
 msgstr ""
 
@@ -196,7 +200,7 @@ msgstr "中央"
 msgid "Changes take effect once the banner script cache refreshes - usually within a minute or two. If you still see the previous version, do a hard refresh in your browser."
 msgstr ""
 
-#: templates/admin-settings.php:107
+#: templates/admin-settings.php:117
 msgid "Check if the banner script is detected on your site."
 msgstr "バナースクリプトがサイトで検出されるか確認します。"
 
@@ -204,7 +208,7 @@ msgstr "バナースクリプトがサイトで検出されるか確認します
 msgid "Checking..."
 msgstr ""
 
-#: templates/admin-settings.php:158
+#: templates/admin-settings.php:168
 msgid "Choose \"Auto-detect\" (recommended) to follow WPML, Polylang, or the WordPress site language. Select a specific language to force the banner into that locale regardless of page context."
 msgstr ""
 
@@ -225,7 +229,7 @@ msgstr "クラシック中央モーダル"
 msgid "Connect"
 msgstr "接続"
 
-#: includes/class-kukie-admin.php:334
+#: includes/class-kukie-admin.php:350
 msgid "Connect now &rarr;"
 msgstr "今すぐ接続 &rarr;"
 
@@ -241,7 +245,7 @@ msgstr "WordPressサイトをKukie.ioに接続して、Cookie同意の自動管�
 msgid "Connected"
 msgstr "接続済み"
 
-#: includes/class-kukie-admin.php:630
+#: includes/class-kukie-admin.php:646
 msgid "Connected successfully!"
 msgstr "接続に成功しました！"
 
@@ -287,7 +291,7 @@ msgstr "Cookie"
 msgid "Cookie Scan"
 msgstr "Cookieスキャン"
 
-#: includes/class-kukie-admin.php:1243
+#: includes/class-kukie-admin.php:1259
 msgid "Cookie scan started!"
 msgstr "Cookieスキャンを開始しました！"
 
@@ -295,7 +299,7 @@ msgstr "Cookieスキャンを開始しました！"
 msgid "Cookies Found"
 msgstr "検出されたCookie"
 
-#: includes/class-kukie-admin.php:580
+#: includes/class-kukie-admin.php:596
 msgid "Could not connect. Please check your API key."
 msgstr "接続できませんでした。APIキーを確認してください。"
 
@@ -303,11 +307,11 @@ msgstr "接続できませんでした。APIキーを確認してください。
 msgid "Could not load settings."
 msgstr ""
 
-#: includes/class-kukie-admin.php:587
+#: includes/class-kukie-admin.php:603
 msgid "Could not securely store the API key on this server. Please contact your host about OpenSSL support."
 msgstr ""
 
-#: includes/class-kukie-admin.php:1238
+#: includes/class-kukie-admin.php:1254
 msgid "Could not start scan."
 msgstr "スキャンを開始できませんでした。"
 
@@ -332,7 +336,7 @@ msgstr "ダッシュボード"
 msgid "Default Consent State"
 msgstr "デフォルトの同意状態"
 
-#: templates/admin-settings.php:174
+#: templates/admin-settings.php:184
 msgid "Default Language"
 msgstr "デフォルト言語"
 
@@ -340,7 +344,7 @@ msgstr "デフォルト言語"
 msgid "Default language"
 msgstr ""
 
-#: includes/class-kukie-admin.php:453
+#: includes/class-kukie-admin.php:469
 msgid "Delay JavaScript execution"
 msgstr ""
 
@@ -352,7 +356,7 @@ msgstr ""
 msgid "Disconnect from Kukie.io"
 msgstr "Kukie.ioから切断"
 
-#: includes/class-kukie-admin.php:655
+#: includes/class-kukie-admin.php:671
 msgid "Disconnected from Kukie.io."
 msgstr "Kukie.ioから切断しました。"
 
@@ -360,7 +364,7 @@ msgstr "Kukie.ioから切断しました。"
 msgid "Disconnecting..."
 msgstr ""
 
-#: includes/class-kukie-admin.php:507
+#: includes/class-kukie-admin.php:523
 msgid "Dismiss"
 msgstr "閉じる"
 
@@ -374,12 +378,8 @@ msgstr "ドメイン"
 msgid "Don't have an account? %s"
 msgstr "アカウントをお持ちでないですか？ %s"
 
-#: templates/admin-settings.php:99
+#: templates/admin-settings.php:109
 msgid "Embed Code"
-msgstr "埋め込みコード"
-
-#: templates/admin-settings.php:92
-msgid "Embed code"
 msgstr "埋め込みコード"
 
 #: templates/admin-banner-gcm.php:27
@@ -398,7 +398,7 @@ msgstr "Microsoft UET同意シグナルを有効にする"
 msgid "Enable accessibility widget"
 msgstr ""
 
-#: templates/admin-settings.php:182
+#: templates/admin-settings.php:192
 msgid "Enabled Languages"
 msgstr "有効な言語"
 
@@ -408,7 +408,7 @@ msgstr "有効な言語"
 msgid "Every text in the panel can be reworded per language in %s."
 msgstr ""
 
-#: includes/class-kukie-admin.php:483
+#: includes/class-kukie-admin.php:499
 msgid "Excluded JavaScript Files"
 msgstr ""
 
@@ -450,7 +450,7 @@ msgstr "上部の全幅バー"
 msgid "Fully self-hosted inside the Kukie script: no third-party requests, and visitor preferences stay in their own browser."
 msgstr ""
 
-#: includes/class-kukie-admin.php:388 templates/admin-dashboard.php:32
+#: includes/class-kukie-admin.php:404 templates/admin-dashboard.php:32
 msgid "Generate a new API key"
 msgstr ""
 
@@ -458,7 +458,7 @@ msgstr ""
 msgid "Go to Dashboard"
 msgstr "ダッシュボードへ移動"
 
-#: includes/class-kukie-admin.php:1016
+#: includes/class-kukie-admin.php:1032
 msgid "Google Consent Mode settings saved."
 msgstr "Google Consent Modeの設定を保存しました。"
 
@@ -494,6 +494,10 @@ msgstr ""
 msgid "If your cookie banner's revisit button uses the same corner, the two stack neatly instead of overlapping."
 msgstr ""
 
+#: templates/admin-settings.php:82
+msgid "In the page head"
+msgstr ""
+
 #: includes/class-kukie-admin.php:262
 msgid "Inactive"
 msgstr ""
@@ -506,7 +510,7 @@ msgstr ""
 msgid "Inherit the banner theme's primary colour"
 msgstr ""
 
-#: includes/class-kukie-admin.php:573
+#: includes/class-kukie-admin.php:589
 msgid "Invalid API key format. The key should be 64 characters."
 msgstr "APIキーの形式が無効です。キーは64文字である必要があります。"
 
@@ -520,7 +524,7 @@ msgstr ""
 msgid "Kukie.io"
 msgstr "Kukie.io"
 
-#: includes/class-kukie-admin.php:500
+#: includes/class-kukie-admin.php:516
 msgid "Kukie.io - WP Rocket detected:"
 msgstr "Kukie.io - WP Rocketが検出されました："
 
@@ -532,15 +536,15 @@ msgstr "Kukie.io ダッシュボード"
 msgid "Kukie.io Settings"
 msgstr "Kukie.io 設定"
 
-#: includes/class-kukie-admin.php:332
+#: includes/class-kukie-admin.php:348
 msgid "Kukie.io cookie consent is not connected."
 msgstr "Kukie.io Cookie同意が接続されていません。"
 
-#: includes/class-kukie-admin.php:357 includes/class-kukie-admin.php:385
+#: includes/class-kukie-admin.php:373 includes/class-kukie-admin.php:401
 msgid "Kukie:"
 msgstr ""
 
-#: templates/admin-settings.php:120
+#: templates/admin-settings.php:130
 msgid "Language"
 msgstr "言語"
 
@@ -560,7 +564,7 @@ msgstr "最後のスキャン"
 msgid "Layout"
 msgstr "レイアウト"
 
-#: includes/class-kukie-admin.php:506
+#: includes/class-kukie-admin.php:522
 msgid "Learn more"
 msgstr "詳しく見る"
 
@@ -582,7 +586,7 @@ msgstr ""
 msgid "Live Preview"
 msgstr "ライブプレビュー"
 
-#: includes/class-kukie-admin.php:446
+#: includes/class-kukie-admin.php:462
 msgid "Load JavaScript deferred"
 msgstr ""
 
@@ -599,6 +603,10 @@ msgstr "デザイン設定を読み込み中..."
 msgid "Loading settings..."
 msgstr "設定を読み込み中..."
 
+#: templates/admin-settings.php:83
+msgid "Loads before the rest of the page, so cookies are blocked as early as possible."
+msgstr ""
+
 #: templates/admin-banner-design.php:119
 msgid "Lock"
 msgstr "ロック"
@@ -607,9 +615,9 @@ msgstr "ロック"
 msgid "Manage region rules in the Kukie.io dashboard"
 msgstr ""
 
-#: templates/admin-settings.php:91
-msgid "Manual"
-msgstr "手動"
+#: templates/admin-settings.php:100
+msgid "Manual embed"
+msgstr ""
 
 #: templates/admin-banner.php:20
 msgid "Microsoft UET"
@@ -619,11 +627,11 @@ msgstr "Microsoft UET"
 msgid "Microsoft UET Consent Signals"
 msgstr "Microsoft UET同意シグナル"
 
-#: includes/class-kukie-admin.php:1032
+#: includes/class-kukie-admin.php:1048
 msgid "Microsoft UET settings saved."
 msgstr "Microsoft UETの設定を保存しました。"
 
-#: includes/class-kukie-admin.php:439
+#: includes/class-kukie-admin.php:455
 msgid "Minify JavaScript files"
 msgstr ""
 
@@ -643,9 +651,9 @@ msgstr ""
 msgid "No scans yet"
 msgstr ""
 
-#: includes/class-kukie-admin.php:676 includes/class-kukie-admin.php:730
-#: includes/class-kukie-admin.php:789 includes/class-kukie-admin.php:1229
-#: includes/class-kukie-admin.php:1255
+#: includes/class-kukie-admin.php:692 includes/class-kukie-admin.php:746
+#: includes/class-kukie-admin.php:805 includes/class-kukie-admin.php:1245
+#: includes/class-kukie-admin.php:1271
 msgid "Not connected."
 msgstr "接続されていません。"
 
@@ -677,7 +685,7 @@ msgstr "オフセット Y (px)"
 msgid "Open Kukie.io Dashboard"
 msgstr "Kukie.ioダッシュボードを開く"
 
-#: includes/class-kukie-admin.php:504
+#: includes/class-kukie-admin.php:520
 msgid "Open WP Rocket Settings"
 msgstr "WP Rocket設定を開く"
 
@@ -755,11 +763,11 @@ msgstr "ポップアップ（中央）"
 msgid "Position"
 msgstr "位置"
 
-#: templates/admin-settings.php:78
+#: templates/admin-settings.php:82
 msgid "Recommended"
 msgstr "推奨"
 
-#: includes/class-kukie-admin.php:360
+#: includes/class-kukie-admin.php:376
 msgid "Reconnect"
 msgstr ""
 
@@ -784,13 +792,13 @@ msgid "Save Changes"
 msgstr "変更を保存"
 
 #: templates/admin-accessibility.php:237 templates/admin-banner-gcm.php:69
-#: templates/admin-banner-uet.php:38 templates/admin-settings.php:208
+#: templates/admin-banner-uet.php:38 templates/admin-settings.php:218
 msgid "Save Settings"
 msgstr "設定を保存"
 
 #: templates/admin-accessibility.php:240 templates/admin-banner-design.php:166
 #: templates/admin-banner-gcm.php:72 templates/admin-banner-uet.php:41
-#: templates/admin-settings.php:211
+#: templates/admin-settings.php:221
 msgid "Saving..."
 msgstr "保存中..."
 
@@ -798,11 +806,11 @@ msgstr "保存中..."
 msgid "Script Blocking"
 msgstr "スクリプトブロック"
 
-#: templates/admin-settings.php:72
+#: templates/admin-settings.php:75
 msgid "Script Position"
 msgstr "スクリプトの位置"
 
-#: templates/admin-settings.php:183
+#: templates/admin-settings.php:193
 msgid "Select which languages are available for your cookie banner."
 msgstr "Cookieバナーで使用可能な言語を選択してください。"
 
@@ -815,11 +823,11 @@ msgstr "設定"
 msgid "Settings could not be loaded, so saving is disabled. Please reload the page."
 msgstr ""
 
-#: includes/class-kukie-admin.php:999
+#: includes/class-kukie-admin.php:1015
 msgid "Settings saved."
 msgstr "設定を保存しました。"
 
-#: includes/class-kukie-admin.php:830
+#: includes/class-kukie-admin.php:846
 msgid "Settings were modified elsewhere since this page was loaded."
 msgstr ""
 
@@ -885,7 +893,7 @@ msgstr ""
 msgid "The accessibility widget is available on the %s plan and above."
 msgstr ""
 
-#: includes/class-kukie-admin.php:286 includes/class-kukie-admin.php:819
+#: includes/class-kukie-admin.php:286 includes/class-kukie-admin.php:835
 msgid "The accessibility widget is not included in your plan."
 msgstr ""
 
@@ -897,7 +905,7 @@ msgstr ""
 msgid "The default consent states before a visitor interacts with the banner depend on the visitor's region: opt-in regions start with consent denied, opt-out regions start with consent granted. They are managed through region rules in the Kukie.io dashboard."
 msgstr ""
 
-#: templates/admin-settings.php:178
+#: templates/admin-settings.php:188
 msgid "The fallback language when auto-translate cannot determine the visitor language."
 msgstr "自動翻訳で訪問者の言語を判別できない場合のフォールバック言語です。"
 
@@ -905,11 +913,15 @@ msgstr "自動翻訳で訪問者の言語を判別できない場合のフォー
 msgid "The panel opens in the visitor's language, with 70+ built-in translations, and respects their system preferences for reduced motion and contrast."
 msgstr ""
 
-#: includes/class-kukie-admin.php:386
+#: templates/admin-settings.php:101
+msgid "The plugin adds nothing. Paste the embed code below into your theme yourself."
+msgstr ""
+
+#: includes/class-kukie-admin.php:402
 msgid "The stored API key is no longer valid, so the dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site."
 msgstr ""
 
-#: includes/class-kukie-admin.php:358
+#: includes/class-kukie-admin.php:374
 msgid "The stored Kukie.io API key can no longer be read. This usually happens after the site's security keys (salts) were changed or the database was copied from another site. Please reconnect with your API key to restore the dashboard connection - the cookie banner itself keeps working."
 msgstr ""
 
@@ -957,12 +969,12 @@ msgstr "左上"
 msgid "Top Right"
 msgstr "右上"
 
-#: includes/class-kukie-admin.php:565 includes/class-kukie-admin.php:642
-#: includes/class-kukie-admin.php:664 includes/class-kukie-admin.php:707
-#: includes/class-kukie-admin.php:959 includes/class-kukie-admin.php:1006
-#: includes/class-kukie-admin.php:1023 includes/class-kukie-admin.php:1039
-#: includes/class-kukie-admin.php:1131 includes/class-kukie-admin.php:1224
-#: includes/class-kukie-admin.php:1250
+#: includes/class-kukie-admin.php:581 includes/class-kukie-admin.php:658
+#: includes/class-kukie-admin.php:680 includes/class-kukie-admin.php:723
+#: includes/class-kukie-admin.php:975 includes/class-kukie-admin.php:1022
+#: includes/class-kukie-admin.php:1039 includes/class-kukie-admin.php:1055
+#: includes/class-kukie-admin.php:1147 includes/class-kukie-admin.php:1240
+#: includes/class-kukie-admin.php:1266
 msgid "Unauthorised."
 msgstr "権限がありません。"
 
@@ -978,15 +990,19 @@ msgstr "設定を変更すると即座に更新されます"
 msgid "Upgrade on Kukie.io"
 msgstr ""
 
+#: templates/admin-settings.php:92
+msgid "Use it only if another script in the head interferes with the banner. The banner appears a moment later."
+msgstr ""
+
 #: templates/admin-accessibility.php:187
 msgid "Used when the visitor's language cannot be detected. Auto-detection always wins when it resolves."
 msgstr ""
 
-#: templates/admin-dashboard.php:84 templates/admin-settings.php:106
+#: templates/admin-dashboard.php:84 templates/admin-settings.php:116
 msgid "Verification"
 msgstr "検証"
 
-#: includes/class-kukie-admin.php:1265
+#: includes/class-kukie-admin.php:1281
 msgid "Verification failed."
 msgstr "検証に失敗しました。"
 
@@ -1004,7 +1020,7 @@ msgstr ""
 msgid "Verified! Banner script detected."
 msgstr ""
 
-#: templates/admin-settings.php:110
+#: templates/admin-settings.php:120
 msgid "Verify"
 msgstr "検証"
 
@@ -1023,7 +1039,7 @@ msgid "Want more customisation options? Edit colours, texts and advanced setting
 msgstr "より多くのカスタマイズオプションが必要ですか？ %sで色、テキスト、詳細設定を編集できます。"
 
 #. translators: %s: link to Kukie.io banner settings
-#: templates/admin-settings.php:195
+#: templates/admin-settings.php:205
 #, php-format
 msgid "Want to customise banner texts and translations? Edit them in %s."
 msgstr "バナーのテキストと翻訳をカスタマイズしたいですか？ %sで編集できます。"
@@ -1040,11 +1056,15 @@ msgstr "プライバシーを大切にしています"
 msgid "What your visitors get"
 msgstr ""
 
+#: templates/admin-settings.php:76
+msgid "Where the plugin adds the banner script to your pages. The page head is right for almost every site."
+msgstr ""
+
 #: templates/admin-dashboard.php:28
 msgid "Your API key has been regenerated or deleted in the Kukie dashboard. Generate a new API key and reconnect to restore the dashboard connection."
 msgstr ""
 
-#: includes/class-kukie-admin.php:501
+#: includes/class-kukie-admin.php:517
 msgid "Your cookie banner may not load correctly. Add cdn.kukie.io to the exclusion list in these WP Rocket settings:"
 msgstr "Cookieバナーが正しく読み込まれない可能性があります。以下のWP Rocket設定の除外リストにcdn.kukie.ioを追加してください："
 
@@ -1052,7 +1072,7 @@ msgstr "Cookieバナーが正しく読み込まれない可能性があります
 msgid "your Kukie.io dashboard"
 msgstr "Kukie.ioダッシュボード"
 
-#: templates/admin-settings.php:196
+#: templates/admin-settings.php:206
 msgid "your banner settings on Kukie.io"
 msgstr "Kukie.ioのバナー設定"
 
@@ -1061,6 +1081,9 @@ msgstr "Kukie.ioのバナー設定"
 
 #~ msgid "Advertisement (ad_storage)"
 #~ msgstr "広告 (ad_storage)"
+
+#~ msgid "After opening tag"
+#~ msgstr "開始タグの後"
 
 #~ msgid "All"
 #~ msgstr "すべて"
@@ -1079,6 +1102,9 @@ msgstr "Kukie.ioのバナー設定"
 
 #~ msgid "Design your cookie banner, manage cookie categories, and configure consent rules in the Kukie.io dashboard."
 #~ msgstr "Kukie.ioダッシュボードでCookieバナーのデザイン、Cookieカテゴリの管理、同意ルールの設定を行えます。"
+
+#~ msgid "Embed code"
+#~ msgstr "埋め込みコード"
 
 #~ msgid "Full settings"
 #~ msgstr "詳細設定"
