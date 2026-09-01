@@ -105,7 +105,11 @@ const browser = await chromium.launch();
   check('a11y entitled: no error, content shown, unlocked', !st.errorVisible && st.contentVisible && !st.lockedVisible && st.introVisible && !st.fieldsDisabled && !st.saveDisabled, JSON.stringify(st));
   check('a11y entitled: values populated', st.enabled && st.position === 'bottom-left' && st.size === '52' && st.modules === 20 && st.ttsChecked === false && st.langs === 71 && st.customLangs && st.defaultLang === 'bg' && JSON.stringify([...st.defaultOptions].sort()) === JSON.stringify(['', 'bg', 'de', 'en']), JSON.stringify(st));
   check('a11y entitled: no JS errors', errors.length === 0, errors.join(' | '));
+  const ext = await page.evaluate(() => { const e = document.querySelector('.kukie-cta-banner a .kukie-ext'); const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return { h: r.height, fs: cs.fontSize }; });
+  check('a11y entitled: inline new-tab marker in the CTA banner is text-sized (13px)', ext.fs === '13px' && ext.h <= 14, JSON.stringify(ext));
   await page.screenshot({ path: path.join(E2E, 'shot-a11y-entitled.png'), fullPage: true });
+  const cta = await page.$('.kukie-cta-banner');
+  if (cta) await cta.screenshot({ path: path.join(E2E, 'shot-cta-banner.png') });
   await page.close();
 }
 // 2. Accessibility page, locked plan
@@ -144,14 +148,25 @@ for (const [scenario, expected] of [['entitled', 'Active'], ['locked', 'Not in p
   check(`dashboard ${scenario}: a11y card = "${expected}"`, txt === expected, `got "${txt}" errors=${errors.join('|')}`);
   if (scenario === 'entitled') {
     const dash = await page.evaluate(() => ({
-      order: Array.from(document.querySelectorAll('#kukie-overview-cards .kukie-stat-label')).map(e => e.textContent.trim()),
+      order: Array.from(document.querySelectorAll('#kukie-overview-cards .kukie-stat-label')).map(e => Array.from(e.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim()),
       linkCards: Array.from(document.querySelectorAll('#kukie-overview-cards a.kukie-stat-card--link')).map(a => ({ label: a.querySelector('.kukie-stat-label').textContent.trim(), newTab: a.target === '_blank', marker: !!a.querySelector('.kukie-stat-card-go'), sr: !!a.querySelector('.screen-reader-text') })),
       externalWithoutSr: Array.from(document.querySelectorAll('a[target="_blank"]')).filter(a => !a.querySelector('.screen-reader-text')).length,
     }));
     check('dashboard: card order', JSON.stringify(dash.order) === JSON.stringify(['Cookie Banner Status', 'Accessibility widget', 'Verification', 'Consents Today', 'Plan']), JSON.stringify(dash.order));
     check('dashboard: link cards marked (a11y same-tab arrow, plan new-tab icon + sr text)', dash.linkCards.length === 2 && dash.linkCards.every(c => c.marker) && dash.linkCards[1].newTab && dash.linkCards[1].sr && !dash.linkCards[0].newTab, JSON.stringify(dash.linkCards));
     check('dashboard: every new-tab link carries screen-reader text', dash.externalWithoutSr === 0, String(dash.externalWithoutSr));
+    const geo = await page.evaluate(() => {
+      const plan = document.querySelector('#kukie-stat-plan').getBoundingClientRect();
+      const go = document.querySelector('#kukie-stat-plan').closest('.kukie-stat-card').querySelector('.kukie-stat-card-go').getBoundingClientRect();
+      const overlap = !(plan.right <= go.left || plan.left >= go.right || plan.bottom <= go.top || plan.top >= go.bottom);
+      const ext = document.querySelector('.kukie-cta-banner .kukie-ext, .kukie-help-text .kukie-ext');
+      const extSize = ext ? ext.getBoundingClientRect().height : 0;
+      return { overlap, extSize, planText: document.querySelector('#kukie-stat-plan').textContent.trim() };
+    });
+    check('dashboard: long plan name never overlaps the card marker', !geo.overlap && geo.planText === 'Pixadoro Custom Plan', JSON.stringify(geo));
     await page.screenshot({ path: path.join(E2E, 'shot-dashboard.png'), fullPage: true });
+    const cards = await page.$('#kukie-overview-cards');
+    if (cards) await cards.screenshot({ path: path.join(E2E, 'shot-cards.png') });
   }
   await page.close();
 }

@@ -58,12 +58,11 @@ $kukie_app_url = 'https://app.kukie.io';
 				<span class="dashicons dashicons-universal-access-alt"></span>
 			</div>
 			<div class="kukie-stat-content">
-				<span class="kukie-stat-label"><?php esc_html_e( 'Accessibility widget', 'kukie-cookie-consent' ); ?></span>
+				<span class="kukie-stat-label"><?php esc_html_e( 'Accessibility widget', 'kukie-cookie-consent' ); ?><span class="kukie-stat-card-go dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></span>
 				<span class="kukie-stat-value" id="kukie-stat-a11y">
 					<span class="kukie-skeleton"></span>
 				</span>
 			</div>
-			<span class="kukie-stat-card-go dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span>
 		</a>
 
 		<div class="kukie-stat-card">
@@ -95,12 +94,11 @@ $kukie_app_url = 'https://app.kukie.io';
 				<span class="dashicons dashicons-awards"></span>
 			</div>
 			<div class="kukie-stat-content">
-				<span class="kukie-stat-label"><?php esc_html_e( 'Plan', 'kukie-cookie-consent' ); ?></span>
+				<span class="kukie-stat-label"><?php esc_html_e( 'Plan', 'kukie-cookie-consent' ); ?><span class="kukie-stat-card-go"><?php echo Kukie_Admin::new_tab_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper ?></span></span>
 				<span class="kukie-stat-value" id="kukie-stat-plan">
 					<span class="kukie-skeleton"></span>
 				</span>
 			</div>
-			<span class="kukie-stat-card-go"><?php echo Kukie_Admin::new_tab_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper ?></span>
 		</a>
 	</div>
 

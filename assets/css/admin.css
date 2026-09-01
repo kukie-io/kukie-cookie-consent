@@ -285,38 +285,12 @@
 	color: inherit;
 }
 
-/* Link cards: a corner marker (arrow for same-tab, external icon for a new
-   tab) plus the hover/focus lift make the clickable cards unmistakable. */
+/* Link cards: the marker sits at the end of the LABEL row (arrow for a
+   same-tab page, external icon for a new tab), so a long value such as a
+   plan name can never run into it; hover underlines the label and the
+   focus ring makes keyboard focus visible. */
 .kukie-stat-card--link {
-	position: relative;
 	color: #1e3a8a;
-}
-
-/* Bottom-right corner: the label row is the tight one on narrow cards. */
-.kukie-stat-card--link .kukie-stat-card-go {
-	position: absolute;
-	right: 12px;
-	bottom: 12px;
-	color: #94a3b8;
-	font-size: 18px;
-	width: 18px;
-	height: 18px;
-	line-height: 18px;
-	transition: color 0.15s, transform 0.15s;
-}
-
-.kukie-stat-card--link .kukie-stat-card-go .kukie-ext {
-	font-size: 18px;
-	width: 18px;
-	height: 18px;
-	margin: 0;
-	vertical-align: top;
-}
-
-.kukie-stat-card--link:hover .kukie-stat-card-go,
-.kukie-stat-card--link:focus-visible .kukie-stat-card-go {
-	color: #2563eb;
-	transform: translateX(2px);
 }
 
 .kukie-stat-card--link:focus-visible {
@@ -335,22 +309,56 @@
 	text-decoration-color: currentColor;
 }
 
-/* Inline "opens in a new tab" marker after links */
-.kukie-ext {
+.kukie-stat-label .kukie-stat-card-go,
+.kukie-stat-label .kukie-stat-card-go .kukie-ext {
+	display: inline-block;
+	font-size: 13px;
+	width: 13px;
+	height: 13px;
+	line-height: 13px;
+	margin: 0 0 0 3px;
+	vertical-align: -2px;
+	color: #94a3b8;
+	text-decoration: none;
+	transition: color 0.15s, transform 0.15s;
+}
+
+.kukie-stat-card--link:hover .kukie-stat-card-go,
+.kukie-stat-card--link:hover .kukie-stat-card-go .kukie-ext {
+	color: #2563eb;
+	transform: translateX(2px);
+}
+
+/* Inline "opens in a new tab" marker after links. Three-part selectors so
+   it outranks every contextual dashicon rule (.kukie-cta-banner .dashicons
+   is 20px, .kukie-stat-icon .dashicons 20px, ...). */
+.kukie-wrap .dashicons.kukie-ext,
+.kukie-wrap a .dashicons.kukie-ext {
+	display: inline-block;
+	font-size: 13px;
+	width: 13px;
+	height: 13px;
+	line-height: 13px;
+	margin: 0 0 0 3px;
+	vertical-align: -2px;
+	color: inherit;
+	text-decoration: none;
+	flex: none;
+}
+
+.kukie-wrap .kukie-btn-primary .dashicons.kukie-ext,
+.kukie-wrap .kukie-btn-secondary .dashicons.kukie-ext,
+.kukie-wrap .button .dashicons.kukie-ext {
 	font-size: 14px;
 	width: 14px;
 	height: 14px;
 	line-height: 14px;
-	margin-left: 3px;
-	vertical-align: text-bottom;
-	text-decoration: none;
+	margin-left: 5px;
+	vertical-align: -2px;
 }
 
-.kukie-btn-primary .kukie-ext,
-.kukie-btn-secondary .kukie-ext,
-.button .kukie-ext {
-	margin-left: 4px;
-	vertical-align: middle;
+.kukie-wrap .kukie-external-link .dashicons.kukie-ext {
+	margin-left: 0;
 }
 
 /* Card Actions */
