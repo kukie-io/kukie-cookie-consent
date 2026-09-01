@@ -70,27 +70,33 @@ $kukie_app_url = 'https://app.kukie.io';
 
 				<fieldset class="kukie-fieldset kukie-form-group">
 					<legend class="kukie-legend"><?php esc_html_e( 'Script Position', 'kukie-cookie-consent' ); ?></legend>
-					<div class="kukie-radio-group">
-						<label class="kukie-radio">
+					<div class="kukie-choice-grid">
+						<label class="kukie-choice">
 							<input type="radio" name="script_position" value="head" checked>
-							<span class="kukie-radio-label">
+							<span class="kukie-choice-icon" aria-hidden="true"><span class="dashicons dashicons-editor-code"></span></span>
+							<span class="kukie-choice-body">
 								<strong><code>&lt;head&gt;</code></strong>
-								<span class="kukie-radio-hint"><?php esc_html_e( 'Recommended', 'kukie-cookie-consent' ); ?></span>
+								<span class="kukie-choice-hint"><?php esc_html_e( 'Recommended', 'kukie-cookie-consent' ); ?></span>
 							</span>
+							<span class="kukie-choice-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
 						</label>
-						<label class="kukie-radio">
+						<label class="kukie-choice">
 							<input type="radio" name="script_position" value="body">
-							<span class="kukie-radio-label">
+							<span class="kukie-choice-icon" aria-hidden="true"><span class="dashicons dashicons-align-wide"></span></span>
+							<span class="kukie-choice-body">
 								<strong><code>&lt;body&gt;</code></strong>
-								<span class="kukie-radio-hint"><?php esc_html_e( 'After opening tag', 'kukie-cookie-consent' ); ?></span>
+								<span class="kukie-choice-hint"><?php esc_html_e( 'After opening tag', 'kukie-cookie-consent' ); ?></span>
 							</span>
+							<span class="kukie-choice-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
 						</label>
-						<label class="kukie-radio">
+						<label class="kukie-choice">
 							<input type="radio" name="script_position" value="manual">
-							<span class="kukie-radio-label">
+							<span class="kukie-choice-icon" aria-hidden="true"><span class="dashicons dashicons-clipboard"></span></span>
+							<span class="kukie-choice-body">
 								<strong><?php esc_html_e( 'Manual', 'kukie-cookie-consent' ); ?></strong>
-								<span class="kukie-radio-hint"><?php esc_html_e( 'Embed code', 'kukie-cookie-consent' ); ?></span>
+								<span class="kukie-choice-hint"><?php esc_html_e( 'Embed code', 'kukie-cookie-consent' ); ?></span>
 							</span>
+							<span class="kukie-choice-check" aria-hidden="true"><span class="dashicons dashicons-yes"></span></span>
 						</label>
 					</div>
 				</fieldset>
