@@ -1,6 +1,6 @@
 <?php
 /**
- * Cookie banner > Microsoft UET tab (a partial of admin-banner.php).
+ * Consent banner > Microsoft UET tab (a partial of admin-banner.php).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -74,14 +74,14 @@ $kukie_app_url = 'https://app.kukie.io';
 						<label class="kukie-radio">
 							<input type="radio" name="script_position" value="head" checked>
 							<span class="kukie-radio-label">
-								<strong>&lt;head&gt;</strong>
+								<strong><code>&lt;head&gt;</code></strong>
 								<span class="kukie-radio-hint"><?php esc_html_e( 'Recommended', 'kukie-cookie-consent' ); ?></span>
 							</span>
 						</label>
 						<label class="kukie-radio">
 							<input type="radio" name="script_position" value="body">
 							<span class="kukie-radio-label">
-								<strong>&lt;body&gt;</strong>
+								<strong><code>&lt;body&gt;</code></strong>
 								<span class="kukie-radio-hint"><?php esc_html_e( 'After opening tag', 'kukie-cookie-consent' ); ?></span>
 							</span>
 						</label>

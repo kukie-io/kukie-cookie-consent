@@ -411,7 +411,7 @@
 	}
 
 	// ─────────────────────────────────────────
-	// GCM TAB (Cookie banner page)
+	// GCM TAB (Consent banner page)
 	// ─────────────────────────────────────────
 
 	function initGcmPage() {
@@ -466,7 +466,7 @@
 	}
 
 	// ─────────────────────────────────────────
-	// UET TAB (Cookie banner page)
+	// UET TAB (Consent banner page)
 	// ─────────────────────────────────────────
 
 	function initUetPage() {
@@ -731,7 +731,7 @@
 	}
 
 	// ─────────────────────────────────────────
-	// DESIGN TAB (Cookie banner page)
+	// DESIGN TAB (Consent banner page)
 	// ─────────────────────────────────────────
 
 	function initBannerDesignPage() {

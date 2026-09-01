@@ -1,6 +1,6 @@
 <?php
 /**
- * Cookie banner > Design tab (a partial of admin-banner.php).
+ * Consent banner > Design tab (a partial of admin-banner.php).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

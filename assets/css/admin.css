@@ -139,7 +139,7 @@
 	margin-left: 4px;
 }
 
-/* WP-native tab strip on the Cookie banner page */
+/* WP-native tab strip on the Consent banner page */
 .kukie-tabs {
 	margin-bottom: 20px;
 }
@@ -751,60 +751,96 @@
 	cursor: not-allowed;
 }
 
-/* Radio Group */
+/* Radio cards (Script position): the native radio is visually hidden but
+   stays focusable; a CSS indicator draws the selected state so the card
+   never depends on WordPress's radio margins. */
 .kukie-radio-group {
-	display: flex;
-	gap: 8px;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 10px;
 }
 
 @media (max-width: 782px) {
 	.kukie-radio-group {
-		flex-direction: column;
+		grid-template-columns: 1fr;
 	}
 }
 
 .kukie-radio {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	padding: 8px 14px;
-	border: 1px solid #e2e8f0;
+	position: relative;
+	display: block;
+	padding: 14px 16px 14px 46px;
+	border: 1.5px solid #e2e8f0;
 	border-radius: 6px;
+	background: #fff;
 	cursor: pointer;
-	transition: border-color 0.15s, background 0.15s;
-	flex: 1;
+	transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
 }
 
 .kukie-radio:hover {
 	border-color: #cbd5e1;
+	background: #f8fafc;
 }
 
 .kukie-radio:has(input:checked) {
 	border-color: #2563eb;
 	background: #eff6ff;
+	box-shadow: 0 0 0 1px #2563eb;
 }
 
 .kukie-radio input[type="radio"] {
-	accent-color: #2563eb;
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
 	margin: 0;
+}
+
+.kukie-radio::before {
+	content: '';
+	position: absolute;
+	left: 16px;
+	top: 17px;
+	width: 18px;
+	height: 18px;
+	box-sizing: border-box;
+	border: 2px solid #94a3b8;
+	border-radius: 50%;
+	background: #fff;
+	transition: border-color 0.15s, border-width 0.15s;
+}
+
+.kukie-radio:has(input:checked)::before {
+	border-color: #2563eb;
+	border-width: 6px;
 }
 
 .kukie-radio-label {
 	display: flex;
 	flex-direction: column;
-	gap: 1px;
+	gap: 3px;
+	min-width: 0;
 }
 
 .kukie-radio-label strong {
-	font-weight: 500;
+	font-weight: 600;
 	color: #0f172a;
+	font-size: 14px;
+	line-height: 1.3;
+}
+
+.kukie-radio-label code {
 	font-size: 13px;
+	padding: 1px 6px;
+	border-radius: 3px;
+	background: #f1f5f9;
+	color: #0f172a;
 }
 
 .kukie-radio-hint {
-	font-size: 11px;
+	font-size: 12px;
 	color: #64748b;
-	line-height: 1.3;
+	line-height: 1.4;
 }
 
 /* Checkbox Grid (Languages) */
@@ -1698,4 +1734,13 @@
 	color: #94a3b8;
 	margin: 0;
 	padding: 0 16px 14px;
+}
+
+/* The hidden attribute wins over every display rule above (.kukie-loading,
+   .kukie-color-input-group and friends set display:flex, which would
+   otherwise override the browser's [hidden] rule and leave spinners and
+   groups visible after admin.js hid them). */
+.kukie-wrap [hidden],
+#kukie-wp-rocket-notice[hidden] {
+	display: none !important;
 }

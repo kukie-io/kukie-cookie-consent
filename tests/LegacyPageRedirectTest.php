@@ -5,7 +5,7 @@
  * pre-1.8.0 bookmark or inter-page link.
  *
  * Banner Design (kukie-design), Google Consent Mode v2 (kukie-gcm) and
- * Microsoft UET (kukie-uet) became tabs of one Cookie banner page. The old
+ * Microsoft UET (kukie-uet) became tabs of one Consent banner page. The old
  * slugs stay registered as hidden pages (so WordPress's page-access check
  * passes) and redirect to the matching tab before any output.
  */

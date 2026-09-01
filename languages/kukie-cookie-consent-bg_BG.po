@@ -260,6 +260,20 @@ msgstr "Връзка"
 msgid "Consent Overview"
 msgstr "Преглед на съгласията"
 
+#: includes/class-kukie-admin.php:113 includes/class-kukie-admin.php:114
+#: includes/class-kukie-admin.php:159 includes/class-kukie-admin.php:160
+#: templates/admin-banner.php:25
+msgid "Consent banner"
+msgstr "Банер за съгласие"
+
+#: templates/admin-banner.php:33
+msgid "Consent banner sections"
+msgstr "Секции на банера за съгласие"
+
+#: templates/admin-dashboard.php:177
+msgid "Consent banner settings"
+msgstr "Настройки на банера за съгласие"
+
 #: templates/admin-dashboard.php:60
 msgid "Consents Today"
 msgstr "Съгласия днес"
@@ -271,20 +285,6 @@ msgstr "Бисквитка"
 #: templates/admin-dashboard.php:136
 msgid "Cookie Scan"
 msgstr "Сканиране за бисквитки"
-
-#: includes/class-kukie-admin.php:113 includes/class-kukie-admin.php:114
-#: includes/class-kukie-admin.php:159 includes/class-kukie-admin.php:160
-#: templates/admin-banner.php:25
-msgid "Cookie banner"
-msgstr "Куки банер"
-
-#: templates/admin-banner.php:33
-msgid "Cookie banner sections"
-msgstr "Секции на куки банера"
-
-#: templates/admin-dashboard.php:177
-msgid "Cookie banner settings"
-msgstr "Настройки на куки банера"
 
 #: includes/class-kukie-admin.php:1243
 msgid "Cookie scan started!"

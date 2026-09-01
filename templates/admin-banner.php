@@ -1,6 +1,6 @@
 <?php
 /**
- * Cookie banner page: one page, three tabs (Design / Google Consent Mode v2 /
+ * Consent banner page: one page, three tabs (Design / Google Consent Mode v2 /
  * Microsoft UET). The tab partials are the pre-1.8.0 per-page templates with
  * their page chrome removed; only the active tab's partial is included.
  *
@@ -22,7 +22,7 @@ $kukie_tabs    = [
 ?>
 <div class="wrap kukie-wrap<?php echo 'design' === $kukie_tab ? ' kukie-wrap--wide' : ''; ?>">
 	<div class="kukie-header">
-		<h1><?php esc_html_e( 'Cookie banner', 'kukie-cookie-consent' ); ?></h1>
+		<h1><?php esc_html_e( 'Consent banner', 'kukie-cookie-consent' ); ?></h1>
 		<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
 			<?php esc_html_e( 'Open the banner editor on Kukie.io', 'kukie-cookie-consent' ); ?>
 			<span class="dashicons dashicons-external" aria-hidden="true"></span>
@@ -30,7 +30,7 @@ $kukie_tabs    = [
 	</div>
 	<hr class="wp-header-end">
 
-	<nav class="nav-tab-wrapper wp-clearfix kukie-tabs" aria-label="<?php esc_attr_e( 'Cookie banner sections', 'kukie-cookie-consent' ); ?>">
+	<nav class="nav-tab-wrapper wp-clearfix kukie-tabs" aria-label="<?php esc_attr_e( 'Consent banner sections', 'kukie-cookie-consent' ); ?>">
 		<?php foreach ( $kukie_tabs as $kukie_tab_key => $kukie_tab_label ) : ?>
 			<?php if ( $kukie_tab_key === $kukie_tab ) : ?>
 				<a href="<?php echo esc_url( Kukie_Admin::banner_tab_url( $kukie_tab_key ) ); ?>" class="nav-tab nav-tab-active" aria-current="page"><?php echo esc_html( $kukie_tab_label ); ?></a>

@@ -260,6 +260,20 @@ msgstr "Bağlantı"
 msgid "Consent Overview"
 msgstr "Onay Genel Bakışı"
 
+#: includes/class-kukie-admin.php:113 includes/class-kukie-admin.php:114
+#: includes/class-kukie-admin.php:159 includes/class-kukie-admin.php:160
+#: templates/admin-banner.php:25
+msgid "Consent banner"
+msgstr ""
+
+#: templates/admin-banner.php:33
+msgid "Consent banner sections"
+msgstr ""
+
+#: templates/admin-dashboard.php:177
+msgid "Consent banner settings"
+msgstr ""
+
 #: templates/admin-dashboard.php:60
 msgid "Consents Today"
 msgstr "Bugünkü Onaylar"
@@ -271,20 +285,6 @@ msgstr "Çerez"
 #: templates/admin-dashboard.php:136
 msgid "Cookie Scan"
 msgstr "Çerez Taraması"
-
-#: includes/class-kukie-admin.php:113 includes/class-kukie-admin.php:114
-#: includes/class-kukie-admin.php:159 includes/class-kukie-admin.php:160
-#: templates/admin-banner.php:25
-msgid "Cookie banner"
-msgstr ""
-
-#: templates/admin-banner.php:33
-msgid "Cookie banner sections"
-msgstr ""
-
-#: templates/admin-dashboard.php:177
-msgid "Cookie banner settings"
-msgstr ""
 
 #: includes/class-kukie-admin.php:1243
 msgid "Cookie scan started!"

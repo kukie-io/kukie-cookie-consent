@@ -174,7 +174,7 @@ $kukie_app_url = 'https://app.kukie.io';
 		<p><?php esc_html_e( 'Choose the layout and revisit button here in WordPress, or design every colour, text, category and consent rule in the Kukie.io dashboard.', 'kukie-cookie-consent' ); ?></p>
 		<p class="kukie-card-actions-row kukie-card-actions-row--center">
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . Kukie_Admin::PAGE_BANNER ) ); ?>" class="kukie-btn-secondary">
-				<?php esc_html_e( 'Cookie banner settings', 'kukie-cookie-consent' ); ?>
+				<?php esc_html_e( 'Consent banner settings', 'kukie-cookie-consent' ); ?>
 			</a>
 			<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-btn-primary">
 				<?php esc_html_e( 'Open Kukie.io Dashboard', 'kukie-cookie-consent' ); ?>

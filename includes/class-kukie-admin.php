@@ -7,11 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Kukie_Admin {
 
 	/**
-	 * Admin page slugs. The four visible entries are Dashboard, Cookie banner
+	 * Admin page slugs. The four visible entries are Dashboard, Consent banner
 	 * (one page, three tabs), Accessibility widget and Settings (since 1.8.0);
 	 * the connect page is hidden and the three LEGACY slugs stay registered as
 	 * hidden pages whose only job is to redirect old bookmarks and inter-page
-	 * links to the matching Cookie banner tab (see redirect_legacy_page()).
+	 * links to the matching Consent banner tab (see redirect_legacy_page()).
 	 *
 	 * @since 1.8.0
 	 */
@@ -21,14 +21,14 @@ class Kukie_Admin {
 	public const PAGE_SETTINGS      = 'kukie-settings';
 	public const PAGE_CONNECT       = 'kukie-connect';
 
-	/** Legacy slug => Cookie banner tab it now lives on. */
+	/** Legacy slug => Consent banner tab it now lives on. */
 	public const LEGACY_PAGES = [
 		'kukie-design' => 'design',
 		'kukie-gcm'    => 'gcm',
 		'kukie-uet'    => 'uet',
 	];
 
-	/** Tabs of the Cookie banner page, in display order. */
+	/** Tabs of the Consent banner page, in display order. */
 	public const BANNER_TABS = [ 'design', 'gcm', 'uet' ];
 
 	/** Accessibility widget whitelists - mirrors the server's, which is authoritative. */
@@ -110,8 +110,8 @@ class Kukie_Admin {
 
 		add_submenu_page(
 			self::PAGE_DASHBOARD,
-			__( 'Cookie banner', 'kukie-cookie-consent' ),
-			__( 'Cookie banner', 'kukie-cookie-consent' ),
+			__( 'Consent banner', 'kukie-cookie-consent' ),
+			__( 'Consent banner', 'kukie-cookie-consent' ),
 			'manage_options',
 			self::PAGE_BANNER,
 			[ $this, 'render_banner_page' ]
@@ -150,14 +150,14 @@ class Kukie_Admin {
 
 		// Legacy slugs (pre-1.8.0 Banner Design / GCM / UET pages): still
 		// registered so bookmarks pass WordPress's page-access check, then
-		// redirected to the matching Cookie banner tab before any output.
+		// redirected to the matching Consent banner tab before any output.
 		// The render callback is only a fallback for a redirect that could
 		// not fire; load-{hook} runs first on every normal request.
 		foreach ( array_keys( self::LEGACY_PAGES ) as $legacy_slug ) {
 			$hook = add_submenu_page(
 				'',
-				__( 'Cookie banner', 'kukie-cookie-consent' ),
-				__( 'Cookie banner', 'kukie-cookie-consent' ),
+				__( 'Consent banner', 'kukie-cookie-consent' ),
+				__( 'Consent banner', 'kukie-cookie-consent' ),
 				'manage_options',
 				$legacy_slug,
 				[ $this, 'render_banner_page' ]
@@ -169,7 +169,7 @@ class Kukie_Admin {
 	}
 
 	/**
-	 * Requested tab of the Cookie banner page, whitelisted to BANNER_TABS
+	 * Requested tab of the Consent banner page, whitelisted to BANNER_TABS
 	 * (default: design). Read by the page template and by the legacy redirect.
 	 *
 	 * @since 1.8.0
@@ -182,7 +182,7 @@ class Kukie_Admin {
 	}
 
 	/**
-	 * URL of one Cookie banner tab (or of the page itself for the default tab).
+	 * URL of one Consent banner tab (or of the page itself for the default tab).
 	 *
 	 * @since 1.8.0
 	 */
@@ -196,7 +196,7 @@ class Kukie_Admin {
 	}
 
 	/**
-	 * Redirect a pre-1.8.0 page slug to its Cookie banner tab. Runs on the
+	 * Redirect a pre-1.8.0 page slug to its Consent banner tab. Runs on the
 	 * legacy page's load-{hook} action - after WordPress's page-access check
 	 * and before any output - so an old bookmark or inter-plugin link lands
 	 * on the right tab instead of a "not allowed" screen.
@@ -532,7 +532,7 @@ class Kukie_Admin {
 	}
 
 	/**
-	 * The Cookie banner page: one page, three tabs (design / gcm / uet). The
+	 * The Consent banner page: one page, three tabs (design / gcm / uet). The
 	 * former per-page templates render as tab partials - only the active
 	 * tab's partial is included, so each partial's page-init hook in admin.js
 	 * (keyed on its root element id) fires for exactly one tab.

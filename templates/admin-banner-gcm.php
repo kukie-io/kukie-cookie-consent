@@ -1,6 +1,6 @@
 <?php
 /**
- * Cookie banner > Google Consent Mode v2 tab (a partial of admin-banner.php).
+ * Consent banner > Google Consent Mode v2 tab (a partial of admin-banner.php).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

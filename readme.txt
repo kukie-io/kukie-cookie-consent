@@ -173,7 +173,7 @@ Banner translations (titles, descriptions, buttons, cookie categories) are manag
 5. Enter your API key from the [Kukie.io dashboard](https://app.kukie.io)
 6. Your cookie consent banner is now active
 
-The plugin adds four admin pages under **Kukie**: **Dashboard** (status, consent counts, scans), **Cookie banner** (Design, Google Consent Mode v2 and Microsoft UET tabs), **Accessibility widget** and **Settings** (script position, languages, connection).
+The plugin adds four admin pages under **Kukie**: **Dashboard** (status, consent counts, scans), **Consent banner** (Design, Google Consent Mode v2 and Microsoft UET tabs), **Accessibility widget** and **Settings** (script position, languages, connection).
 
 Alternatively, download the plugin from [WordPress.org](https://wordpress.org/plugins/kukie-cookie-consent/) and upload the ZIP file via **Plugins > Add New > Upload Plugin**.
 
@@ -260,7 +260,7 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 
 = 1.8.0 =
 * Added: Accessibility widget page. Switch on the Kukie accessibility widget for this site and configure its position, colour, button size, mobile visibility, modules, languages and accessibility-statement link from WordPress. Settings are read from and saved to your Kukie.io account, so the plugin and the dashboard never disagree. On plans without the widget the page explains what it does and which plan includes it.
-* Changed: the admin menu is now Dashboard, Cookie banner, Accessibility widget and Settings. Banner Design, Google Consent Mode v2 and Microsoft UET moved into tabs of the single Cookie banner page; old bookmarks to the previous pages redirect to the matching tab.
+* Changed: the admin menu is now Dashboard, Consent banner, Accessibility widget and Settings. Banner Design, Google Consent Mode v2 and Microsoft UET moved into tabs of the single Consent banner page; old bookmarks to the previous pages redirect to the matching tab.
 * Changed: the dashboard shows the accessibility widget state alongside the banner, consent and verification cards.
 * Improved: refreshed admin styling - WordPress-native notices and tabs, 40px form controls matching WordPress 7.1, proper labels and descriptions on every field for screen readers, consistent save buttons.
 * Improved: the Dashboard's status badges and the Settings page's verification and disconnect messages are now translatable.
