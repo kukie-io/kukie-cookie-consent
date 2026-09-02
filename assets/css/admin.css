@@ -1018,53 +1018,96 @@
 	display: flex;
 }
 
-/* Checkbox Grid (Languages) */
+/* Checkbox grids (languages, widget modules, iFrame services): one chip per
+   option. Two-class selectors on purpose - the generic
+   `.kukie-form-group label { display:block }` rule outranks a single class
+   and glued the native checkbox to its text. */
 .kukie-checkbox-grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 4px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
 	margin-top: 8px;
 }
 
-@media (max-width: 782px) {
+@media (max-width: 960px) {
 	.kukie-checkbox-grid {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 
-.kukie-checkbox-item {
+@media (max-width: 600px) {
+	.kukie-checkbox-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.kukie-checkbox-grid .kukie-checkbox-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 10px;
-	border: none;
-	border-radius: 4px;
-	font-size: 13px;
-	cursor: pointer;
-	transition: background 0.15s;
-	background: transparent;
-}
-
-.kukie-checkbox-item:hover {
-	background: #f1f5f9;
-}
-
-.kukie-checkbox-item:has(input:checked) {
-	background: #eff6ff;
-}
-
-.kukie-checkbox-item input[type="checkbox"] {
-	accent-color: #2563eb;
+	gap: 10px;
 	margin: 0;
+	padding: 9px 12px;
+	min-height: 40px;
+	border: 1.5px solid #e2e8f0;
+	border-radius: 6px;
+	background: #fff;
+	font-size: 13px;
+	font-weight: 500;
+	color: #334155;
+	cursor: pointer;
+	transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.kukie-checkbox-grid .kukie-checkbox-item:hover {
+	border-color: #94a3b8;
+	background: #f8fafc;
+}
+
+.kukie-checkbox-grid .kukie-checkbox-item:has(input:checked) {
+	border-color: #2563eb;
+	background: #eff6ff;
+	color: #1e3a8a;
+}
+
+.kukie-checkbox-grid .kukie-checkbox-item:has(input:focus-visible) {
+	outline: 2px solid #2271b1;
+	outline-offset: 1px;
+}
+
+.kukie-checkbox-grid .kukie-checkbox-item input[type="checkbox"] {
+	flex: none;
 	width: 16px;
 	height: 16px;
+	margin: 0 !important;
+	accent-color: #2563eb;
 }
 
-.kukie-checkbox-item span {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	color: #334155;
+.kukie-checkbox-grid .kukie-checkbox-item span {
+	min-width: 0;
+	white-space: normal;
+	overflow: visible;
+	text-overflow: clip;
+	line-height: 1.3;
+}
+
+/* "Select all / Clear" row above a grid */
+.kukie-grid-tools {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 4px 0 0;
+	font-size: 12px;
+}
+
+.kukie-grid-tools .button-link {
+	font-size: 12px;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.kukie-grid-tools .kukie-grid-count {
+	margin-left: auto;
+	color: #64748b;
 }
 
 /* CTA Banner */

@@ -52,7 +52,7 @@ msgstr "Приемане на всички"
 msgid "Accepted"
 msgstr "Приети"
 
-#: templates/admin-accessibility.php:193
+#: templates/admin-accessibility.php:202
 msgid "Accessibility statement"
 msgstr "Декларация за достъпност"
 
@@ -215,7 +215,7 @@ msgstr "Цвят на бутона (hex)"
 msgid "Button size"
 msgstr "Размер на бутона"
 
-#: templates/admin-accessibility.php:166
+#: templates/admin-accessibility.php:171
 msgid "By default the panel offers your banner's languages plus English and opens in the language the banner detected for the visitor."
 msgstr "По подразбиране панелът предлага езиците на Вашия банер плюс английски и се отваря на езика, който банерът е разпознал за посетителя."
 
@@ -243,13 +243,17 @@ msgstr "Изберете \"Автоматично разпознаване\" (п
 msgid "Choose the layout and revisit button here in WordPress, or design every colour, text, category and consent rule in the Kukie.io dashboard."
 msgstr "Изберете оформлението и бутона за повторно посещение тук в WordPress или настройте всеки цвят, текст, категория и правило за съгласие в таблото на Kukie.io."
 
-#: templates/admin-accessibility.php:170
+#: templates/admin-accessibility.php:175
 msgid "Choose which languages to offer"
 msgstr "Изберете кои езици да се предлагат"
 
 #: templates/admin-banner-design.php:31
 msgid "Classic centered modal"
 msgstr "Класически центриран модален прозорец"
+
+#: templates/admin-accessibility.php:157 templates/admin-accessibility.php:187
+msgid "Clear"
+msgstr "Изчистване"
 
 #: includes/class-kukie-admin.php:146 includes/class-kukie-admin.php:147
 #: includes/class-kukie-plugin.php:374
@@ -375,7 +379,7 @@ msgstr "Състояние на съгласието по подразбиран
 msgid "Default Language"
 msgstr "Език по подразбиране"
 
-#: templates/admin-accessibility.php:185
+#: templates/admin-accessibility.php:194
 msgid "Default language"
 msgstr "Език по подразбиране"
 
@@ -450,7 +454,7 @@ msgid "Enabled Languages"
 msgstr "Активирани езици"
 
 #. translators: %s: link to the accessibility widget page on Kukie.io
-#: templates/admin-accessibility.php:227
+#: templates/admin-accessibility.php:236
 #, php-format
 msgid "Every text in the panel can be reworded per language in %s."
 msgstr "Всеки текст в панела може да бъде променен за всеки език в %s."
@@ -599,7 +603,7 @@ msgstr "Kukie:"
 msgid "Language"
 msgstr "Език"
 
-#: templates/admin-accessibility.php:165
+#: templates/admin-accessibility.php:170
 msgid "Languages"
 msgstr "Езици"
 
@@ -620,16 +624,16 @@ msgid "Learn more"
 msgstr "Научете повече"
 
 #. translators: %s: link to the site's Legal Documents page on Kukie.io
-#: templates/admin-accessibility.php:213
+#: templates/admin-accessibility.php:222
 #, php-format
 msgid "Leave empty to link the statement generated and published from the site's %s on Kukie.io."
 msgstr "Оставете празно, за да се използва декларацията, генерирана и публикувана от %s на сайта в Kukie.io."
 
-#: templates/admin-accessibility.php:214
+#: templates/admin-accessibility.php:223
 msgid "Legal Documents page"
 msgstr "страницата Правни документи"
 
-#: templates/admin-accessibility.php:197
+#: templates/admin-accessibility.php:206
 msgid "Link to an accessibility statement from the panel"
 msgstr "Връзка към декларация за достъпност от панела"
 
@@ -725,7 +729,7 @@ msgstr "Непроверено"
 msgid "Off"
 msgstr "Изключено"
 
-#: templates/admin-accessibility.php:180
+#: templates/admin-accessibility.php:185
 msgid "Offered languages"
 msgstr "Предлагани езици"
 
@@ -769,7 +773,7 @@ msgstr "Общ преглед"
 msgid "Pages Scanned"
 msgstr "Сканирани страници"
 
-#: templates/admin-accessibility.php:158
+#: templates/admin-accessibility.php:163
 msgid "Panel sections"
 msgstr "Секции на панела"
 
@@ -797,7 +801,7 @@ msgstr "Изберете цвят на бутона"
 msgid "Pick an icon colour"
 msgstr "Изберете цвят на иконата"
 
-#: templates/admin-accessibility.php:171
+#: templates/admin-accessibility.php:176
 msgid "Pick any of the 70+ built-in translations. With more than 8 languages the panel's flag picker becomes a dropdown."
 msgstr "Изберете от 70+ вградени превода. При повече от 8 езика изборът на език с флагове в панела става падащо меню."
 
@@ -875,7 +879,7 @@ msgstr "Стартиране на ново сканиране"
 msgid "Save Changes"
 msgstr "Запазване на промените"
 
-#: templates/admin-accessibility.php:237
+#: templates/admin-accessibility.php:246
 #: templates/admin-banner-behaviour.php:103 templates/admin-banner-gcm.php:55
 #: templates/admin-banner-iframes.php:44
 #: templates/admin-banner-language.php:115 templates/admin-banner-uet.php:38
@@ -883,7 +887,7 @@ msgstr "Запазване на промените"
 msgid "Save Settings"
 msgstr "Запазване на настройките"
 
-#: templates/admin-accessibility.php:240
+#: templates/admin-accessibility.php:249
 #: templates/admin-banner-behaviour.php:106
 #: templates/admin-banner-design.php:166 templates/admin-banner-gcm.php:58
 #: templates/admin-banner-iframes.php:47
@@ -895,6 +899,10 @@ msgstr "Запазване..."
 #: templates/admin-settings.php:75
 msgid "Script Position"
 msgstr "Позиция на скрипта"
+
+#: templates/admin-accessibility.php:156
+msgid "Select all"
+msgstr "Избиране на всички"
 
 #: templates/admin-banner-language.php:90
 msgid "Select which languages are available for your cookie banner."
@@ -933,7 +941,7 @@ msgstr "Показване на брандинг"
 msgid "Show/hide API key"
 msgstr "Показване/скриване на API ключа"
 
-#: templates/admin-accessibility.php:198
+#: templates/admin-accessibility.php:207
 msgid "Shown in the panel footer."
 msgstr "Показва се в долната част на панела."
 
@@ -961,7 +969,7 @@ msgstr "Малка плаваща карта"
 msgid "Standard (44px)"
 msgstr "Стандартен (44px)"
 
-#: templates/admin-accessibility.php:207
+#: templates/admin-accessibility.php:216
 msgid "Statement URL"
 msgstr "URL на декларацията"
 
@@ -1101,7 +1109,7 @@ msgstr "Надграждане в Kukie.io"
 msgid "Use it only if another script in the head interferes with the banner. The banner appears a moment later."
 msgstr "Използвайте само ако друг скрипт в началото на страницата пречи на банера. Банерът се появява малко по-късно."
 
-#: templates/admin-accessibility.php:187
+#: templates/admin-accessibility.php:196
 msgid "Used when the visitor's language cannot be detected. Auto-detection always wins when it resolves."
 msgstr "Използва се, когато езикът на посетителя не може да бъде разпознат. Автоматичното разпознаване винаги има предимство, когато успее."
 
@@ -1195,7 +1203,7 @@ msgstr "Блокиране на iFrame"
 msgid "iFrame blocking settings saved."
 msgstr "Настройките за блокиране на iFrame са запазени."
 
-#: templates/admin-accessibility.php:228 templates/admin-banner-design.php:179
+#: templates/admin-accessibility.php:237 templates/admin-banner-design.php:179
 msgid "your Kukie.io dashboard"
 msgstr "Вашето табло на Kukie.io"
 

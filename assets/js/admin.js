@@ -1325,6 +1325,8 @@
 			});
 		}
 		renderA11yDefaultOptions(a.default_language || '');
+		updateGridCount('kukie-a11y-modules');
+		updateGridCount('kukie-a11y-languages');
 
 		// Statement link
 		setChecked('kukie-a11y-stmt-enabled', a.statement_enabled !== false);
@@ -1433,6 +1435,35 @@
 	}
 
 	// ─────────────────────────────────────────
+	// CHECKBOX GRID TOOLS (select all / clear / "n of m" count)
+	// ─────────────────────────────────────────
+
+	function updateGridCount(gridId) {
+		const grid = document.getElementById(gridId);
+		const out = document.querySelector(`[data-kukie-count="${gridId}"]`);
+		if (!grid || !out) return;
+		const all = grid.querySelectorAll('input[type="checkbox"]');
+		const on = grid.querySelectorAll('input[type="checkbox"]:checked');
+		out.textContent = all.length ? `${on.length} / ${all.length}` : '';
+	}
+
+	function initGridTools() {
+		document.querySelectorAll('[data-kukie-check]').forEach(btn => {
+			btn.addEventListener('click', () => {
+				const grid = document.getElementById(btn.dataset.kukieGrid);
+				if (!grid) return;
+				const checked = btn.dataset.kukieCheck === 'all';
+				grid.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = checked; });
+				grid.dispatchEvent(new Event('change', { bubbles: true }));
+				updateGridCount(btn.dataset.kukieGrid);
+			});
+		});
+		document.querySelectorAll('.kukie-checkbox-grid').forEach(grid => {
+			grid.addEventListener('change', () => updateGridCount(grid.id));
+		});
+	}
+
+	// ─────────────────────────────────────────
 	// HELPERS
 	// ─────────────────────────────────────────
 
@@ -1496,6 +1527,7 @@
 
 	document.addEventListener('DOMContentLoaded', () => {
 		initRocketNotice();
+		initGridTools();
 
 		// Detect which page we're on by looking for page-specific elements
 		if (document.getElementById('kukie-connect-form')) {

@@ -52,7 +52,7 @@ msgstr "Acceptați toate"
 msgid "Accepted"
 msgstr ""
 
-#: templates/admin-accessibility.php:193
+#: templates/admin-accessibility.php:202
 msgid "Accessibility statement"
 msgstr ""
 
@@ -215,7 +215,7 @@ msgstr ""
 msgid "Button size"
 msgstr ""
 
-#: templates/admin-accessibility.php:166
+#: templates/admin-accessibility.php:171
 msgid "By default the panel offers your banner's languages plus English and opens in the language the banner detected for the visitor."
 msgstr ""
 
@@ -243,13 +243,17 @@ msgstr ""
 msgid "Choose the layout and revisit button here in WordPress, or design every colour, text, category and consent rule in the Kukie.io dashboard."
 msgstr ""
 
-#: templates/admin-accessibility.php:170
+#: templates/admin-accessibility.php:175
 msgid "Choose which languages to offer"
 msgstr ""
 
 #: templates/admin-banner-design.php:31
 msgid "Classic centered modal"
 msgstr "Fereastră modală clasică centrată"
+
+#: templates/admin-accessibility.php:157 templates/admin-accessibility.php:187
+msgid "Clear"
+msgstr ""
 
 #: includes/class-kukie-admin.php:146 includes/class-kukie-admin.php:147
 #: includes/class-kukie-plugin.php:374
@@ -375,7 +379,7 @@ msgstr "Starea implicită a consimțământului"
 msgid "Default Language"
 msgstr "Limba implicită"
 
-#: templates/admin-accessibility.php:185
+#: templates/admin-accessibility.php:194
 msgid "Default language"
 msgstr ""
 
@@ -450,7 +454,7 @@ msgid "Enabled Languages"
 msgstr "Limbi activate"
 
 #. translators: %s: link to the accessibility widget page on Kukie.io
-#: templates/admin-accessibility.php:227
+#: templates/admin-accessibility.php:236
 #, php-format
 msgid "Every text in the panel can be reworded per language in %s."
 msgstr ""
@@ -599,7 +603,7 @@ msgstr ""
 msgid "Language"
 msgstr "Limbă"
 
-#: templates/admin-accessibility.php:165
+#: templates/admin-accessibility.php:170
 msgid "Languages"
 msgstr ""
 
@@ -620,16 +624,16 @@ msgid "Learn more"
 msgstr "Aflați mai multe"
 
 #. translators: %s: link to the site's Legal Documents page on Kukie.io
-#: templates/admin-accessibility.php:213
+#: templates/admin-accessibility.php:222
 #, php-format
 msgid "Leave empty to link the statement generated and published from the site's %s on Kukie.io."
 msgstr ""
 
-#: templates/admin-accessibility.php:214
+#: templates/admin-accessibility.php:223
 msgid "Legal Documents page"
 msgstr ""
 
-#: templates/admin-accessibility.php:197
+#: templates/admin-accessibility.php:206
 msgid "Link to an accessibility statement from the panel"
 msgstr ""
 
@@ -725,7 +729,7 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: templates/admin-accessibility.php:180
+#: templates/admin-accessibility.php:185
 msgid "Offered languages"
 msgstr ""
 
@@ -769,7 +773,7 @@ msgstr ""
 msgid "Pages Scanned"
 msgstr "Pagini scanate"
 
-#: templates/admin-accessibility.php:158
+#: templates/admin-accessibility.php:163
 msgid "Panel sections"
 msgstr ""
 
@@ -797,7 +801,7 @@ msgstr ""
 msgid "Pick an icon colour"
 msgstr ""
 
-#: templates/admin-accessibility.php:171
+#: templates/admin-accessibility.php:176
 msgid "Pick any of the 70+ built-in translations. With more than 8 languages the panel's flag picker becomes a dropdown."
 msgstr ""
 
@@ -875,7 +879,7 @@ msgstr "Rulați o scanare nouă"
 msgid "Save Changes"
 msgstr "Salvați modificările"
 
-#: templates/admin-accessibility.php:237
+#: templates/admin-accessibility.php:246
 #: templates/admin-banner-behaviour.php:103 templates/admin-banner-gcm.php:55
 #: templates/admin-banner-iframes.php:44
 #: templates/admin-banner-language.php:115 templates/admin-banner-uet.php:38
@@ -883,7 +887,7 @@ msgstr "Salvați modificările"
 msgid "Save Settings"
 msgstr "Salvați setările"
 
-#: templates/admin-accessibility.php:240
+#: templates/admin-accessibility.php:249
 #: templates/admin-banner-behaviour.php:106
 #: templates/admin-banner-design.php:166 templates/admin-banner-gcm.php:58
 #: templates/admin-banner-iframes.php:47
@@ -895,6 +899,10 @@ msgstr "Se salvează..."
 #: templates/admin-settings.php:75
 msgid "Script Position"
 msgstr "Poziția scriptului"
+
+#: templates/admin-accessibility.php:156
+msgid "Select all"
+msgstr ""
 
 #: templates/admin-banner-language.php:90
 msgid "Select which languages are available for your cookie banner."
@@ -933,7 +941,7 @@ msgstr ""
 msgid "Show/hide API key"
 msgstr "Afișare/ascundere cheie API"
 
-#: templates/admin-accessibility.php:198
+#: templates/admin-accessibility.php:207
 msgid "Shown in the panel footer."
 msgstr ""
 
@@ -961,7 +969,7 @@ msgstr "Card flotant mic"
 msgid "Standard (44px)"
 msgstr ""
 
-#: templates/admin-accessibility.php:207
+#: templates/admin-accessibility.php:216
 msgid "Statement URL"
 msgstr ""
 
@@ -1097,7 +1105,7 @@ msgstr ""
 msgid "Use it only if another script in the head interferes with the banner. The banner appears a moment later."
 msgstr ""
 
-#: templates/admin-accessibility.php:187
+#: templates/admin-accessibility.php:196
 msgid "Used when the visitor's language cannot be detected. Auto-detection always wins when it resolves."
 msgstr ""
 
@@ -1191,7 +1199,7 @@ msgstr ""
 msgid "iFrame blocking settings saved."
 msgstr ""
 
-#: templates/admin-accessibility.php:228 templates/admin-banner-design.php:179
+#: templates/admin-accessibility.php:237 templates/admin-banner-design.php:179
 msgid "your Kukie.io dashboard"
 msgstr "panoul de control Kukie.io"
 

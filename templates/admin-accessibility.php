@@ -152,6 +152,11 @@ $kukie_app_url = 'https://app.kukie.io';
 					<p class="kukie-card-description" id="kukie-a11y-modules-hint"><?php esc_html_e( 'Untick a tool and visitors never see it. A hidden module is fully inactive, and new tools added to the widget later appear automatically unless you hide them.', 'kukie-cookie-consent' ); ?></p>
 					<fieldset class="kukie-fieldset kukie-form-group" aria-describedby="kukie-a11y-modules-hint">
 						<legend class="kukie-legend"><?php esc_html_e( 'Adjustments', 'kukie-cookie-consent' ); ?></legend>
+						<div class="kukie-grid-tools">
+							<button type="button" class="button-link" data-kukie-check="all" data-kukie-grid="kukie-a11y-modules"><?php esc_html_e( 'Select all', 'kukie-cookie-consent' ); ?></button>
+							<button type="button" class="button-link" data-kukie-check="none" data-kukie-grid="kukie-a11y-modules"><?php esc_html_e( 'Clear', 'kukie-cookie-consent' ); ?></button>
+							<span class="kukie-grid-count" data-kukie-count="kukie-a11y-modules" aria-live="polite"></span>
+						</div>
 						<div class="kukie-checkbox-grid" id="kukie-a11y-modules"></div>
 					</fieldset>
 					<fieldset class="kukie-fieldset kukie-form-group">
@@ -178,6 +183,10 @@ $kukie_app_url = 'https://app.kukie.io';
 
 					<fieldset class="kukie-fieldset kukie-form-group" id="kukie-a11y-langs-wrap" hidden>
 						<legend class="kukie-legend"><?php esc_html_e( 'Offered languages', 'kukie-cookie-consent' ); ?></legend>
+						<div class="kukie-grid-tools">
+							<button type="button" class="button-link" data-kukie-check="none" data-kukie-grid="kukie-a11y-languages"><?php esc_html_e( 'Clear', 'kukie-cookie-consent' ); ?></button>
+							<span class="kukie-grid-count" data-kukie-count="kukie-a11y-languages" aria-live="polite"></span>
+						</div>
 						<div class="kukie-checkbox-grid" id="kukie-a11y-languages"></div>
 					</fieldset>
 
