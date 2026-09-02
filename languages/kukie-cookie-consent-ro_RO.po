@@ -2,10 +2,10 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kukie Cookie Consent 1.8.0\n"
+"Project-Id-Version: Kukie Cookie Consent 1.8.1\n"
 "Report-Msgid-Bugs-To: support@kukie.io\n"
 "POT-Creation-Date: 2026-09-01 00:00+0000\n"
-"PO-Revision-Date: 2026-03-30 00:00+0000\n"
+"PO-Revision-Date: 2026-09-02 00:00+0000\n"
 "Last-Translator: Kukie.io <support@kukie.io>\n"
 "Language-Team: Romanian <support@kukie.io>\n"
 "Language: ro_RO\n"
@@ -18,23 +18,23 @@ msgstr ""
 #: includes/class-kukie-admin.php:280
 #, php-format
 msgid "(Trial: %sd)"
-msgstr ""
+msgstr "(Perioadă de probă: %s z)"
 
 #: includes/class-kukie-admin.php:307
 msgid "(opens in a new tab)"
-msgstr ""
+msgstr "(se deschide într-o filă nouă)"
 
 #: templates/admin-accessibility.php:65
 msgid "17 adjustments: bigger text, spacing, line height, dyslexia-friendly font, contrast modes, saturation, highlight links and titles, hide images, pause animations, mute sounds, big cursor, reading guide, read aloud and more."
-msgstr ""
+msgstr "17 ajustări: text mai mare, spațiere, înălțimea rândului, font adaptat pentru dislexie, moduri de contrast, saturație, evidențierea linkurilor și a titlurilor, ascunderea imaginilor, oprirea animațiilor, dezactivarea sunetelor, cursor mare, ghid de citire, citire cu voce tare și altele."
 
 #: templates/admin-accessibility.php:120
 msgid "44px is the recognised accessibility minimum for a touch target, so there is no smaller option."
-msgstr ""
+msgstr "44px este minimul de accesibilitate recunoscut pentru o zonă tactilă, așa că nu există o opțiune mai mică."
 
 #: templates/admin-accessibility.php:66
 msgid "6 one-tap profiles (motor impaired, low vision, dyslexia, cognitive, ADHD, seizure-safe) and a page structure navigator."
-msgstr ""
+msgstr "6 profiluri cu o singură atingere (deficiențe motorii, vedere slabă, dislexie, cognitiv, ADHD, protecție împotriva crizelor) și un navigator al structurii paginii."
 
 #: templates/admin-connect.php:23
 msgid "API Key"
@@ -42,7 +42,7 @@ msgstr "Cheie API"
 
 #: includes/class-kukie-api-client.php:116
 msgid "API error."
-msgstr ""
+msgstr "Eroare API."
 
 #: templates/admin-banner-design.php:237
 msgid "Accept All"
@@ -50,28 +50,28 @@ msgstr "Acceptați toate"
 
 #: includes/class-kukie-admin.php:276
 msgid "Accepted"
-msgstr ""
+msgstr "Acceptate"
 
 #: templates/admin-accessibility.php:202
 msgid "Accessibility statement"
-msgstr ""
+msgstr "Declarație de accesibilitate"
 
 #: includes/class-kukie-admin.php:124 includes/class-kukie-admin.php:125
 #: templates/admin-accessibility.php:22 templates/admin-dashboard.php:61
 msgid "Accessibility widget"
-msgstr ""
+msgstr "Widget de accesibilitate"
 
 #: templates/admin-accessibility.php:77
 msgid "Accessibility widget settings"
-msgstr ""
+msgstr "Setările widgetului de accesibilitate"
 
 #: includes/class-kukie-admin.php:1347
 msgid "Accessibility widget settings saved."
-msgstr ""
+msgstr "Setările widgetului de accesibilitate au fost salvate."
 
 #: includes/class-kukie-admin.php:263
 msgid "Active"
-msgstr ""
+msgstr "Activ"
 
 #: templates/admin-settings.php:111
 msgid "Add this code to your theme header template."
@@ -79,27 +79,27 @@ msgstr "Adăugați acest cod în șablonul antetului temei dumneavoastră."
 
 #: templates/admin-settings.php:66
 msgid "Adds the Kukie consent banner to every public page of this site."
-msgstr ""
+msgstr "Adaugă bannerul de consimțământ Kukie pe fiecare pagină publică a acestui site."
 
 #: templates/admin-accessibility.php:154
 msgid "Adjustments"
-msgstr ""
+msgstr "Ajustări"
 
 #: templates/admin-accessibility.php:53
 msgid "Already upgraded? Check again"
-msgstr ""
+msgstr "Ați trecut deja la un plan superior? Verificați din nou"
 
 #: templates/admin-accessibility.php:95
 msgid "Appearance"
-msgstr ""
+msgstr "Aspect"
 
 #: includes/class-kukie-admin.php:281
 msgid "Are you sure you want to disconnect from Kukie.io? The cookie consent banner will be removed from your site."
-msgstr ""
+msgstr "Sigur doriți să vă deconectați de la Kukie.io? Bannerul de consimțământ pentru cookie-uri va fi eliminat de pe site-ul dumneavoastră."
 
 #: templates/admin-settings.php:91
 msgid "At the end of the page"
-msgstr ""
+msgstr "La sfârșitul paginii"
 
 #: templates/admin-banner-design.php:140
 msgid "Auto (contrast)"
@@ -111,23 +111,23 @@ msgstr "Traducere automată"
 
 #: templates/admin-banner-behaviour.php:38
 msgid "Auto-block Scripts"
-msgstr ""
+msgstr "Blocare automată a scripturilor"
 
 #: templates/admin-banner-language.php:32
 msgid "Auto-detect (WPML / Polylang / WordPress)"
-msgstr ""
+msgstr "Detectare automată (WPML / Polylang / WordPress)"
 
 #: includes/class-kukie-admin.php:290
 msgid "Auto-detect (recommended)"
-msgstr ""
+msgstr "Detectare automată (recomandat)"
 
 #: templates/admin-banner-behaviour.php:50
 msgid "Auto-reject non-essential cookies when the browser sends the DNT signal."
-msgstr ""
+msgstr "Respinge automat cookie-urile neesențiale când browserul trimite semnalul DNT."
 
 #: templates/admin-banner-behaviour.php:61
 msgid "Auto-reject when a GPC signal is detected."
-msgstr ""
+msgstr "Respinge automat când este detectat un semnal GPC."
 
 #: templates/admin-banner-language.php:71
 msgid "Automatically detect visitor language and show the banner in their language."
@@ -147,39 +147,39 @@ msgstr "Designul bannerului a fost salvat."
 
 #: templates/admin-banner-language.php:30
 msgid "Banner language"
-msgstr ""
+msgstr "Limba bannerului"
 
 #: includes/class-kukie-admin.php:273
 msgid "Banner script not found."
-msgstr ""
+msgstr "Scriptul bannerului nu a fost găsit."
 
 #: includes/class-kukie-admin.php:271
 msgid "Banner script verified on your site!"
-msgstr ""
+msgstr "Scriptul bannerului a fost verificat pe site-ul dumneavoastră!"
 
 #: templates/admin-banner-behaviour.php:22 templates/admin-banner.php:19
 msgid "Behaviour"
-msgstr ""
+msgstr "Comportament"
 
 #: includes/class-kukie-admin.php:1264
 msgid "Behaviour settings saved."
-msgstr ""
+msgstr "Setările de comportament au fost salvate."
 
 #: templates/admin-banner-behaviour.php:39
 msgid "Best-effort blocking of known tracker scripts (Google Analytics, Facebook Pixel, etc.) until the visitor gives consent. Works with the opt-in consent model. Browsers cannot cancel scripts that were already inserted by other code, so for guaranteed blocking tag the script manually with type=\"text/plain\" and data-cc-category."
-msgstr ""
+msgstr "Blocare, pe cât posibil, a scripturilor de urmărire cunoscute (Google Analytics, Facebook Pixel etc.) până când vizitatorul își dă consimțământul. Funcționează cu modelul de consimțământ opt-in. Browserele nu pot anula scripturile deja inserate de alt cod, așa că pentru o blocare garantată marcați scriptul manual cu type=\"text/plain\" și data-cc-category."
 
 #: templates/admin-banner-iframes.php:26
 msgid "Block third-party iFrames until consent"
-msgstr ""
+msgstr "Blocați iFrame-urile terților până la consimțământ"
 
 #: templates/admin-banner-iframes.php:22
 msgid "Block third-party iFrames until the visitor gives consent. Blocked iFrames show a styled placeholder with an option to accept the relevant cookie category."
-msgstr ""
+msgstr "Blochează iFrame-urile terților până când vizitatorul își dă consimțământul. iFrame-urile blocate afișează un substituent stilizat cu opțiunea de a accepta categoria de cookie-uri relevantă."
 
 #: templates/admin-banner-iframes.php:36
 msgid "Blocked services"
-msgstr ""
+msgstr "Servicii blocate"
 
 #: templates/admin-banner-design.php:37
 msgid "Bottom Bar"
@@ -205,19 +205,19 @@ msgstr "Text buton"
 
 #: templates/admin-accessibility.php:125
 msgid "Button colour"
-msgstr ""
+msgstr "Culoarea butonului"
 
 #: templates/admin-accessibility.php:133
 msgid "Button colour (hex)"
-msgstr ""
+msgstr "Culoarea butonului (hex)"
 
 #: templates/admin-accessibility.php:114
 msgid "Button size"
-msgstr ""
+msgstr "Dimensiunea butonului"
 
 #: templates/admin-accessibility.php:171
 msgid "By default the panel offers your banner's languages plus English and opens in the language the banner detected for the visitor."
-msgstr ""
+msgstr "În mod implicit, panoul oferă limbile bannerului dumneavoastră plus engleza și se deschide în limba pe care bannerul a detectat-o pentru vizitator."
 
 #: templates/admin-banner-design.php:66
 msgid "Center"
@@ -225,7 +225,7 @@ msgstr "Centru"
 
 #: templates/admin-accessibility.php:71
 msgid "Changes take effect once the banner script cache refreshes - usually within a minute or two. If you still see the previous version, do a hard refresh in your browser."
-msgstr ""
+msgstr "Modificările intră în vigoare după ce se reîmprospătează cache-ul scriptului bannerului - de obicei în unu-două minute. Dacă vedeți în continuare versiunea anterioară, faceți o reîmprospătare forțată în browser."
 
 #: templates/admin-settings.php:117
 msgid "Check if the banner script is detected on your site."
@@ -233,19 +233,19 @@ msgstr "Verificați dacă scriptul bannerului este detectat pe site-ul dumneavoa
 
 #: includes/class-kukie-admin.php:291
 msgid "Checking..."
-msgstr ""
+msgstr "Se verifică..."
 
 #: templates/admin-banner-language.php:65
 msgid "Choose \"Auto-detect\" (recommended) to follow WPML, Polylang, or the WordPress site language. Select a specific language to force the banner into that locale regardless of page context."
-msgstr ""
+msgstr "Alegeți \"Detectare automată\" (recomandat) pentru a urma WPML, Polylang sau limba site-ului WordPress. Selectați o anumită limbă pentru a forța bannerul în acea limbă indiferent de contextul paginii."
 
 #: templates/admin-dashboard.php:175
 msgid "Choose the layout and revisit button here in WordPress, or design every colour, text, category and consent rule in the Kukie.io dashboard."
-msgstr ""
+msgstr "Alegeți aspectul și butonul de revenire aici, în WordPress, sau proiectați fiecare culoare, text, categorie și regulă de consimțământ în panoul de control Kukie.io."
 
 #: templates/admin-accessibility.php:175
 msgid "Choose which languages to offer"
-msgstr ""
+msgstr "Alegeți ce limbi să oferiți"
 
 #: templates/admin-banner-design.php:31
 msgid "Classic centered modal"
@@ -253,7 +253,7 @@ msgstr "Fereastră modală clasică centrată"
 
 #: templates/admin-accessibility.php:157 templates/admin-accessibility.php:187
 msgid "Clear"
-msgstr ""
+msgstr "Deselectați toate"
 
 #: includes/class-kukie-admin.php:146 includes/class-kukie-admin.php:147
 #: includes/class-kukie-plugin.php:374
@@ -300,19 +300,19 @@ msgstr "Prezentare generală a consimțământului"
 #: includes/class-kukie-admin.php:161 includes/class-kukie-admin.php:162
 #: templates/admin-banner.php:29
 msgid "Consent banner"
-msgstr ""
+msgstr "Banner de consimțământ"
 
 #: templates/admin-banner.php:37
 msgid "Consent banner sections"
-msgstr ""
+msgstr "Secțiunile bannerului de consimțământ"
 
 #: templates/admin-dashboard.php:178
 msgid "Consent banner settings"
-msgstr ""
+msgstr "Setările bannerului de consimțământ"
 
 #: templates/admin-banner-regions.php:19
 msgid "Consent model, button visibility, texts and cookie-wall behaviour per visitor region (EU opt-in, US opt-out, sub-regions such as CNIL or Quebec) are managed in the Kukie.io banner editor. They apply to this site automatically - there is nothing to configure here."
-msgstr ""
+msgstr "Modelul de consimțământ, vizibilitatea butoanelor, textele și comportamentul cookie wall pentru fiecare regiune a vizitatorilor (opt-in în UE, opt-out în SUA, subregiuni precum CNIL sau Quebec) sunt gestionate în editorul de banner Kukie.io. Se aplică automat acestui site - nu este nimic de configurat aici."
 
 #: templates/admin-dashboard.php:85
 msgid "Consents Today"
@@ -324,7 +324,7 @@ msgstr "Cookie"
 
 #: templates/admin-dashboard.php:49
 msgid "Cookie Banner Status"
-msgstr ""
+msgstr "Starea bannerului"
 
 #: templates/admin-dashboard.php:137
 msgid "Cookie Scan"
@@ -344,11 +344,11 @@ msgstr "Conectarea nu a reușit. Vă rugăm să verificați cheia API."
 
 #: includes/class-kukie-admin.php:261
 msgid "Could not load settings."
-msgstr ""
+msgstr "Setările nu au putut fi încărcate."
 
 #: includes/class-kukie-admin.php:623
 msgid "Could not securely store the API key on this server. Please contact your host about OpenSSL support."
-msgstr ""
+msgstr "Cheia API nu a putut fi stocată în siguranță pe acest server. Vă rugăm să contactați furnizorul de găzduire în legătură cu suportul OpenSSL."
 
 #: includes/class-kukie-admin.php:1416
 msgid "Could not start scan."
@@ -356,7 +356,7 @@ msgstr "Scanarea nu a putut fi pornită."
 
 #: includes/class-kukie-admin.php:278
 msgid "Custom"
-msgstr ""
+msgstr "Personalizate"
 
 #: templates/admin-banner-design.php:235
 msgid "Customise"
@@ -381,23 +381,23 @@ msgstr "Limba implicită"
 
 #: templates/admin-accessibility.php:194
 msgid "Default language"
-msgstr ""
+msgstr "Limba implicită"
 
 #: includes/class-kukie-admin.php:489
 msgid "Delay JavaScript execution"
-msgstr ""
+msgstr "Amânare execuție JavaScript"
 
 #: templates/admin-banner.php:18
 msgid "Design"
-msgstr ""
+msgstr "Design"
 
 #: templates/admin-banner-behaviour.php:83
 msgid "Dims the page behind the banner. Floating banners show no overlay unless this is on."
-msgstr ""
+msgstr "Întunecă pagina din spatele bannerului. Bannerele flotante nu afișează nicio suprapunere decât dacă această opțiune este activată."
 
 #: templates/admin-banner-behaviour.php:93
 msgid "Disabled Pages"
-msgstr ""
+msgstr "Pagini dezactivate"
 
 #: includes/class-kukie-admin.php:283 templates/admin-settings.php:54
 msgid "Disconnect from Kukie.io"
@@ -409,7 +409,7 @@ msgstr "Deconectat de la Kukie.io."
 
 #: includes/class-kukie-admin.php:282
 msgid "Disconnecting..."
-msgstr ""
+msgstr "Se deconectează..."
 
 #: includes/class-kukie-admin.php:543
 msgid "Dismiss"
@@ -417,7 +417,7 @@ msgstr "Închide"
 
 #: templates/admin-banner-behaviour.php:28
 msgid "Display \"Powered by Kukie.io\" branding. Hiding it is available on plans that include branding removal."
-msgstr ""
+msgstr "Afișează marcajul \"Powered by Kukie.io\". Ascunderea lui este disponibilă în planurile care includ eliminarea marcajului."
 
 #: templates/admin-connect.php:77 templates/admin-settings.php:43
 msgid "Domain"
@@ -447,7 +447,7 @@ msgstr "Activare semnale de consimțământ Microsoft UET"
 
 #: templates/admin-accessibility.php:83
 msgid "Enable accessibility widget"
-msgstr ""
+msgstr "Activare widget de accesibilitate"
 
 #: templates/admin-banner-language.php:89
 msgid "Enabled Languages"
@@ -457,23 +457,23 @@ msgstr "Limbi activate"
 #: templates/admin-accessibility.php:236
 #, php-format
 msgid "Every text in the panel can be reworded per language in %s."
-msgstr ""
+msgstr "Fiecare text din panou poate fi reformulat pentru fiecare limbă în %s."
 
 #: includes/class-kukie-admin.php:519
 msgid "Excluded JavaScript Files"
-msgstr ""
+msgstr "Fișiere JavaScript excluse"
 
 #: templates/admin-accessibility.php:118
 msgid "Extra large (60px)"
-msgstr ""
+msgstr "Foarte mare (60px)"
 
 #: includes/class-kukie-admin.php:284
 msgid "Failed to disconnect."
-msgstr ""
+msgstr "Deconectarea a eșuat."
 
 #: includes/class-kukie-admin.php:262
 msgid "Failed to save."
-msgstr ""
+msgstr "Salvarea a eșuat."
 
 #. translators: %s: link to Kukie.io dashboard
 #: templates/admin-connect.php:43
@@ -499,11 +499,11 @@ msgstr "Bară cu lățime completă în partea de sus"
 
 #: templates/admin-accessibility.php:68
 msgid "Fully self-hosted inside the Kukie script: no third-party requests, and visitor preferences stay in their own browser."
-msgstr ""
+msgstr "Complet integrat în scriptul Kukie: fără cereri către terți, iar preferințele vizitatorilor rămân în propriul lor browser."
 
 #: includes/class-kukie-admin.php:424 templates/admin-dashboard.php:32
 msgid "Generate a new API key"
-msgstr ""
+msgstr "Generați o cheie API nouă"
 
 #: templates/admin-connect.php:82
 msgid "Go to Dashboard"
@@ -519,15 +519,15 @@ msgstr "Google Consent Mode v2"
 
 #: templates/admin-accessibility.php:139
 msgid "Hide on mobile"
-msgstr ""
+msgstr "Ascundere pe mobil"
 
 #: templates/admin-accessibility.php:140
 msgid "Hides the widget button on screens narrower than 768px. Adjustments a visitor already applied stay applied."
-msgstr ""
+msgstr "Ascunde butonul widgetului pe ecranele mai înguste de 768px. Ajustările deja aplicate de un vizitator rămân aplicate."
 
 #: templates/admin-banner-behaviour.php:27
 msgid "Higher plans"
-msgstr ""
+msgstr "Planuri superioare"
 
 #: templates/admin-banner-design.php:113
 msgid "Icon"
@@ -543,27 +543,27 @@ msgstr "Doar pictogramă"
 
 #: templates/admin-banner-design.php:144
 msgid "Icon colour (hex)"
-msgstr ""
+msgstr "Culoarea pictogramei (hex)"
 
 #: templates/admin-accessibility.php:109
 msgid "If your cookie banner's revisit button uses the same corner, the two stack neatly instead of overlapping."
-msgstr ""
+msgstr "Dacă butonul de revenire al bannerului de cookie-uri folosește același colț, cele două se așază ordonat unul peste altul în loc să se suprapună."
 
 #: templates/admin-settings.php:82
 msgid "In the page head"
-msgstr ""
+msgstr "În antetul paginii"
 
 #: includes/class-kukie-admin.php:264
 msgid "Inactive"
-msgstr ""
+msgstr "Inactiv"
 
 #: templates/admin-accessibility.php:41
 msgid "Included on higher plans"
-msgstr ""
+msgstr "Inclus în planurile superioare"
 
 #: templates/admin-accessibility.php:128
 msgid "Inherit the banner theme's primary colour"
-msgstr ""
+msgstr "Moștenește culoarea principală a temei bannerului"
 
 #: includes/class-kukie-admin.php:609
 msgid "Invalid API key format. The key should be 64 characters."
@@ -571,7 +571,7 @@ msgstr "Format de cheie API nevalid. Cheia trebuie să aibă 64 de caractere."
 
 #: templates/admin-dashboard.php:24
 msgid "Invalid API key."
-msgstr ""
+msgstr "Cheie API nevalidă."
 
 #: includes/class-kukie-admin.php:82 includes/class-kukie-admin.php:83
 #: includes/class-kukie-admin.php:95 includes/class-kukie-admin.php:96
@@ -597,7 +597,7 @@ msgstr "Consimțământul pentru cookie-uri Kukie.io nu este conectat."
 
 #: includes/class-kukie-admin.php:393 includes/class-kukie-admin.php:421
 msgid "Kukie:"
-msgstr ""
+msgstr "Kukie:"
 
 #: templates/admin-banner-language.php:27 templates/admin-banner.php:21
 msgid "Language"
@@ -605,11 +605,11 @@ msgstr "Limbă"
 
 #: templates/admin-accessibility.php:170
 msgid "Languages"
-msgstr ""
+msgstr "Limbi"
 
 #: templates/admin-accessibility.php:117
 msgid "Large (52px)"
-msgstr ""
+msgstr "Mare (52px)"
 
 #: templates/admin-dashboard.php:157
 msgid "Last Scan"
@@ -627,15 +627,15 @@ msgstr "Aflați mai multe"
 #: templates/admin-accessibility.php:222
 #, php-format
 msgid "Leave empty to link the statement generated and published from the site's %s on Kukie.io."
-msgstr ""
+msgstr "Lăsați gol pentru a face legătura cu declarația generată și publicată din %s a site-ului pe Kukie.io."
 
 #: templates/admin-accessibility.php:223
 msgid "Legal Documents page"
-msgstr ""
+msgstr "pagina Documente juridice"
 
 #: templates/admin-accessibility.php:206
 msgid "Link to an accessibility statement from the panel"
-msgstr ""
+msgstr "Legătură către o declarație de accesibilitate din panou"
 
 #: templates/admin-banner-design.php:190
 msgid "Live Preview"
@@ -643,11 +643,11 @@ msgstr "Previzualizare în timp real"
 
 #: includes/class-kukie-admin.php:482
 msgid "Load JavaScript deferred"
-msgstr ""
+msgstr "Încărcare JavaScript amânată"
 
 #: templates/admin-accessibility.php:34
 msgid "Loading accessibility widget settings..."
-msgstr ""
+msgstr "Se încarcă setările widgetului de accesibilitate..."
 
 #: templates/admin-banner-design.php:15
 msgid "Loading design settings..."
@@ -661,7 +661,7 @@ msgstr "Se încarcă setările..."
 
 #: templates/admin-settings.php:83
 msgid "Loads before the rest of the page, so cookies are blocked as early as possible."
-msgstr ""
+msgstr "Se încarcă înaintea restului paginii, astfel încât cookie-urile sunt blocate cât mai devreme posibil."
 
 #: templates/admin-banner-design.php:119
 msgid "Lock"
@@ -669,15 +669,15 @@ msgstr "Lacăt"
 
 #: templates/admin-banner-gcm.php:47
 msgid "Manage region rules in the Kukie.io dashboard"
-msgstr ""
+msgstr "Gestionați regulile regionale în panoul de control Kukie.io"
 
 #: templates/admin-banner-regions.php:22
 msgid "Manage region rules on Kukie.io"
-msgstr ""
+msgstr "Gestionați regulile regionale pe Kukie.io"
 
 #: templates/admin-settings.php:100
 msgid "Manual embed"
-msgstr ""
+msgstr "Integrare manuală"
 
 #: templates/admin-banner.php:23
 msgid "Microsoft UET"
@@ -693,23 +693,23 @@ msgstr "Setările Microsoft UET au fost salvate."
 
 #: includes/class-kukie-admin.php:475
 msgid "Minify JavaScript files"
-msgstr ""
+msgstr "Minificare fișiere JavaScript"
 
 #: templates/admin-accessibility.php:151
 msgid "Modules"
-msgstr ""
+msgstr "Module"
 
 #: includes/class-kukie-admin.php:258
 msgid "Network error. Please try again."
-msgstr ""
+msgstr "Eroare de rețea. Vă rugăm să încercați din nou."
 
 #: includes/class-kukie-admin.php:274
 msgid "No data yet"
-msgstr ""
+msgstr "Încă nu există date"
 
 #: includes/class-kukie-admin.php:275
 msgid "No scans yet"
-msgstr ""
+msgstr "Încă nu există scanări"
 
 #: includes/class-kukie-admin.php:712 includes/class-kukie-admin.php:767
 #: includes/class-kukie-admin.php:826 includes/class-kukie-admin.php:1407
@@ -719,19 +719,19 @@ msgstr "Neconectat."
 
 #: includes/class-kukie-admin.php:266
 msgid "Not in plan"
-msgstr ""
+msgstr "Nu este în plan"
 
 #: includes/class-kukie-admin.php:268
 msgid "Not verified"
-msgstr ""
+msgstr "Neverificat"
 
 #: includes/class-kukie-admin.php:265
 msgid "Off"
-msgstr ""
+msgstr "Oprit"
 
 #: templates/admin-accessibility.php:185
 msgid "Offered languages"
-msgstr ""
+msgstr "Limbi oferite"
 
 #: templates/admin-banner-design.php:150
 msgid "Offset X (px)"
@@ -755,11 +755,11 @@ msgstr "Deschideți panoul de control complet"
 
 #: templates/admin-accessibility.php:24
 msgid "Open on Kukie.io"
-msgstr ""
+msgstr "Deschideți pe Kukie.io"
 
 #: templates/admin-banner.php:31
 msgid "Open the banner editor on Kukie.io"
-msgstr ""
+msgstr "Deschideți editorul de banner pe Kukie.io"
 
 #: templates/admin-connect.php:69 templates/admin-settings.php:35
 msgid "Organisation"
@@ -767,7 +767,7 @@ msgstr "Organizație"
 
 #: templates/admin-dashboard.php:42
 msgid "Overview"
-msgstr ""
+msgstr "Prezentare generală"
 
 #: templates/admin-dashboard.php:165
 msgid "Pages Scanned"
@@ -775,7 +775,7 @@ msgstr "Pagini scanate"
 
 #: templates/admin-accessibility.php:163
 msgid "Panel sections"
-msgstr ""
+msgstr "Secțiunile panoului"
 
 #: templates/admin-banner-uet.php:27
 msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking."
@@ -791,19 +791,19 @@ msgstr "Inserați cheia API de 64 de caractere"
 
 #: templates/admin-banner-design.php:131
 msgid "Pick a background colour"
-msgstr ""
+msgstr "Alegeți o culoare de fundal"
 
 #: templates/admin-accessibility.php:132
 msgid "Pick a button colour"
-msgstr ""
+msgstr "Alegeți o culoare pentru buton"
 
 #: templates/admin-banner-design.php:143
 msgid "Pick an icon colour"
-msgstr ""
+msgstr "Alegeți o culoare pentru pictogramă"
 
 #: templates/admin-accessibility.php:176
 msgid "Pick any of the 70+ built-in translations. With more than 8 languages the panel's flag picker becomes a dropdown."
-msgstr ""
+msgstr "Alegeți dintre cele peste 70 de traduceri integrate. La mai mult de 8 limbi, selectorul de steaguri din panou devine o listă derulantă."
 
 #: templates/admin-banner-design.php:108
 msgid "Pill (Icon + Text)"
@@ -825,7 +825,7 @@ msgstr "Poziție"
 
 #: templates/admin-banner-behaviour.php:23
 msgid "Privacy signals, script blocking, and how the banner reacts to consent."
-msgstr ""
+msgstr "Semnale de confidențialitate, blocarea scripturilor și modul în care bannerul reacționează la consimțământ."
 
 #: templates/admin-settings.php:82
 msgid "Recommended"
@@ -833,15 +833,15 @@ msgstr "Recomandat"
 
 #: includes/class-kukie-admin.php:396
 msgid "Reconnect"
-msgstr ""
+msgstr "Reconectare"
 
 #: templates/admin-banner-regions.php:18
 msgid "Region rules"
-msgstr ""
+msgstr "Reguli regionale"
 
 #: templates/admin-banner.php:24
 msgid "Regions"
-msgstr ""
+msgstr "Regiuni"
 
 #: templates/admin-banner-design.php:236
 msgid "Reject All"
@@ -849,23 +849,23 @@ msgstr "Respingeți toate"
 
 #: includes/class-kukie-admin.php:277
 msgid "Rejected"
-msgstr ""
+msgstr "Respinse"
 
 #: templates/admin-banner-behaviour.php:71
 msgid "Reload on Consent"
-msgstr ""
+msgstr "Reîncărcare la consimțământ"
 
 #: templates/admin-banner-behaviour.php:72
 msgid "Reload the page after consent is given or updated."
-msgstr ""
+msgstr "Reîncarcă pagina după ce consimțământul este dat sau actualizat."
 
 #: templates/admin-banner-behaviour.php:49
 msgid "Respect Do Not Track"
-msgstr ""
+msgstr "Respectați Do Not Track"
 
 #: templates/admin-banner-behaviour.php:60
 msgid "Respect Global Privacy Control"
-msgstr ""
+msgstr "Respectați Global Privacy Control"
 
 #: templates/admin-banner-design.php:87
 msgid "Revisit Button"
@@ -902,7 +902,7 @@ msgstr "Poziția scriptului"
 
 #: templates/admin-accessibility.php:156
 msgid "Select all"
-msgstr ""
+msgstr "Selectați toate"
 
 #: templates/admin-banner-language.php:90
 msgid "Select which languages are available for your cookie banner."
@@ -915,7 +915,7 @@ msgstr "Setări"
 
 #: includes/class-kukie-admin.php:259
 msgid "Settings could not be loaded, so saving is disabled. Please reload the page."
-msgstr ""
+msgstr "Setările nu au putut fi încărcate, așa că salvarea este dezactivată. Vă rugăm să reîncărcați pagina."
 
 #: includes/class-kukie-admin.php:1104
 msgid "Settings saved."
@@ -923,7 +923,7 @@ msgstr "Setările au fost salvate."
 
 #: includes/class-kukie-admin.php:867
 msgid "Settings were modified elsewhere since this page was loaded."
-msgstr ""
+msgstr "Setările au fost modificate în altă parte de la încărcarea acestei pagini."
 
 #: templates/admin-banner-design.php:116
 msgid "Shield"
@@ -931,11 +931,11 @@ msgstr "Scut"
 
 #: templates/admin-banner-behaviour.php:82
 msgid "Show Background Overlay"
-msgstr ""
+msgstr "Afișare suprapunere de fundal"
 
 #: templates/admin-banner-behaviour.php:27
 msgid "Show Branding"
-msgstr ""
+msgstr "Afișare marcaj"
 
 #: templates/admin-connect.php:35
 msgid "Show/hide API key"
@@ -943,11 +943,11 @@ msgstr "Afișare/ascundere cheie API"
 
 #: templates/admin-accessibility.php:207
 msgid "Shown in the panel footer."
-msgstr ""
+msgstr "Afișat în subsolul panoului."
 
 #: templates/admin-accessibility.php:84
 msgid "Shows the widget button on every public page of this site."
-msgstr ""
+msgstr "Afișează butonul widgetului pe fiecare pagină publică a acestui site."
 
 #: templates/admin-connect.php:91
 msgid "Sign up free at kukie.io"
@@ -967,11 +967,11 @@ msgstr "Card flotant mic"
 
 #: templates/admin-accessibility.php:116
 msgid "Standard (44px)"
-msgstr ""
+msgstr "Standard (44px)"
 
 #: templates/admin-accessibility.php:216
 msgid "Statement URL"
-msgstr ""
+msgstr "URL-ul declarației"
 
 #: templates/admin-dashboard.php:153 templates/admin-settings.php:28
 msgid "Status"
@@ -987,29 +987,29 @@ msgstr "Filă (Text)"
 
 #: includes/class-kukie-admin.php:285
 msgid "The Kukie.io service did not return accessibility widget settings. Please try again in a few minutes."
-msgstr ""
+msgstr "Serviciul Kukie.io nu a returnat setările widgetului de accesibilitate. Vă rugăm să încercați din nou în câteva minute."
 
 #. translators: %s: plan name
 #: includes/class-kukie-admin.php:287
 #, php-format
 msgid "The accessibility widget is available on the %s plan and above."
-msgstr ""
+msgstr "Widgetul de accesibilitate este disponibil începând cu planul %s."
 
 #: includes/class-kukie-admin.php:288 includes/class-kukie-admin.php:856
 msgid "The accessibility widget is not included in your plan."
-msgstr ""
+msgstr "Widgetul de accesibilitate nu este inclus în planul dumneavoastră."
 
 #: templates/admin-banner-behaviour.php:94
 msgid "The banner and its reopen button are hidden on these URL patterns (supports * wildcards), but consent enforcement still applies: script blocking, embed placeholders and stored consent keep working."
-msgstr ""
+msgstr "Bannerul și butonul său de redeschidere sunt ascunse pe aceste tipare de URL (acceptă metacaracterele *), dar aplicarea consimțământului rămâne activă: blocarea scripturilor, substituenții pentru conținutul integrat și consimțământul stocat funcționează în continuare."
 
 #: templates/admin-dashboard.php:25
 msgid "The dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site."
-msgstr ""
+msgstr "Conexiunea cu panoul de control este întreruptă - statisticile, scanările și sincronizarea setărilor sunt suspendate. Bannerul de cookie-uri în sine funcționează în continuare pe site-ul dumneavoastră."
 
 #: templates/admin-banner-gcm.php:43
 msgid "The default consent states before a visitor interacts with the banner depend on the visitor's region: opt-in regions start with consent denied, opt-out regions start with consent granted. They are managed through region rules in the Kukie.io dashboard."
-msgstr ""
+msgstr "Stările implicite ale consimțământului, înainte ca un vizitator să interacționeze cu bannerul, depind de regiunea vizitatorului: regiunile opt-in încep cu consimțământul refuzat, regiunile opt-out încep cu consimțământul acordat. Sunt gestionate prin regulile regionale din panoul de control Kukie.io."
 
 #: templates/admin-banner-language.php:85
 msgid "The fallback language when auto-translate cannot determine the visitor language."
@@ -1017,23 +1017,23 @@ msgstr "Limba implicită atunci când traducerea automată nu poate determina li
 
 #: templates/admin-accessibility.php:67
 msgid "The panel opens in the visitor's language, with 70+ built-in translations, and respects their system preferences for reduced motion and contrast."
-msgstr ""
+msgstr "Panoul se deschide în limba vizitatorului, cu peste 70 de traduceri integrate, și respectă preferințele de sistem ale acestuia pentru mișcare redusă și contrast."
 
 #: templates/admin-settings.php:101
 msgid "The plugin adds nothing. Paste the embed code below into your theme yourself."
-msgstr ""
+msgstr "Modulul nu adaugă nimic. Lipiți dumneavoastră codul de integrare de mai jos în temă."
 
 #: includes/class-kukie-admin.php:422
 msgid "The stored API key is no longer valid, so the dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site."
-msgstr ""
+msgstr "Cheia API stocată nu mai este validă, așa că conexiunea cu panoul de control este întreruptă - statisticile, scanările și sincronizarea setărilor sunt suspendate. Bannerul de cookie-uri în sine funcționează în continuare pe site-ul dumneavoastră."
 
 #: includes/class-kukie-admin.php:394
 msgid "The stored Kukie.io API key can no longer be read. This usually happens after the site's security keys (salts) were changed or the database was copied from another site. Please reconnect with your API key to restore the dashboard connection - the cookie banner itself keeps working."
-msgstr ""
+msgstr "Cheia API Kukie.io stocată nu mai poate fi citită. De obicei, acest lucru se întâmplă după schimbarea cheilor de securitate (salts) ale site-ului sau după copierea bazei de date de pe alt site. Vă rugăm să vă reconectați cu cheia API pentru a restabili conexiunea cu panoul de control - bannerul de cookie-uri în sine funcționează în continuare."
 
 #: templates/admin-accessibility.php:44
 msgid "The widget adds a floating button to your site that opens a panel of reading, contrast and navigation aids for visitors - bigger text, a dyslexia-friendly font, high contrast, read aloud, one-tap profiles and more - delivered inside the same Kukie script as your cookie banner."
-msgstr ""
+msgstr "Widgetul adaugă pe site-ul dumneavoastră un buton flotant care deschide un panou cu instrumente de citire, contrast și navigare pentru vizitatori - text mai mare, un font adaptat pentru dislexie, contrast ridicat, citire cu voce tare, profiluri cu o singură atingere și altele - livrate în același script Kukie ca bannerul de cookie-uri."
 
 #: includes/class-kukie-admin.php:260
 msgid ""
@@ -1042,6 +1042,10 @@ msgid ""
 "OK: save anyway and overwrite the other changes.\n"
 "Cancel: keep the other changes (reload this page to see them)."
 msgstr ""
+"Aceste setări au fost modificate în altă parte (de exemplu în panoul de control Kukie.io) după încărcarea acestei pagini.\n"
+"\n"
+"OK: salvați oricum și suprascrieți celelalte modificări.\n"
+"Anulare: păstrați celelalte modificări (reîncărcați această pagină pentru a le vedea)."
 
 #: templates/admin-dashboard.php:128
 msgid "This Month"
@@ -1053,7 +1057,7 @@ msgstr "Săptămâna aceasta"
 
 #: includes/class-kukie-admin.php:289
 msgid "This site still has the widget switched on from an earlier plan. Visitors do not see it until the plan includes it again; the setting is kept so nothing needs re-doing after an upgrade."
-msgstr ""
+msgstr "Acest site are widgetul încă activat dintr-un plan anterior. Vizitatorii nu îl văd până când planul îl include din nou; setarea este păstrată, astfel încât nimic nu trebuie refăcut după trecerea la un plan superior."
 
 #: templates/admin-settings.php:56
 msgid "This will remove the cookie consent banner from your site."
@@ -1077,7 +1081,7 @@ msgstr "Sus dreapta"
 
 #: templates/admin-banner-behaviour.php:96
 msgid "URL patterns, one per line"
-msgstr ""
+msgstr "Tipare de URL, câte unul pe rând"
 
 #: includes/class-kukie-admin.php:601 includes/class-kukie-admin.php:678
 #: includes/class-kukie-admin.php:700 includes/class-kukie-admin.php:744
@@ -1091,7 +1095,7 @@ msgstr "Neautorizat."
 
 #: templates/admin-accessibility.php:152
 msgid "Untick a tool and visitors never see it. A hidden module is fully inactive, and new tools added to the widget later appear automatically unless you hide them."
-msgstr ""
+msgstr "Debifați un instrument și vizitatorii nu îl vor vedea niciodată. Un modul ascuns este complet inactiv, iar instrumentele noi adăugate ulterior widgetului apar automat, cu excepția cazului în care le ascundeți."
 
 #: templates/admin-banner-design.php:245
 msgid "Updates instantly as you change settings"
@@ -1099,15 +1103,15 @@ msgstr "Se actualizează instantaneu pe măsură ce modificați setările"
 
 #: templates/admin-accessibility.php:49
 msgid "Upgrade on Kukie.io"
-msgstr ""
+msgstr "Treceți la un plan superior pe Kukie.io"
 
 #: templates/admin-settings.php:92
 msgid "Use it only if another script in the head interferes with the banner. The banner appears a moment later."
-msgstr ""
+msgstr "Folosiți această opțiune doar dacă un alt script din antet interferează cu bannerul. Bannerul apare puțin mai târziu."
 
 #: templates/admin-accessibility.php:196
 msgid "Used when the visitor's language cannot be detected. Auto-detection always wins when it resolves."
-msgstr ""
+msgstr "Folosită atunci când limba vizitatorului nu poate fi detectată. Detectarea automată are întotdeauna prioritate atunci când reușește."
 
 #: templates/admin-dashboard.php:73 templates/admin-settings.php:116
 msgid "Verification"
@@ -1119,17 +1123,17 @@ msgstr "Verificarea a eșuat."
 
 #: includes/class-kukie-admin.php:267
 msgid "Verified"
-msgstr ""
+msgstr "Verificat"
 
 #. translators: %s: date and time
 #: includes/class-kukie-admin.php:270
 #, php-format
 msgid "Verified on %s"
-msgstr ""
+msgstr "Verificat la %s"
 
 #: includes/class-kukie-admin.php:272
 msgid "Verified! Banner script detected."
-msgstr ""
+msgstr "Verificat! Scriptul bannerului a fost detectat."
 
 #: templates/admin-settings.php:120
 msgid "Verify"
@@ -1165,23 +1169,23 @@ msgstr "Respectăm confidențialitatea dumneavoastră"
 
 #: templates/admin-accessibility.php:63
 msgid "What your visitors get"
-msgstr ""
+msgstr "Ce primesc vizitatorii dumneavoastră"
 
 #: templates/admin-banner-iframes.php:38
 msgid "When blocked, visitors see a styled placeholder with an option to accept the relevant cookie category."
-msgstr ""
+msgstr "Când sunt blocate, vizitatorii văd un substituent stilizat cu opțiunea de a accepta categoria de cookie-uri relevantă."
 
 #: templates/admin-settings.php:76
 msgid "Where the plugin adds the banner script to your pages. The page head is right for almost every site."
-msgstr ""
+msgstr "Unde adaugă modulul scriptul bannerului în paginile dumneavoastră. Antetul paginii este alegerea potrivită pentru aproape orice site."
 
 #: templates/admin-banner-iframes.php:27
 msgid "YouTube, Google Maps, social embeds and similar are held until the matching cookie category is accepted."
-msgstr ""
+msgstr "YouTube, Google Maps, conținutul integrat din rețelele sociale și altele similare sunt reținute până când este acceptată categoria de cookie-uri corespunzătoare."
 
 #: templates/admin-dashboard.php:28
 msgid "Your API key has been regenerated or deleted in the Kukie dashboard. Generate a new API key and reconnect to restore the dashboard connection."
-msgstr ""
+msgstr "Cheia dumneavoastră API a fost regenerată sau ștearsă în panoul de control Kukie. Generați o cheie API nouă și reconectați-vă pentru a restabili conexiunea cu panoul de control."
 
 #: includes/class-kukie-admin.php:537
 msgid "Your cookie banner may not load correctly. Add cdn.kukie.io to the exclusion list in these WP Rocket settings:"
@@ -1189,15 +1193,15 @@ msgstr "Bannerul de cookie-uri ar putea să nu se încarce corect. Adăugați cd
 
 #: templates/admin-banner-iframes.php:21
 msgid "iFrame Blocking"
-msgstr ""
+msgstr "Blocare iFrame"
 
 #: templates/admin-banner.php:20
 msgid "iFrame blocking"
-msgstr ""
+msgstr "Blocare iFrame"
 
 #: includes/class-kukie-admin.php:1288
 msgid "iFrame blocking settings saved."
-msgstr ""
+msgstr "Setările de blocare iFrame au fost salvate."
 
 #: templates/admin-accessibility.php:237 templates/admin-banner-design.php:179
 msgid "your Kukie.io dashboard"

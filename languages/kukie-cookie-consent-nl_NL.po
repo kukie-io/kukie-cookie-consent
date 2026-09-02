@@ -3,10 +3,10 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kukie Cookie Consent 1.8.0\n"
+"Project-Id-Version: Kukie Cookie Consent 1.8.1\n"
 "Report-Msgid-Bugs-To: support@kukie.io\n"
 "POT-Creation-Date: 2026-09-01 00:00+0000\n"
-"PO-Revision-Date: 2026-03-30 00:00+0000\n"
+"PO-Revision-Date: 2026-09-02 00:00+0000\n"
 "Last-Translator: Kukie.io <support@kukie.io>\n"
 "Language-Team: Dutch <support@kukie.io>\n"
 "Language: nl_NL\n"
@@ -19,23 +19,23 @@ msgstr ""
 #: includes/class-kukie-admin.php:280
 #, php-format
 msgid "(Trial: %sd)"
-msgstr ""
+msgstr "(Proefperiode: %s d)"
 
 #: includes/class-kukie-admin.php:307
 msgid "(opens in a new tab)"
-msgstr ""
+msgstr "(opent in een nieuw tabblad)"
 
 #: templates/admin-accessibility.php:65
 msgid "17 adjustments: bigger text, spacing, line height, dyslexia-friendly font, contrast modes, saturation, highlight links and titles, hide images, pause animations, mute sounds, big cursor, reading guide, read aloud and more."
-msgstr ""
+msgstr "17 aanpassingen: grotere tekst, spatiëring, regelhoogte, dyslexievriendelijk lettertype, contrastmodi, verzadiging, links en koppen markeren, afbeeldingen verbergen, animaties pauzeren, geluid dempen, grote cursor, leesliniaal, voorlezen en meer."
 
 #: templates/admin-accessibility.php:120
 msgid "44px is the recognised accessibility minimum for a touch target, so there is no smaller option."
-msgstr ""
+msgstr "44px is het erkende toegankelijkheidsminimum voor een aanraakdoel, dus er is geen kleinere optie."
 
 #: templates/admin-accessibility.php:66
 msgid "6 one-tap profiles (motor impaired, low vision, dyslexia, cognitive, ADHD, seizure-safe) and a page structure navigator."
-msgstr ""
+msgstr "6 profielen met één tik (motorische beperking, slechtziendheid, dyslexie, cognitief, ADHD, epilepsieveilig) en een paginastructuurnavigator."
 
 #: templates/admin-connect.php:23
 msgid "API Key"
@@ -43,7 +43,7 @@ msgstr "API-sleutel"
 
 #: includes/class-kukie-api-client.php:116
 msgid "API error."
-msgstr ""
+msgstr "API-fout."
 
 #: templates/admin-banner-design.php:237
 msgid "Accept All"
@@ -51,28 +51,28 @@ msgstr "Alles accepteren"
 
 #: includes/class-kukie-admin.php:276
 msgid "Accepted"
-msgstr ""
+msgstr "Geaccepteerd"
 
 #: templates/admin-accessibility.php:202
 msgid "Accessibility statement"
-msgstr ""
+msgstr "Toegankelijkheidsverklaring"
 
 #: includes/class-kukie-admin.php:124 includes/class-kukie-admin.php:125
 #: templates/admin-accessibility.php:22 templates/admin-dashboard.php:61
 msgid "Accessibility widget"
-msgstr ""
+msgstr "Toegankelijkheidswidget"
 
 #: templates/admin-accessibility.php:77
 msgid "Accessibility widget settings"
-msgstr ""
+msgstr "Instellingen toegankelijkheidswidget"
 
 #: includes/class-kukie-admin.php:1347
 msgid "Accessibility widget settings saved."
-msgstr ""
+msgstr "Instellingen van de toegankelijkheidswidget opgeslagen."
 
 #: includes/class-kukie-admin.php:263
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 #: templates/admin-settings.php:111
 msgid "Add this code to your theme header template."
@@ -80,27 +80,27 @@ msgstr "Voeg deze code toe aan uw thema-headersjabloon."
 
 #: templates/admin-settings.php:66
 msgid "Adds the Kukie consent banner to every public page of this site."
-msgstr ""
+msgstr "Voegt de Kukie-toestemmingsbanner toe aan elke openbare pagina van deze site."
 
 #: templates/admin-accessibility.php:154
 msgid "Adjustments"
-msgstr ""
+msgstr "Aanpassingen"
 
 #: templates/admin-accessibility.php:53
 msgid "Already upgraded? Check again"
-msgstr ""
+msgstr "Al geüpgraded? Opnieuw controleren"
 
 #: templates/admin-accessibility.php:95
 msgid "Appearance"
-msgstr ""
+msgstr "Uiterlijk"
 
 #: includes/class-kukie-admin.php:281
 msgid "Are you sure you want to disconnect from Kukie.io? The cookie consent banner will be removed from your site."
-msgstr ""
+msgstr "Weet u zeker dat u de verbinding met Kukie.io wilt verbreken? De cookietoestemmingsbanner wordt van uw site verwijderd."
 
 #: templates/admin-settings.php:91
 msgid "At the end of the page"
-msgstr ""
+msgstr "Aan het einde van de pagina"
 
 #: templates/admin-banner-design.php:140
 msgid "Auto (contrast)"
@@ -112,23 +112,23 @@ msgstr "Automatisch vertalen"
 
 #: templates/admin-banner-behaviour.php:38
 msgid "Auto-block Scripts"
-msgstr ""
+msgstr "Scripts automatisch blokkeren"
 
 #: templates/admin-banner-language.php:32
 msgid "Auto-detect (WPML / Polylang / WordPress)"
-msgstr ""
+msgstr "Automatisch detecteren (WPML / Polylang / WordPress)"
 
 #: includes/class-kukie-admin.php:290
 msgid "Auto-detect (recommended)"
-msgstr ""
+msgstr "Automatisch detecteren (aanbevolen)"
 
 #: templates/admin-banner-behaviour.php:50
 msgid "Auto-reject non-essential cookies when the browser sends the DNT signal."
-msgstr ""
+msgstr "Niet-essentiële cookies automatisch weigeren wanneer de browser het DNT-signaal verstuurt."
 
 #: templates/admin-banner-behaviour.php:61
 msgid "Auto-reject when a GPC signal is detected."
-msgstr ""
+msgstr "Automatisch weigeren wanneer een GPC-signaal wordt gedetecteerd."
 
 #: templates/admin-banner-language.php:71
 msgid "Automatically detect visitor language and show the banner in their language."
@@ -148,39 +148,39 @@ msgstr "Bannerontwerp opgeslagen."
 
 #: templates/admin-banner-language.php:30
 msgid "Banner language"
-msgstr ""
+msgstr "Bannertaal"
 
 #: includes/class-kukie-admin.php:273
 msgid "Banner script not found."
-msgstr ""
+msgstr "Bannerscript niet gevonden."
 
 #: includes/class-kukie-admin.php:271
 msgid "Banner script verified on your site!"
-msgstr ""
+msgstr "Bannerscript geverifieerd op uw site!"
 
 #: templates/admin-banner-behaviour.php:22 templates/admin-banner.php:19
 msgid "Behaviour"
-msgstr ""
+msgstr "Gedrag"
 
 #: includes/class-kukie-admin.php:1264
 msgid "Behaviour settings saved."
-msgstr ""
+msgstr "Gedragsinstellingen opgeslagen."
 
 #: templates/admin-banner-behaviour.php:39
 msgid "Best-effort blocking of known tracker scripts (Google Analytics, Facebook Pixel, etc.) until the visitor gives consent. Works with the opt-in consent model. Browsers cannot cancel scripts that were already inserted by other code, so for guaranteed blocking tag the script manually with type=\"text/plain\" and data-cc-category."
-msgstr ""
+msgstr "Blokkeert bekende trackerscripts (Google Analytics, Facebook Pixel, enz.) zo goed mogelijk totdat de bezoeker toestemming geeft. Werkt met het opt-in-toestemmingsmodel. Browsers kunnen scripts die al door andere code zijn ingevoegd niet meer annuleren; markeer het script voor gegarandeerde blokkering dus handmatig met type=\"text/plain\" en data-cc-category."
 
 #: templates/admin-banner-iframes.php:26
 msgid "Block third-party iFrames until consent"
-msgstr ""
+msgstr "iFrames van derden blokkeren tot toestemming"
 
 #: templates/admin-banner-iframes.php:22
 msgid "Block third-party iFrames until the visitor gives consent. Blocked iFrames show a styled placeholder with an option to accept the relevant cookie category."
-msgstr ""
+msgstr "Blokkeert iFrames van derden totdat de bezoeker toestemming geeft. Geblokkeerde iFrames tonen een opgemaakte plaatshouder met een optie om de betreffende cookiecategorie te accepteren."
 
 #: templates/admin-banner-iframes.php:36
 msgid "Blocked services"
-msgstr ""
+msgstr "Geblokkeerde diensten"
 
 #: templates/admin-banner-design.php:37
 msgid "Bottom Bar"
@@ -206,19 +206,19 @@ msgstr "Knoptekst"
 
 #: templates/admin-accessibility.php:125
 msgid "Button colour"
-msgstr ""
+msgstr "Knopkleur"
 
 #: templates/admin-accessibility.php:133
 msgid "Button colour (hex)"
-msgstr ""
+msgstr "Knopkleur (hex)"
 
 #: templates/admin-accessibility.php:114
 msgid "Button size"
-msgstr ""
+msgstr "Knopgrootte"
 
 #: templates/admin-accessibility.php:171
 msgid "By default the panel offers your banner's languages plus English and opens in the language the banner detected for the visitor."
-msgstr ""
+msgstr "Standaard biedt het paneel de talen van uw banner plus Engels aan en opent het in de taal die de banner voor de bezoeker heeft gedetecteerd."
 
 #: templates/admin-banner-design.php:66
 msgid "Center"
@@ -226,7 +226,7 @@ msgstr "Midden"
 
 #: templates/admin-accessibility.php:71
 msgid "Changes take effect once the banner script cache refreshes - usually within a minute or two. If you still see the previous version, do a hard refresh in your browser."
-msgstr ""
+msgstr "Wijzigingen worden actief zodra de cache van het bannerscript is vernieuwd - meestal binnen een minuut of twee. Ziet u nog steeds de vorige versie, doe dan een geforceerde vernieuwing in uw browser."
 
 #: templates/admin-settings.php:117
 msgid "Check if the banner script is detected on your site."
@@ -234,19 +234,19 @@ msgstr "Controleer of het bannerscript op uw site is gedetecteerd."
 
 #: includes/class-kukie-admin.php:291
 msgid "Checking..."
-msgstr ""
+msgstr "Controleren..."
 
 #: templates/admin-banner-language.php:65
 msgid "Choose \"Auto-detect\" (recommended) to follow WPML, Polylang, or the WordPress site language. Select a specific language to force the banner into that locale regardless of page context."
-msgstr ""
+msgstr "Kies \"Automatisch detecteren\" (aanbevolen) om WPML, Polylang of de WordPress-sitetaal te volgen. Selecteer een specifieke taal om de banner ongeacht de paginacontext in die taal te forceren."
 
 #: templates/admin-dashboard.php:175
 msgid "Choose the layout and revisit button here in WordPress, or design every colour, text, category and consent rule in the Kukie.io dashboard."
-msgstr ""
+msgstr "Kies hier in WordPress de lay-out en de herbezoekknop, of ontwerp elke kleur, tekst, categorie en toestemmingsregel in het Kukie.io-dashboard."
 
 #: templates/admin-accessibility.php:175
 msgid "Choose which languages to offer"
-msgstr ""
+msgstr "Kies welke talen u wilt aanbieden"
 
 #: templates/admin-banner-design.php:31
 msgid "Classic centered modal"
@@ -254,7 +254,7 @@ msgstr "Klassiek gecentreerd modaal venster"
 
 #: templates/admin-accessibility.php:157 templates/admin-accessibility.php:187
 msgid "Clear"
-msgstr ""
+msgstr "Alles deselecteren"
 
 #: includes/class-kukie-admin.php:146 includes/class-kukie-admin.php:147
 #: includes/class-kukie-plugin.php:374
@@ -301,19 +301,19 @@ msgstr "Toestemmingsoverzicht"
 #: includes/class-kukie-admin.php:161 includes/class-kukie-admin.php:162
 #: templates/admin-banner.php:29
 msgid "Consent banner"
-msgstr ""
+msgstr "Toestemmingsbanner"
 
 #: templates/admin-banner.php:37
 msgid "Consent banner sections"
-msgstr ""
+msgstr "Secties van de toestemmingsbanner"
 
 #: templates/admin-dashboard.php:178
 msgid "Consent banner settings"
-msgstr ""
+msgstr "Instellingen toestemmingsbanner"
 
 #: templates/admin-banner-regions.php:19
 msgid "Consent model, button visibility, texts and cookie-wall behaviour per visitor region (EU opt-in, US opt-out, sub-regions such as CNIL or Quebec) are managed in the Kukie.io banner editor. They apply to this site automatically - there is nothing to configure here."
-msgstr ""
+msgstr "Toestemmingsmodel, zichtbaarheid van knoppen, teksten en cookiewall-gedrag per bezoekersregio (EU opt-in, VS opt-out, subregio's zoals CNIL of Quebec) worden beheerd in de Kukie.io-bannereditor. Ze gelden automatisch voor deze site - hier valt niets te configureren."
 
 #: templates/admin-dashboard.php:85
 msgid "Consents Today"
@@ -325,7 +325,7 @@ msgstr "Cookie"
 
 #: templates/admin-dashboard.php:49
 msgid "Cookie Banner Status"
-msgstr ""
+msgstr "Status cookiebanner"
 
 #: templates/admin-dashboard.php:137
 msgid "Cookie Scan"
@@ -345,11 +345,11 @@ msgstr "Kan niet verbinden. Controleer uw API-sleutel."
 
 #: includes/class-kukie-admin.php:261
 msgid "Could not load settings."
-msgstr ""
+msgstr "Kan de instellingen niet laden."
 
 #: includes/class-kukie-admin.php:623
 msgid "Could not securely store the API key on this server. Please contact your host about OpenSSL support."
-msgstr ""
+msgstr "De API-sleutel kon niet veilig op deze server worden opgeslagen. Neem contact op met uw hostingprovider over OpenSSL-ondersteuning."
 
 #: includes/class-kukie-admin.php:1416
 msgid "Could not start scan."
@@ -357,7 +357,7 @@ msgstr "Kan de scan niet starten."
 
 #: includes/class-kukie-admin.php:278
 msgid "Custom"
-msgstr ""
+msgstr "Aangepast"
 
 #: templates/admin-banner-design.php:235
 msgid "Customise"
@@ -382,23 +382,23 @@ msgstr "Standaardtaal"
 
 #: templates/admin-accessibility.php:194
 msgid "Default language"
-msgstr ""
+msgstr "Standaardtaal"
 
 #: includes/class-kukie-admin.php:489
 msgid "Delay JavaScript execution"
-msgstr ""
+msgstr "JavaScript-uitvoering uitstellen"
 
 #: templates/admin-banner.php:18
 msgid "Design"
-msgstr ""
+msgstr "Ontwerp"
 
 #: templates/admin-banner-behaviour.php:83
 msgid "Dims the page behind the banner. Floating banners show no overlay unless this is on."
-msgstr ""
+msgstr "Dimt de pagina achter de banner. Zwevende banners tonen geen overlay tenzij dit is ingeschakeld."
 
 #: templates/admin-banner-behaviour.php:93
 msgid "Disabled Pages"
-msgstr ""
+msgstr "Uitgeschakelde pagina's"
 
 #: includes/class-kukie-admin.php:283 templates/admin-settings.php:54
 msgid "Disconnect from Kukie.io"
@@ -410,7 +410,7 @@ msgstr "Verbinding met Kukie.io verbroken."
 
 #: includes/class-kukie-admin.php:282
 msgid "Disconnecting..."
-msgstr ""
+msgstr "Verbinding verbreken..."
 
 #: includes/class-kukie-admin.php:543
 msgid "Dismiss"
@@ -418,7 +418,7 @@ msgstr "Sluiten"
 
 #: templates/admin-banner-behaviour.php:28
 msgid "Display \"Powered by Kukie.io\" branding. Hiding it is available on plans that include branding removal."
-msgstr ""
+msgstr "Toon de \"Powered by Kukie.io\"-branding. Verbergen is mogelijk bij abonnementen die het verwijderen van branding omvatten."
 
 #: templates/admin-connect.php:77 templates/admin-settings.php:43
 msgid "Domain"
@@ -448,7 +448,7 @@ msgstr "Microsoft UET-toestemmingssignalen inschakelen"
 
 #: templates/admin-accessibility.php:83
 msgid "Enable accessibility widget"
-msgstr ""
+msgstr "Toegankelijkheidswidget inschakelen"
 
 #: templates/admin-banner-language.php:89
 msgid "Enabled Languages"
@@ -458,23 +458,23 @@ msgstr "Ingeschakelde talen"
 #: templates/admin-accessibility.php:236
 #, php-format
 msgid "Every text in the panel can be reworded per language in %s."
-msgstr ""
+msgstr "Elke tekst in het paneel kan per taal worden herschreven in %s."
 
 #: includes/class-kukie-admin.php:519
 msgid "Excluded JavaScript Files"
-msgstr ""
+msgstr "Uitgesloten JavaScript-bestanden"
 
 #: templates/admin-accessibility.php:118
 msgid "Extra large (60px)"
-msgstr ""
+msgstr "Extra groot (60px)"
 
 #: includes/class-kukie-admin.php:284
 msgid "Failed to disconnect."
-msgstr ""
+msgstr "Verbinding verbreken mislukt."
 
 #: includes/class-kukie-admin.php:262
 msgid "Failed to save."
-msgstr ""
+msgstr "Opslaan mislukt."
 
 #. translators: %s: link to Kukie.io dashboard
 #: templates/admin-connect.php:43
@@ -500,11 +500,11 @@ msgstr "Balk over de volle breedte bovenaan"
 
 #: templates/admin-accessibility.php:68
 msgid "Fully self-hosted inside the Kukie script: no third-party requests, and visitor preferences stay in their own browser."
-msgstr ""
+msgstr "Volledig ingebouwd in het Kukie-script: geen verzoeken aan derden, en de voorkeuren van bezoekers blijven in hun eigen browser."
 
 #: includes/class-kukie-admin.php:424 templates/admin-dashboard.php:32
 msgid "Generate a new API key"
-msgstr ""
+msgstr "Een nieuwe API-sleutel genereren"
 
 #: templates/admin-connect.php:82
 msgid "Go to Dashboard"
@@ -520,15 +520,15 @@ msgstr "Google Consent Mode v2"
 
 #: templates/admin-accessibility.php:139
 msgid "Hide on mobile"
-msgstr ""
+msgstr "Verbergen op mobiel"
 
 #: templates/admin-accessibility.php:140
 msgid "Hides the widget button on screens narrower than 768px. Adjustments a visitor already applied stay applied."
-msgstr ""
+msgstr "Verbergt de widgetknop op schermen smaller dan 768px. Aanpassingen die een bezoeker al heeft toegepast, blijven van kracht."
 
 #: templates/admin-banner-behaviour.php:27
 msgid "Higher plans"
-msgstr ""
+msgstr "Hogere abonnementen"
 
 #: templates/admin-banner-design.php:113
 msgid "Icon"
@@ -544,27 +544,27 @@ msgstr "Alleen pictogram"
 
 #: templates/admin-banner-design.php:144
 msgid "Icon colour (hex)"
-msgstr ""
+msgstr "Pictogramkleur (hex)"
 
 #: templates/admin-accessibility.php:109
 msgid "If your cookie banner's revisit button uses the same corner, the two stack neatly instead of overlapping."
-msgstr ""
+msgstr "Als de herbezoekknop van uw cookiebanner dezelfde hoek gebruikt, worden de twee netjes gestapeld in plaats van elkaar te overlappen."
 
 #: templates/admin-settings.php:82
 msgid "In the page head"
-msgstr ""
+msgstr "In de head van de pagina"
 
 #: includes/class-kukie-admin.php:264
 msgid "Inactive"
-msgstr ""
+msgstr "Inactief"
 
 #: templates/admin-accessibility.php:41
 msgid "Included on higher plans"
-msgstr ""
+msgstr "Inbegrepen bij hogere abonnementen"
 
 #: templates/admin-accessibility.php:128
 msgid "Inherit the banner theme's primary colour"
-msgstr ""
+msgstr "De primaire kleur van het bannerthema overnemen"
 
 #: includes/class-kukie-admin.php:609
 msgid "Invalid API key format. The key should be 64 characters."
@@ -572,7 +572,7 @@ msgstr "Ongeldig API-sleutelformaat. De sleutel moet 64 tekens bevatten."
 
 #: templates/admin-dashboard.php:24
 msgid "Invalid API key."
-msgstr ""
+msgstr "Ongeldige API-sleutel."
 
 #: includes/class-kukie-admin.php:82 includes/class-kukie-admin.php:83
 #: includes/class-kukie-admin.php:95 includes/class-kukie-admin.php:96
@@ -598,7 +598,7 @@ msgstr "Kukie.io-cookietoestemming is niet verbonden."
 
 #: includes/class-kukie-admin.php:393 includes/class-kukie-admin.php:421
 msgid "Kukie:"
-msgstr ""
+msgstr "Kukie:"
 
 #: templates/admin-banner-language.php:27 templates/admin-banner.php:21
 msgid "Language"
@@ -606,11 +606,11 @@ msgstr "Taal"
 
 #: templates/admin-accessibility.php:170
 msgid "Languages"
-msgstr ""
+msgstr "Talen"
 
 #: templates/admin-accessibility.php:117
 msgid "Large (52px)"
-msgstr ""
+msgstr "Groot (52px)"
 
 #: templates/admin-dashboard.php:157
 msgid "Last Scan"
@@ -628,15 +628,15 @@ msgstr "Meer informatie"
 #: templates/admin-accessibility.php:222
 #, php-format
 msgid "Leave empty to link the statement generated and published from the site's %s on Kukie.io."
-msgstr ""
+msgstr "Laat leeg om te verwijzen naar de verklaring die is gegenereerd en gepubliceerd via de %s van de site op Kukie.io."
 
 #: templates/admin-accessibility.php:223
 msgid "Legal Documents page"
-msgstr ""
+msgstr "pagina Juridische documenten"
 
 #: templates/admin-accessibility.php:206
 msgid "Link to an accessibility statement from the panel"
-msgstr ""
+msgstr "Vanuit het paneel naar een toegankelijkheidsverklaring linken"
 
 #: templates/admin-banner-design.php:190
 msgid "Live Preview"
@@ -644,11 +644,11 @@ msgstr "Live voorbeeld"
 
 #: includes/class-kukie-admin.php:482
 msgid "Load JavaScript deferred"
-msgstr ""
+msgstr "JavaScript uitgesteld laden"
 
 #: templates/admin-accessibility.php:34
 msgid "Loading accessibility widget settings..."
-msgstr ""
+msgstr "Instellingen van de toegankelijkheidswidget laden..."
 
 #: templates/admin-banner-design.php:15
 msgid "Loading design settings..."
@@ -662,7 +662,7 @@ msgstr "Instellingen laden..."
 
 #: templates/admin-settings.php:83
 msgid "Loads before the rest of the page, so cookies are blocked as early as possible."
-msgstr ""
+msgstr "Wordt vóór de rest van de pagina geladen, zodat cookies zo vroeg mogelijk worden geblokkeerd."
 
 #: templates/admin-banner-design.php:119
 msgid "Lock"
@@ -670,15 +670,15 @@ msgstr "Slot"
 
 #: templates/admin-banner-gcm.php:47
 msgid "Manage region rules in the Kukie.io dashboard"
-msgstr ""
+msgstr "Regioregels beheren in het Kukie.io-dashboard"
 
 #: templates/admin-banner-regions.php:22
 msgid "Manage region rules on Kukie.io"
-msgstr ""
+msgstr "Regioregels beheren op Kukie.io"
 
 #: templates/admin-settings.php:100
 msgid "Manual embed"
-msgstr ""
+msgstr "Handmatig insluiten"
 
 #: templates/admin-banner.php:23
 msgid "Microsoft UET"
@@ -694,23 +694,23 @@ msgstr "Microsoft UET-instellingen opgeslagen."
 
 #: includes/class-kukie-admin.php:475
 msgid "Minify JavaScript files"
-msgstr ""
+msgstr "JavaScript-bestanden minificeren"
 
 #: templates/admin-accessibility.php:151
 msgid "Modules"
-msgstr ""
+msgstr "Modules"
 
 #: includes/class-kukie-admin.php:258
 msgid "Network error. Please try again."
-msgstr ""
+msgstr "Netwerkfout. Probeer het opnieuw."
 
 #: includes/class-kukie-admin.php:274
 msgid "No data yet"
-msgstr ""
+msgstr "Nog geen gegevens"
 
 #: includes/class-kukie-admin.php:275
 msgid "No scans yet"
-msgstr ""
+msgstr "Nog geen scans"
 
 #: includes/class-kukie-admin.php:712 includes/class-kukie-admin.php:767
 #: includes/class-kukie-admin.php:826 includes/class-kukie-admin.php:1407
@@ -720,19 +720,19 @@ msgstr "Niet verbonden."
 
 #: includes/class-kukie-admin.php:266
 msgid "Not in plan"
-msgstr ""
+msgstr "Niet in abonnement"
 
 #: includes/class-kukie-admin.php:268
 msgid "Not verified"
-msgstr ""
+msgstr "Niet geverifieerd"
 
 #: includes/class-kukie-admin.php:265
 msgid "Off"
-msgstr ""
+msgstr "Uit"
 
 #: templates/admin-accessibility.php:185
 msgid "Offered languages"
-msgstr ""
+msgstr "Aangeboden talen"
 
 #: templates/admin-banner-design.php:150
 msgid "Offset X (px)"
@@ -756,11 +756,11 @@ msgstr "Volledig dashboard openen"
 
 #: templates/admin-accessibility.php:24
 msgid "Open on Kukie.io"
-msgstr ""
+msgstr "Openen op Kukie.io"
 
 #: templates/admin-banner.php:31
 msgid "Open the banner editor on Kukie.io"
-msgstr ""
+msgstr "De bannereditor openen op Kukie.io"
 
 #: templates/admin-connect.php:69 templates/admin-settings.php:35
 msgid "Organisation"
@@ -768,7 +768,7 @@ msgstr "Organisatie"
 
 #: templates/admin-dashboard.php:42
 msgid "Overview"
-msgstr ""
+msgstr "Overzicht"
 
 #: templates/admin-dashboard.php:165
 msgid "Pages Scanned"
@@ -776,7 +776,7 @@ msgstr "Gescande pagina's"
 
 #: templates/admin-accessibility.php:163
 msgid "Panel sections"
-msgstr ""
+msgstr "Paneelsecties"
 
 #: templates/admin-banner-uet.php:27
 msgid "Pass consent signals to Microsoft Advertising Universal Event Tracking."
@@ -792,19 +792,19 @@ msgstr "Plak uw API-sleutel van 64 tekens"
 
 #: templates/admin-banner-design.php:131
 msgid "Pick a background colour"
-msgstr ""
+msgstr "Kies een achtergrondkleur"
 
 #: templates/admin-accessibility.php:132
 msgid "Pick a button colour"
-msgstr ""
+msgstr "Kies een knopkleur"
 
 #: templates/admin-banner-design.php:143
 msgid "Pick an icon colour"
-msgstr ""
+msgstr "Kies een pictogramkleur"
 
 #: templates/admin-accessibility.php:176
 msgid "Pick any of the 70+ built-in translations. With more than 8 languages the panel's flag picker becomes a dropdown."
-msgstr ""
+msgstr "Kies uit de meer dan 70 ingebouwde vertalingen. Bij meer dan 8 talen wordt de vlaggenkiezer van het paneel een keuzelijst."
 
 #: templates/admin-banner-design.php:108
 msgid "Pill (Icon + Text)"
@@ -826,7 +826,7 @@ msgstr "Positie"
 
 #: templates/admin-banner-behaviour.php:23
 msgid "Privacy signals, script blocking, and how the banner reacts to consent."
-msgstr ""
+msgstr "Privacysignalen, scriptblokkering en hoe de banner op toestemming reageert."
 
 #: templates/admin-settings.php:82
 msgid "Recommended"
@@ -834,15 +834,15 @@ msgstr "Aanbevolen"
 
 #: includes/class-kukie-admin.php:396
 msgid "Reconnect"
-msgstr ""
+msgstr "Opnieuw verbinden"
 
 #: templates/admin-banner-regions.php:18
 msgid "Region rules"
-msgstr ""
+msgstr "Regioregels"
 
 #: templates/admin-banner.php:24
 msgid "Regions"
-msgstr ""
+msgstr "Regio's"
 
 #: templates/admin-banner-design.php:236
 msgid "Reject All"
@@ -850,23 +850,23 @@ msgstr "Alles weigeren"
 
 #: includes/class-kukie-admin.php:277
 msgid "Rejected"
-msgstr ""
+msgstr "Geweigerd"
 
 #: templates/admin-banner-behaviour.php:71
 msgid "Reload on Consent"
-msgstr ""
+msgstr "Herladen bij toestemming"
 
 #: templates/admin-banner-behaviour.php:72
 msgid "Reload the page after consent is given or updated."
-msgstr ""
+msgstr "Herlaadt de pagina nadat toestemming is gegeven of bijgewerkt."
 
 #: templates/admin-banner-behaviour.php:49
 msgid "Respect Do Not Track"
-msgstr ""
+msgstr "Do Not Track respecteren"
 
 #: templates/admin-banner-behaviour.php:60
 msgid "Respect Global Privacy Control"
-msgstr ""
+msgstr "Global Privacy Control respecteren"
 
 #: templates/admin-banner-design.php:87
 msgid "Revisit Button"
@@ -903,7 +903,7 @@ msgstr "Scriptpositie"
 
 #: templates/admin-accessibility.php:156
 msgid "Select all"
-msgstr ""
+msgstr "Alles selecteren"
 
 #: templates/admin-banner-language.php:90
 msgid "Select which languages are available for your cookie banner."
@@ -916,7 +916,7 @@ msgstr "Instellingen"
 
 #: includes/class-kukie-admin.php:259
 msgid "Settings could not be loaded, so saving is disabled. Please reload the page."
-msgstr ""
+msgstr "De instellingen konden niet worden geladen, dus opslaan is uitgeschakeld. Laad de pagina opnieuw."
 
 #: includes/class-kukie-admin.php:1104
 msgid "Settings saved."
@@ -924,7 +924,7 @@ msgstr "Instellingen opgeslagen."
 
 #: includes/class-kukie-admin.php:867
 msgid "Settings were modified elsewhere since this page was loaded."
-msgstr ""
+msgstr "De instellingen zijn elders gewijzigd sinds deze pagina is geladen."
 
 #: templates/admin-banner-design.php:116
 msgid "Shield"
@@ -932,11 +932,11 @@ msgstr "Schild"
 
 #: templates/admin-banner-behaviour.php:82
 msgid "Show Background Overlay"
-msgstr ""
+msgstr "Achtergrondoverlay tonen"
 
 #: templates/admin-banner-behaviour.php:27
 msgid "Show Branding"
-msgstr ""
+msgstr "Branding tonen"
 
 #: templates/admin-connect.php:35
 msgid "Show/hide API key"
@@ -944,11 +944,11 @@ msgstr "API-sleutel tonen/verbergen"
 
 #: templates/admin-accessibility.php:207
 msgid "Shown in the panel footer."
-msgstr ""
+msgstr "Wordt in de voettekst van het paneel getoond."
 
 #: templates/admin-accessibility.php:84
 msgid "Shows the widget button on every public page of this site."
-msgstr ""
+msgstr "Toont de widgetknop op elke openbare pagina van deze site."
 
 #: templates/admin-connect.php:91
 msgid "Sign up free at kukie.io"
@@ -968,11 +968,11 @@ msgstr "Klein zwevend kaartje"
 
 #: templates/admin-accessibility.php:116
 msgid "Standard (44px)"
-msgstr ""
+msgstr "Standaard (44px)"
 
 #: templates/admin-accessibility.php:216
 msgid "Statement URL"
-msgstr ""
+msgstr "URL van de verklaring"
 
 #: templates/admin-dashboard.php:153 templates/admin-settings.php:28
 msgid "Status"
@@ -988,29 +988,29 @@ msgstr "Tab (tekst)"
 
 #: includes/class-kukie-admin.php:285
 msgid "The Kukie.io service did not return accessibility widget settings. Please try again in a few minutes."
-msgstr ""
+msgstr "De Kukie.io-dienst heeft geen instellingen voor de toegankelijkheidswidget teruggestuurd. Probeer het over een paar minuten opnieuw."
 
 #. translators: %s: plan name
 #: includes/class-kukie-admin.php:287
 #, php-format
 msgid "The accessibility widget is available on the %s plan and above."
-msgstr ""
+msgstr "De toegankelijkheidswidget is beschikbaar vanaf het %s-abonnement."
 
 #: includes/class-kukie-admin.php:288 includes/class-kukie-admin.php:856
 msgid "The accessibility widget is not included in your plan."
-msgstr ""
+msgstr "De toegankelijkheidswidget is niet inbegrepen bij uw abonnement."
 
 #: templates/admin-banner-behaviour.php:94
 msgid "The banner and its reopen button are hidden on these URL patterns (supports * wildcards), but consent enforcement still applies: script blocking, embed placeholders and stored consent keep working."
-msgstr ""
+msgstr "De banner en de knop om hem opnieuw te openen zijn verborgen op deze URL-patronen (ondersteunt *-jokertekens), maar de toestemming blijft afgedwongen: scriptblokkering, plaatshouders voor ingesloten inhoud en opgeslagen toestemming blijven werken."
 
 #: templates/admin-dashboard.php:25
 msgid "The dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site."
-msgstr ""
+msgstr "De dashboardverbinding is verbroken - statistieken, scans en het synchroniseren van instellingen zijn gepauzeerd. De cookiebanner zelf blijft op uw site werken."
 
 #: templates/admin-banner-gcm.php:43
 msgid "The default consent states before a visitor interacts with the banner depend on the visitor's region: opt-in regions start with consent denied, opt-out regions start with consent granted. They are managed through region rules in the Kukie.io dashboard."
-msgstr ""
+msgstr "De standaard toestemmingsstatussen voordat een bezoeker met de banner interacteert, hangen af van de regio van de bezoeker: opt-in-regio's beginnen met geweigerde toestemming, opt-out-regio's met verleende toestemming. Ze worden beheerd via regioregels in het Kukie.io-dashboard."
 
 #: templates/admin-banner-language.php:85
 msgid "The fallback language when auto-translate cannot determine the visitor language."
@@ -1018,23 +1018,23 @@ msgstr "De terugvaltaal wanneer automatisch vertalen de taal van de bezoeker nie
 
 #: templates/admin-accessibility.php:67
 msgid "The panel opens in the visitor's language, with 70+ built-in translations, and respects their system preferences for reduced motion and contrast."
-msgstr ""
+msgstr "Het paneel opent in de taal van de bezoeker, met meer dan 70 ingebouwde vertalingen, en respecteert diens systeemvoorkeuren voor verminderde beweging en contrast."
 
 #: templates/admin-settings.php:101
 msgid "The plugin adds nothing. Paste the embed code below into your theme yourself."
-msgstr ""
+msgstr "De plugin voegt niets toe. Plak de onderstaande insluitcode zelf in uw thema."
 
 #: includes/class-kukie-admin.php:422
 msgid "The stored API key is no longer valid, so the dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site."
-msgstr ""
+msgstr "De opgeslagen API-sleutel is niet meer geldig, dus de dashboardverbinding is verbroken - statistieken, scans en het synchroniseren van instellingen zijn gepauzeerd. De cookiebanner zelf blijft op uw site werken."
 
 #: includes/class-kukie-admin.php:394
 msgid "The stored Kukie.io API key can no longer be read. This usually happens after the site's security keys (salts) were changed or the database was copied from another site. Please reconnect with your API key to restore the dashboard connection - the cookie banner itself keeps working."
-msgstr ""
+msgstr "De opgeslagen Kukie.io-API-sleutel kan niet meer worden gelezen. Dit gebeurt meestal nadat de beveiligingssleutels (salts) van de site zijn gewijzigd of de database van een andere site is gekopieerd. Maak opnieuw verbinding met uw API-sleutel om de dashboardverbinding te herstellen - de cookiebanner zelf blijft werken."
 
 #: templates/admin-accessibility.php:44
 msgid "The widget adds a floating button to your site that opens a panel of reading, contrast and navigation aids for visitors - bigger text, a dyslexia-friendly font, high contrast, read aloud, one-tap profiles and more - delivered inside the same Kukie script as your cookie banner."
-msgstr ""
+msgstr "De widget voegt een zwevende knop toe aan uw site die een paneel opent met lees-, contrast- en navigatiehulpmiddelen voor bezoekers - grotere tekst, een dyslexievriendelijk lettertype, hoog contrast, voorlezen, profielen met één tik en meer - geleverd in hetzelfde Kukie-script als uw cookiebanner."
 
 #: includes/class-kukie-admin.php:260
 msgid ""
@@ -1043,6 +1043,10 @@ msgid ""
 "OK: save anyway and overwrite the other changes.\n"
 "Cancel: keep the other changes (reload this page to see them)."
 msgstr ""
+"Deze instellingen zijn elders gewijzigd (bijvoorbeeld in het Kukie.io-dashboard) nadat deze pagina is geladen.\n"
+"\n"
+"OK: toch opslaan en de andere wijzigingen overschrijven.\n"
+"Annuleren: de andere wijzigingen behouden (laad deze pagina opnieuw om ze te zien)."
 
 #: templates/admin-dashboard.php:128
 msgid "This Month"
@@ -1054,7 +1058,7 @@ msgstr "Deze week"
 
 #: includes/class-kukie-admin.php:289
 msgid "This site still has the widget switched on from an earlier plan. Visitors do not see it until the plan includes it again; the setting is kept so nothing needs re-doing after an upgrade."
-msgstr ""
+msgstr "Op deze site staat de widget nog aan vanuit een eerder abonnement. Bezoekers zien hem pas weer zodra het abonnement hem opnieuw bevat; de instelling blijft bewaard, zodat u na een upgrade niets opnieuw hoeft in te stellen."
 
 #: templates/admin-settings.php:56
 msgid "This will remove the cookie consent banner from your site."
@@ -1078,7 +1082,7 @@ msgstr "Boven rechts"
 
 #: templates/admin-banner-behaviour.php:96
 msgid "URL patterns, one per line"
-msgstr ""
+msgstr "URL-patronen, één per regel"
 
 #: includes/class-kukie-admin.php:601 includes/class-kukie-admin.php:678
 #: includes/class-kukie-admin.php:700 includes/class-kukie-admin.php:744
@@ -1092,7 +1096,7 @@ msgstr "Niet geautoriseerd."
 
 #: templates/admin-accessibility.php:152
 msgid "Untick a tool and visitors never see it. A hidden module is fully inactive, and new tools added to the widget later appear automatically unless you hide them."
-msgstr ""
+msgstr "Vink een hulpmiddel uit en bezoekers zien het nooit. Een verborgen module is volledig inactief, en nieuwe hulpmiddelen die later aan de widget worden toegevoegd, verschijnen automatisch tenzij u ze verbergt."
 
 #: templates/admin-banner-design.php:245
 msgid "Updates instantly as you change settings"
@@ -1100,15 +1104,15 @@ msgstr "Wordt direct bijgewerkt wanneer u instellingen wijzigt"
 
 #: templates/admin-accessibility.php:49
 msgid "Upgrade on Kukie.io"
-msgstr ""
+msgstr "Upgraden op Kukie.io"
 
 #: templates/admin-settings.php:92
 msgid "Use it only if another script in the head interferes with the banner. The banner appears a moment later."
-msgstr ""
+msgstr "Gebruik dit alleen als een ander script in de head de banner verstoort. De banner verschijnt dan iets later."
 
 #: templates/admin-accessibility.php:196
 msgid "Used when the visitor's language cannot be detected. Auto-detection always wins when it resolves."
-msgstr ""
+msgstr "Wordt gebruikt wanneer de taal van de bezoeker niet kan worden gedetecteerd. Automatische detectie gaat altijd voor wanneer die slaagt."
 
 #: templates/admin-dashboard.php:73 templates/admin-settings.php:116
 msgid "Verification"
@@ -1120,17 +1124,17 @@ msgstr "Verificatie mislukt."
 
 #: includes/class-kukie-admin.php:267
 msgid "Verified"
-msgstr ""
+msgstr "Geverifieerd"
 
 #. translators: %s: date and time
 #: includes/class-kukie-admin.php:270
 #, php-format
 msgid "Verified on %s"
-msgstr ""
+msgstr "Geverifieerd op %s"
 
 #: includes/class-kukie-admin.php:272
 msgid "Verified! Banner script detected."
-msgstr ""
+msgstr "Geverifieerd! Bannerscript gedetecteerd."
 
 #: templates/admin-settings.php:120
 msgid "Verify"
@@ -1166,23 +1170,23 @@ msgstr "Wij hechten waarde aan uw privacy"
 
 #: templates/admin-accessibility.php:63
 msgid "What your visitors get"
-msgstr ""
+msgstr "Wat uw bezoekers krijgen"
 
 #: templates/admin-banner-iframes.php:38
 msgid "When blocked, visitors see a styled placeholder with an option to accept the relevant cookie category."
-msgstr ""
+msgstr "Wanneer ze zijn geblokkeerd, zien bezoekers een opgemaakte plaatshouder met een optie om de betreffende cookiecategorie te accepteren."
 
 #: templates/admin-settings.php:76
 msgid "Where the plugin adds the banner script to your pages. The page head is right for almost every site."
-msgstr ""
+msgstr "Waar de plugin het bannerscript aan uw pagina's toevoegt. De head van de pagina is de juiste keuze voor vrijwel elke site."
 
 #: templates/admin-banner-iframes.php:27
 msgid "YouTube, Google Maps, social embeds and similar are held until the matching cookie category is accepted."
-msgstr ""
+msgstr "YouTube, Google Maps, insluitingen van sociale media en vergelijkbare inhoud worden vastgehouden totdat de bijbehorende cookiecategorie is geaccepteerd."
 
 #: templates/admin-dashboard.php:28
 msgid "Your API key has been regenerated or deleted in the Kukie dashboard. Generate a new API key and reconnect to restore the dashboard connection."
-msgstr ""
+msgstr "Uw API-sleutel is opnieuw gegenereerd of verwijderd in het Kukie-dashboard. Genereer een nieuwe API-sleutel en maak opnieuw verbinding om de dashboardverbinding te herstellen."
 
 #: includes/class-kukie-admin.php:537
 msgid "Your cookie banner may not load correctly. Add cdn.kukie.io to the exclusion list in these WP Rocket settings:"
@@ -1190,15 +1194,15 @@ msgstr "Uw cookiebanner wordt mogelijk niet correct geladen. Voeg cdn.kukie.io t
 
 #: templates/admin-banner-iframes.php:21
 msgid "iFrame Blocking"
-msgstr ""
+msgstr "iFrame-blokkering"
 
 #: templates/admin-banner.php:20
 msgid "iFrame blocking"
-msgstr ""
+msgstr "iFrame-blokkering"
 
 #: includes/class-kukie-admin.php:1288
 msgid "iFrame blocking settings saved."
-msgstr ""
+msgstr "Instellingen voor iFrame-blokkering opgeslagen."
 
 #: templates/admin-accessibility.php:237 templates/admin-banner-design.php:179
 msgid "your Kukie.io dashboard"

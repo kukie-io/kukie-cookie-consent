@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -257,6 +257,9 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.8.1 =
+* Translations: the admin interface added in 1.8.0 is now fully translated into German, Spanish, French, Italian, Japanese, Dutch, Polish, Brazilian Portuguese, Romanian and Turkish (Bulgarian was already complete).
 
 = 1.8.0 =
 * Added: Consent banner page tabs Behaviour (show branding, auto-block scripts, Do Not Track, Global Privacy Control, reload on consent, background overlay, disabled pages), iFrame blocking (toggle plus the blocked services list) and Language (banner language override, auto-translate, default and enabled languages - moved here from Settings), plus a Regions tab pointing to the region rules editor on Kukie.io.
