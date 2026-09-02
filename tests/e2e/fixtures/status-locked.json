@@ -1,6 +1,6 @@
 {
     "plan": {
-        "name": "Test Plan",
+        "name": "Free",
         "trial": false,
         "trial_days_remaining": null
     },
@@ -17,6 +17,8 @@
             "total": 0
         }
     },
+    "organisation": "Reinger and Sons",
+    "domain": "obshti-uslovia.com",
     "last_scan": null,
     "banner_enabled": true,
     "script_verified": true,

@@ -1,29 +1,31 @@
 {
-  "plan": {
-    "name": "Pixadoro Custom Plan",
-    "trial": false,
-    "trial_days_remaining": null
-  },
-  "consent_stats": {
-    "today": {
-      "accept_all": 0,
-      "reject_all": 0,
-      "custom_consent": 0
+    "plan": {
+        "name": "Pixadoro Custom Plan",
+        "trial": false,
+        "trial_days_remaining": null
     },
-    "this_week": {
-      "total": 0
+    "consent_stats": {
+        "today": {
+            "accept_all": 0,
+            "reject_all": 0,
+            "custom_consent": 0
+        },
+        "this_week": {
+            "total": 0
+        },
+        "this_month": {
+            "total": 0
+        }
     },
-    "this_month": {
-      "total": 0
+    "organisation": "Davis, Steuber and Keeling",
+    "domain": "obshti-uslovia.com",
+    "last_scan": null,
+    "banner_enabled": true,
+    "script_verified": true,
+    "accessibility_widget": {
+        "available": true,
+        "enabled": true,
+        "position": "bottom-left",
+        "color": null
     }
-  },
-  "last_scan": null,
-  "banner_enabled": true,
-  "script_verified": true,
-  "accessibility_widget": {
-    "available": true,
-    "enabled": true,
-    "position": "bottom-left",
-    "color": null
-  }
 }

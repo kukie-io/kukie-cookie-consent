@@ -115,6 +115,70 @@ final class SettingsSaveTest extends Kukie_Test_Case {
 		);
 	}
 
+	/** The JSON body of the PUT /settings request, decoded. */
+	private function putBody(): array {
+		foreach ( kukie_test_http_log() as $request ) {
+			if ( ( $request['args']['method'] ?? '' ) === 'PUT' ) {
+				return json_decode( (string) $request['args']['body'], true );
+			}
+		}
+
+		$this->fail( 'No PUT /settings request was made.' );
+	}
+
+	public function test_a_settings_page_save_never_touches_the_language_fields(): void {
+		// 1.8.0 split the Settings page (banner on/off, placement) from the
+		// Language tab. The pre-1.8.0 handler defaulted every absent field,
+		// so a Settings-page save would have wiped enabled_languages to [].
+		$this->seedConnectedInstall( [ 'force_language' => 'de' ] );
+		$_POST = [ 'banner_enabled' => '0', 'script_position' => 'body', 'config_version' => '5' ];
+
+		kukie_test_queue_response( 200, [ 'message' => 'Settings updated.' ] );
+		// The post-save refresh is authoritative for the admin-bar mirror, so
+		// it must reflect the value just saved.
+		kukie_test_queue_response( 200, $this->settingsPayload( [ 'banner_enabled' => false ] ) );
+
+		$admin = new Kukie_Admin( Kukie_Plugin::instance() );
+		$this->captureJson( fn () => $admin->ajax_save_settings() );
+
+		$body = $this->putBody();
+		$this->assertSame( [ 'banner_enabled' => false, 'config_version' => 5 ], $body, 'Only the posted field rides to the API.' );
+
+		$settings = kukie_test_stored_settings();
+		$this->assertSame( 'body', $settings['script_position'] );
+		$this->assertSame( 'de', $settings['force_language'], 'The Language tab owns force_language.' );
+		$this->assertFalse( $settings['banner_enabled'] );
+	}
+
+	public function test_a_language_tab_save_never_touches_banner_enabled_or_placement(): void {
+		$this->seedConnectedInstall( [ 'banner_enabled' => false, 'script_position' => 'manual' ] );
+		$_POST = [
+			'force_language'        => 'bg',
+			'auto_translate'        => '1',
+			'default_language'      => 'bg',
+			'has_enabled_languages' => '1',
+			'config_version'        => '5',
+		];
+
+		kukie_test_queue_response( 200, [ 'message' => 'Settings updated.' ] );
+		// The server still reports the banner disabled (nothing touched it).
+		kukie_test_queue_response( 200, $this->settingsPayload( [ 'banner_enabled' => false ] ) );
+
+		$admin = new Kukie_Admin( Kukie_Plugin::instance() );
+		$this->captureJson( fn () => $admin->ajax_save_settings() );
+
+		$body = $this->putBody();
+		$this->assertArrayNotHasKey( 'banner_enabled', $body, 'A language save must not re-enable a disabled banner.' );
+		$this->assertSame( [], $body['enabled_languages'], 'No box ticked + the marker = send an empty list.' );
+		$this->assertTrue( $body['auto_translate'] );
+		$this->assertSame( 'bg', $body['default_language'] );
+
+		$settings = kukie_test_stored_settings();
+		$this->assertFalse( $settings['banner_enabled'] );
+		$this->assertSame( 'manual', $settings['script_position'] );
+		$this->assertSame( 'bg', $settings['force_language'] );
+	}
+
 	public function test_the_server_error_message_reaches_the_user(): void {
 		// KUK-QA-2026-384: Laravel-native responses (throttle, validation)
 		// carry only `message`, so a client reading `error` alone showed a

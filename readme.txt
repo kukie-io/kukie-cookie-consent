@@ -259,6 +259,10 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 == Changelog ==
 
 = 1.8.0 =
+* Added: Consent banner page tabs Behaviour (show branding, auto-block scripts, Do Not Track, Global Privacy Control, reload on consent, background overlay, disabled pages), iFrame blocking (toggle plus the blocked services list) and Language (banner language override, auto-translate, default and enabled languages - moved here from Settings), plus a Regions tab pointing to the region rules editor on Kukie.io.
+* Fixed: the dashboard's Consents Today and this week/month counts now include today's live consents instead of waiting for the nightly aggregation (requires the Kukie.io service update of 2 September 2026).
+* Fixed: the Settings page's Connection card follows plan and organisation changes made on Kukie.io instead of showing the values from the day you connected.
+* Fixed: a save from one page can no longer reset a field owned by another (for example the language list from the Settings page).
 * Added: Accessibility widget page. Switch on the Kukie accessibility widget for this site and configure its position, colour, button size, mobile visibility, modules, languages and accessibility-statement link from WordPress. Settings are read from and saved to your Kukie.io account, so the plugin and the dashboard never disagree. On plans without the widget the page explains what it does and which plan includes it.
 * Changed: the admin menu is now Dashboard, Consent banner, Accessibility widget and Settings. Banner Design, Google Consent Mode v2 and Microsoft UET moved into tabs of the single Consent banner page; old bookmarks to the previous pages redirect to the matching tab.
 * Changed: the dashboard shows the accessibility widget state alongside the banner, consent and verification cards.

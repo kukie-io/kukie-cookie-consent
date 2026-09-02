@@ -1,7 +1,7 @@
 <?php
 /**
- * Consent banner page: one page, three tabs (Design / Google Consent Mode v2 /
- * Microsoft UET). The tab partials are the pre-1.8.0 per-page templates with
+ * Consent banner page: one page, seven tabs (Design / Behaviour / iFrame
+ * blocking / Language / Google Consent Mode v2 / Microsoft UET / Regions). The tab partials are the pre-1.8.0 per-page templates with
  * their page chrome removed; only the active tab's partial is included.
  *
  * @since 1.8.0
@@ -15,9 +15,13 @@ $kukie_site_id = absint( $kukie_plugin->get_option( 'site_id', 0 ) );
 $kukie_app_url = 'https://app.kukie.io';
 $kukie_tab     = Kukie_Admin::current_banner_tab();
 $kukie_tabs    = [
-	'design' => __( 'Design', 'kukie-cookie-consent' ),
-	'gcm'    => __( 'Google Consent Mode v2', 'kukie-cookie-consent' ),
-	'uet'    => __( 'Microsoft UET', 'kukie-cookie-consent' ),
+	'design'    => __( 'Design', 'kukie-cookie-consent' ),
+	'behaviour' => __( 'Behaviour', 'kukie-cookie-consent' ),
+	'iframes'   => __( 'iFrame blocking', 'kukie-cookie-consent' ),
+	'language'  => __( 'Language', 'kukie-cookie-consent' ),
+	'gcm'       => __( 'Google Consent Mode v2', 'kukie-cookie-consent' ),
+	'uet'       => __( 'Microsoft UET', 'kukie-cookie-consent' ),
+	'regions'   => __( 'Regions', 'kukie-cookie-consent' ),
 ];
 ?>
 <div class="wrap kukie-wrap<?php echo 'design' === $kukie_tab ? ' kukie-wrap--wide' : ''; ?>">
@@ -44,11 +48,23 @@ $kukie_tabs    = [
 	// Literal paths only (the tab value is whitelisted, but a literal keeps
 	// the include set enumerable for static review).
 	switch ( $kukie_tab ) {
+		case 'behaviour':
+			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-behaviour.php';
+			break;
+		case 'iframes':
+			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-iframes.php';
+			break;
+		case 'language':
+			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-language.php';
+			break;
 		case 'gcm':
 			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-gcm.php';
 			break;
 		case 'uet':
 			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-uet.php';
+			break;
+		case 'regions':
+			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-regions.php';
 			break;
 		default:
 			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-design.php';

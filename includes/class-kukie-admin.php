@@ -29,7 +29,7 @@ class Kukie_Admin {
 	];
 
 	/** Tabs of the Consent banner page, in display order. */
-	public const BANNER_TABS = [ 'design', 'gcm', 'uet' ];
+	public const BANNER_TABS = [ 'design', 'behaviour', 'iframes', 'language', 'gcm', 'uet', 'regions' ];
 
 	/** Accessibility widget whitelists - mirrors the server's, which is authoritative. */
 	public const A11Y_POSITIONS = [ 'bottom-right', 'bottom-left' ];
@@ -61,6 +61,8 @@ class Kukie_Admin {
 		add_action( 'wp_ajax_kukie_save_uet', [ $this, 'ajax_save_uet' ] );
 		add_action( 'wp_ajax_kukie_save_banner_design', [ $this, 'ajax_save_banner_design' ] );
 		add_action( 'wp_ajax_kukie_save_a11y', [ $this, 'ajax_save_a11y' ] );
+		add_action( 'wp_ajax_kukie_save_behaviour', [ $this, 'ajax_save_behaviour' ] );
+		add_action( 'wp_ajax_kukie_save_iframes', [ $this, 'ajax_save_iframes' ] );
 		add_action( 'wp_ajax_kukie_trigger_scan', [ $this, 'ajax_trigger_scan' ] );
 		add_action( 'wp_ajax_kukie_verify', [ $this, 'ajax_verify' ] );
 	}
@@ -722,6 +724,7 @@ class Kukie_Admin {
 		// minutes - acceptable staleness for the dot; do not shorten or
 		// bypass the kukie_dashboard_data cache for it.
 		$this->mirror_banner_enabled( $response['data'] );
+		$this->mirror_connection_info( $response['data'] );
 
 		// The /status round trip is long enough for a concurrent disconnect
 		// to land, and the cached branch above serves this transient before
@@ -963,6 +966,45 @@ class Kukie_Admin {
 	}
 
 	/**
+	 * Mirror the connection details /status carries (plan name, organisation,
+	 * domain) into the stored option that renders the Settings page's
+	 * Connection card. Those values were written once at connect time, so a
+	 * plan change or an organisation rename on Kukie.io left the card stale
+	 * until a reconnect (operator report, 2026-09-02). Same discipline as
+	 * mirror_banner_enabled(): only from a SUCCESSFUL response, only into an
+	 * install still connected after the round trip, only when changed.
+	 *
+	 * @since 1.8.0
+	 */
+	private function mirror_connection_info( mixed $data ): void {
+		if ( ! is_array( $data ) || ! $this->plugin->settings_still_connected() ) {
+			return;
+		}
+
+		$incoming = [];
+		if ( isset( $data['plan']['name'] ) && is_string( $data['plan']['name'] ) && $data['plan']['name'] !== '' ) {
+			$incoming['plan_name'] = sanitize_text_field( $data['plan']['name'] );
+		}
+		if ( isset( $data['organisation'] ) && is_string( $data['organisation'] ) && $data['organisation'] !== '' ) {
+			$incoming['organisation'] = sanitize_text_field( $data['organisation'] );
+		}
+		if ( isset( $data['domain'] ) && is_string( $data['domain'] ) && $data['domain'] !== '' ) {
+			$incoming['domain'] = sanitize_text_field( $data['domain'] );
+		}
+
+		$changed = [];
+		foreach ( $incoming as $key => $value ) {
+			if ( $this->plugin->get_option( $key ) !== $value ) {
+				$changed[ $key ] = $value;
+			}
+		}
+
+		if ( $changed !== [] ) {
+			$this->plugin->update_options( $changed );
+		}
+	}
+
+	/**
 	 * Whitelist of language codes accepted by the "Banner language" override
 	 * dropdown. `auto` disables the override (detector falls through to
 	 * WPML / Polylang / WP core). All other entries are Kukie-format short
@@ -986,6 +1028,22 @@ class Kukie_Admin {
 		];
 	}
 
+	/**
+	 * Shared by the Settings page (banner on/off + script position) and the
+	 * Consent banner > Language tab (banner language override, auto-translate,
+	 * default + enabled languages) since 1.8.0. PRESENCE-BASED on purpose:
+	 * only fields the posting form actually carries are sent to the API or
+	 * committed locally, so a save from one page can never reset a field the
+	 * other page owns (the pre-1.8.0 handler defaulted every absent field -
+	 * banner_enabled to true, enabled_languages to [] - which would have
+	 * re-enabled a disabled banner or wiped the language list from the
+	 * Settings page once the language fields moved to their own tab).
+	 *
+	 * enabled_languages is an array, and an EMPTY checkbox list posts no key
+	 * at all; the Language tab therefore also posts has_enabled_languages=1,
+	 * which is what turns an absent array into "send []" instead of "leave
+	 * untouched".
+	 */
 	public function ajax_save_settings(): void {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
@@ -993,27 +1051,41 @@ class Kukie_Admin {
 			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
+		$api_data = [];
+		$local    = [];
+
 		// Local-only: script_position (validated here, committed only after
 		// the PUT below succeeds).
-		$script_position = $this->sanitize_script_position( sanitize_text_field( wp_unslash( $_POST['script_position'] ?? 'head' ) ) );
+		if ( isset( $_POST['script_position'] ) ) {
+			$local['script_position'] = $this->sanitize_script_position( sanitize_text_field( wp_unslash( $_POST['script_position'] ) ) );
+		}
 
 		// Local-only: force_language (WPML/Polylang override dropdown).
 		// Invalid values silently fall back to 'auto' so the detector
 		// takes over normally.
-		$force_language = sanitize_text_field( wp_unslash( $_POST['force_language'] ?? 'auto' ) );
-		if ( ! in_array( $force_language, $this->allowed_force_languages(), true ) ) {
-			$force_language = 'auto';
+		if ( isset( $_POST['force_language'] ) ) {
+			$force_language = sanitize_text_field( wp_unslash( $_POST['force_language'] ) );
+			if ( ! in_array( $force_language, $this->allowed_force_languages(), true ) ) {
+				$force_language = 'auto';
+			}
+			$local['force_language'] = $force_language;
 		}
 
 		// API-synced settings
-		$api_data = [
-			'banner_enabled'    => rest_sanitize_boolean( $_POST['banner_enabled'] ?? true ),
-			'auto_translate'    => rest_sanitize_boolean( $_POST['auto_translate'] ?? true ),
-			'default_language'  => sanitize_text_field( wp_unslash( $_POST['default_language'] ?? 'en' ) ),
-			'enabled_languages' => isset( $_POST['enabled_languages'] ) && is_array( $_POST['enabled_languages'] )
+		if ( isset( $_POST['banner_enabled'] ) ) {
+			$api_data['banner_enabled'] = rest_sanitize_boolean( $_POST['banner_enabled'] );
+		}
+		if ( isset( $_POST['auto_translate'] ) ) {
+			$api_data['auto_translate'] = rest_sanitize_boolean( $_POST['auto_translate'] );
+		}
+		if ( isset( $_POST['default_language'] ) ) {
+			$api_data['default_language'] = sanitize_text_field( wp_unslash( $_POST['default_language'] ) );
+		}
+		if ( isset( $_POST['enabled_languages'] ) || ! empty( $_POST['has_enabled_languages'] ) ) {
+			$api_data['enabled_languages'] = isset( $_POST['enabled_languages'] ) && is_array( $_POST['enabled_languages'] )
 				? array_map( 'sanitize_text_field', wp_unslash( $_POST['enabled_languages'] ) )
-				: [],
-		];
+				: [];
+		}
 
 		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
 
@@ -1022,12 +1094,11 @@ class Kukie_Admin {
 		// (and the admin-bar status dot) unchanged - and only into an install
 		// that is still connected, so the commit cannot resurrect a
 		// concurrent disconnect that landed during the PUT round trip.
-		if ( $this->plugin->settings_still_connected() ) {
-			$this->plugin->update_options( [
-				'script_position' => $script_position,
-				'force_language'  => $force_language,
-				'banner_enabled'  => $api_data['banner_enabled'],
-			] );
+		if ( array_key_exists( 'banner_enabled', $api_data ) ) {
+			$local['banner_enabled'] = $api_data['banner_enabled'];
+		}
+		if ( $local !== [] && $this->plugin->settings_still_connected() ) {
+			$this->plugin->update_options( $local );
 		}
 
 		$this->send_settings_saved( $client, __( 'Settings saved.', 'kukie-cookie-consent' ), $config_version );
@@ -1041,9 +1112,14 @@ class Kukie_Admin {
 		}
 
 		$api_data = [
-			'gcm_v2_enabled'     => rest_sanitize_boolean( $_POST['gcm_v2_enabled'] ?? false ),
-			'auto_block_scripts' => rest_sanitize_boolean( $_POST['auto_block_scripts'] ?? false ),
+			'gcm_v2_enabled' => rest_sanitize_boolean( $_POST['gcm_v2_enabled'] ?? false ),
 		];
+
+		// Script blocking lives on the Behaviour tab since 1.8.0; still
+		// honoured here when an older form posts it, never defaulted.
+		if ( isset( $_POST['auto_block_scripts'] ) ) {
+			$api_data['auto_block_scripts'] = rest_sanitize_boolean( $_POST['auto_block_scripts'] );
+		}
 
 		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
 
@@ -1142,6 +1218,74 @@ class Kukie_Admin {
 		}
 		$value = trim( $value );
 		return preg_match( '/^#[0-9a-fA-F]{3,8}$/', $value ) ? $value : '';
+	}
+
+	/**
+	 * Consent banner > Behaviour tab: the Banner Editor's Behaviour settings.
+	 * show_branding is plan-gated server-side (forced back to true on plans
+	 * that must keep branding - the tab renders that toggle locked).
+	 * disabled_pages arrives as one URL pattern per line.
+	 *
+	 * @since 1.8.0
+	 */
+	public function ajax_save_behaviour(): void {
+		check_ajax_referer( 'kukie_admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+		}
+
+		$patterns = [];
+		if ( isset( $_POST['disabled_pages'] ) ) {
+			$lines = preg_split( '/\r\n|\r|\n/', sanitize_textarea_field( wp_unslash( $_POST['disabled_pages'] ) ) ) ?: [];
+			foreach ( $lines as $line ) {
+				$line = trim( $line );
+				if ( $line !== '' && strlen( $line ) <= 500 && ! in_array( $line, $patterns, true ) ) {
+					$patterns[] = $line;
+				}
+				if ( count( $patterns ) >= 100 ) {
+					break;
+				}
+			}
+		}
+
+		$api_data = [
+			'show_branding'      => rest_sanitize_boolean( $_POST['show_branding'] ?? true ),
+			'auto_block_scripts' => rest_sanitize_boolean( $_POST['auto_block_scripts'] ?? false ),
+			'respect_dnt'        => rest_sanitize_boolean( $_POST['respect_dnt'] ?? false ),
+			'respect_gpc'        => rest_sanitize_boolean( $_POST['respect_gpc'] ?? false ),
+			'reload_on_consent'  => rest_sanitize_boolean( $_POST['reload_on_consent'] ?? false ),
+			'show_overlay'       => rest_sanitize_boolean( $_POST['show_overlay'] ?? true ),
+			'disabled_pages'     => $patterns,
+		];
+
+		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+
+		$this->send_settings_saved( $client, __( 'Behaviour settings saved.', 'kukie-cookie-consent' ), $config_version );
+	}
+
+	/**
+	 * Consent banner > iFrame blocking tab. The service list is validated by
+	 * the server against its registry; here only the token shape is
+	 * sanitised (lowercase ids with hyphens, e.g. google-maps).
+	 *
+	 * @since 1.8.0
+	 */
+	public function ajax_save_iframes(): void {
+		check_ajax_referer( 'kukie_admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+		}
+
+		$api_data = [
+			'iframe_blocking_enabled' => rest_sanitize_boolean( $_POST['iframe_blocking_enabled'] ?? true ),
+			'blocked_iframe_services' => $this->sanitize_a11y_tokens( $_POST['blocked_iframe_services'] ?? [] ),
+		];
+
+		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+
+		$this->send_settings_saved( $client, __( 'iFrame blocking settings saved.', 'kukie-cookie-consent' ), $config_version );
 	}
 
 	/**

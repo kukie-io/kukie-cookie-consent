@@ -35,6 +35,9 @@ const noBlockStatus = { ...status.entitled }; delete noBlockStatus.accessibility
 for (const tpl of ['admin-accessibility.php', 'admin-dashboard.php', 'admin-settings.php']) {
   execFileSync(process.env.KUKIE_PHP || 'php', [path.join(HERE, 'render.php'), tpl], { stdio: 'inherit' });
 }
+for (const tab of ['design', 'behaviour', 'iframes', 'language', 'gcm', 'uet', 'regions']) {
+  execFileSync(process.env.KUKIE_PHP || 'php', [path.join(HERE, 'render.php'), 'admin-banner.php', 'kukie-banner', tab], { stdio: 'inherit' });
+}
 
 const results = [];
 const check = (name, ok, extra = '') => { results.push(`${ok ? 'PASS' : 'FAIL'} ${name}${extra ? ' - ' + extra : ''}`); };
@@ -187,6 +190,90 @@ for (const [scenario, expected] of [['entitled', 'Active'], ['locked', 'Not in p
   if (card) await card.screenshot({ path: path.join(E2E, 'shot-script-position.png') });
   await page.close();
 }
+// 6. Settings page: language card gone, connection card refreshed from /status
+{
+  const { page, errors } = await open(browser, 'admin-settings.html', 'entitled');
+  const st = await page.evaluate(() => ({
+    langGone: !document.getElementById('kukie-force-language') && !document.getElementById('kukie-languages-grid'),
+    plan: document.getElementById('kukie-conn-plan').textContent.trim(),
+    org: document.getElementById('kukie-conn-org').textContent.trim(),
+    domain: document.getElementById('kukie-conn-domain').textContent.trim(),
+  }));
+  check('settings: language fields moved off the page', st.langGone, JSON.stringify(st));
+  check('settings: connection card shows the live plan/org/domain from /status', st.plan === 'Pixadoro Custom Plan' && st.org.length > 0 && st.domain === 'obshti-uslovia.com', JSON.stringify(st) + ' ' + errors.join('|'));
+  await page.close();
+}
+// 7. Consent banner tabs
+{
+  const { page, errors } = await open(browser, 'admin-banner-behaviour.html', 'entitled');
+  const st = await page.evaluate(() => ({
+    tabs: Array.from(document.querySelectorAll('.nav-tab')).map(a => a.textContent.trim()),
+    formVisible: getComputedStyle(document.getElementById('kukie-behaviour-form')).display !== 'none',
+    branding: document.getElementById('kukie-show-branding').checked,
+    brandingDisabled: document.getElementById('kukie-show-branding').disabled,
+    badgeVisible: getComputedStyle(document.getElementById('kukie-branding-locked')).display !== 'none',
+    dnt: document.getElementById('kukie-respect-dnt').checked,
+    gpc: document.getElementById('kukie-respect-gpc').checked,
+    overlay: document.getElementById('kukie-show-overlay').checked,
+    pages: document.getElementById('kukie-disabled-pages').value,
+  }));
+  check('behaviour tab: seven tabs in order', JSON.stringify(st.tabs) === JSON.stringify(['Design', 'Behaviour', 'iFrame blocking', 'Language', 'Google Consent Mode v2', 'Microsoft UET', 'Regions']), JSON.stringify(st.tabs));
+  check('behaviour tab (branding removable): toggles populated, branding editable', st.formVisible && !st.branding && !st.brandingDisabled && !st.badgeVisible && st.dnt && !st.gpc && st.overlay && st.pages === '/checkout/*\n/account', JSON.stringify(st) + ' ' + errors.join('|'));
+  await page.screenshot({ path: path.join(E2E, 'shot-behaviour.png'), fullPage: true });
+  await page.close();
+}
+{
+  const { page } = await open(browser, 'admin-banner-behaviour.html', 'locked');
+  const st = await page.evaluate(() => ({
+    branding: document.getElementById('kukie-show-branding').checked,
+    brandingDisabled: document.getElementById('kukie-show-branding').disabled,
+    badgeVisible: getComputedStyle(document.getElementById('kukie-branding-locked')).display !== 'none',
+  }));
+  check('behaviour tab (branding required): toggle locked ON with the plan badge', st.branding && st.brandingDisabled && st.badgeVisible, JSON.stringify(st));
+  await page.close();
+}
+{
+  const { page, errors } = await open(browser, 'admin-banner-iframes.html', 'entitled');
+  const st = await page.evaluate(() => ({
+    enabled: document.getElementById('kukie-iframe-enabled').checked,
+    wrapVisible: getComputedStyle(document.getElementById('kukie-iframe-services-wrap')).display !== 'none',
+    services: document.querySelectorAll('input[name="blocked_iframe_services[]"]').length,
+    checked: Array.from(document.querySelectorAll('input[name="blocked_iframe_services[]"]:checked')).map(cb => cb.value),
+  }));
+  check('iframes tab: registry rendered, blocked subset ticked', st.enabled && st.wrapVisible && st.services === 12 && JSON.stringify(st.checked) === JSON.stringify(['youtube', 'google-maps']), JSON.stringify(st) + ' ' + errors.join('|'));
+  await page.screenshot({ path: path.join(E2E, 'shot-iframes.png'), fullPage: true });
+  await page.close();
+}
+{
+  const { page, errors } = await open(browser, 'admin-banner-language.html', 'entitled');
+  const st = await page.evaluate(() => ({
+    formVisible: getComputedStyle(document.getElementById('kukie-language-form')).display !== 'none',
+    force: document.getElementById('kukie-force-language').value,
+    auto: document.getElementById('kukie-auto-translate').checked,
+    optionsVisible: getComputedStyle(document.getElementById('kukie-language-options')).display !== 'none',
+    grid: document.querySelectorAll('input[name="enabled_languages[]"]').length,
+    ticked: Array.from(document.querySelectorAll('input[name="enabled_languages[]"]:checked')).map(cb => cb.value).sort(),
+  }));
+  check('language tab: populated from the API + local override', st.formVisible && st.force === 'auto' && st.auto && st.optionsVisible && st.grid === 3 && JSON.stringify(st.ticked) === JSON.stringify(['bg', 'en']), JSON.stringify(st) + ' ' + errors.join('|'));
+  await page.screenshot({ path: path.join(E2E, 'shot-language.png'), fullPage: true });
+  await page.close();
+}
+{
+  const { page } = await open(browser, 'admin-banner-regions.html', 'entitled');
+  const st = await page.evaluate(() => {
+    const a = document.querySelector('.kukie-cta-card a.kukie-btn-primary');
+    return { href: a?.href, newTab: a?.target === '_blank', sr: !!a?.querySelector('.screen-reader-text'), noForm: !document.querySelector('form') };
+  });
+  check('regions tab: only a CTA to the Kukie.io regions editor', st.noForm && st.newTab && st.sr && /\/sites\/7\/banner\?tab=regions$/.test(st.href), JSON.stringify(st));
+  await page.close();
+}
+{
+  const { page } = await open(browser, 'admin-banner-gcm.html', 'entitled');
+  const st = await page.evaluate(() => ({ autoBlockGone: !document.getElementById('kukie-auto-block'), gcm: document.getElementById('kukie-gcm-enabled') !== null }));
+  check('gcm tab: script blocking moved to Behaviour', st.autoBlockGone && st.gcm, JSON.stringify(st));
+  await page.close();
+}
+
 await browser.close();
 console.log(results.join('\n'));
 if (results.some((r) => r.startsWith('FAIL'))) process.exit(1);

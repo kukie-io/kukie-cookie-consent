@@ -430,7 +430,6 @@
 
 			const data = {
 				gcm_v2_enabled: form.querySelector('#kukie-gcm-enabled')?.checked ? '1' : '0',
-				auto_block_scripts: form.querySelector('#kukie-auto-block')?.checked ? '1' : '0',
 			};
 
 			const result = await kukieSaveSettings('kukie_save_gcm', data);
@@ -462,7 +461,6 @@
 		const d = result.data;
 		rememberConfigVersion(d);
 		setChecked('kukie-gcm-enabled', d.gcm_v2_enabled);
-		setChecked('kukie-auto-block', d.auto_block_scripts);
 	}
 
 	// ─────────────────────────────────────────
@@ -518,7 +516,7 @@
 	}
 
 	// ─────────────────────────────────────────
-	// SETTINGS PAGE
+	// SETTINGS PAGE (connection, banner on/off, script position)
 	// ─────────────────────────────────────────
 
 	function initSettingsPage() {
@@ -528,6 +526,7 @@
 		if (!form) return;
 
 		loadSettingsData(form, loading, content);
+		refreshConnectionCard();
 
 		// Script position radio -> show/hide manual embed
 		form.querySelectorAll('input[name="script_position"]').forEach(radio => {
@@ -539,16 +538,8 @@
 			});
 		});
 
-		// Auto-translate toggle -> show/hide language options
-		const autoTranslateToggle = document.getElementById('kukie-auto-translate');
-		const langOptions = document.getElementById('kukie-language-options');
-		if (autoTranslateToggle && langOptions) {
-			autoTranslateToggle.addEventListener('change', () => {
-				langOptions.hidden = !autoTranslateToggle.checked;
-			});
-		}
-
-		// Save
+		// Save - only the fields this page owns (the handler is presence-based,
+		// so the Language tab's fields are never touched from here).
 		form.addEventListener('submit', async (e) => {
 			e.preventDefault();
 			hideNotice('kukie-settings-error');
@@ -556,18 +547,9 @@
 			const saveBtn = document.getElementById('kukie-settings-save');
 			setButtonLoading(saveBtn, true);
 
-			const enabledLangs = [];
-			form.querySelectorAll('input[name="enabled_languages[]"]:checked').forEach(cb => {
-				enabledLangs.push(cb.value);
-			});
-
 			const data = {
 				banner_enabled: form.querySelector('#kukie-banner-enabled')?.checked ? '1' : '0',
 				script_position: form.querySelector('input[name="script_position"]:checked')?.value || 'head',
-				force_language: form.querySelector('#kukie-force-language')?.value || 'auto',
-				auto_translate: form.querySelector('#kukie-auto-translate')?.checked ? '1' : '0',
-				default_language: form.querySelector('#kukie-default-language')?.value || 'en',
-				enabled_languages: enabledLangs,
 			};
 
 			const result = await kukieSaveSettings('kukie_save_settings', data);
@@ -629,16 +611,29 @@
 		}
 	}
 
+	// The Connection card is server-rendered from values stored at connect
+	// time; /status carries the live plan name, organisation and domain, and
+	// the PHP side mirrors them into the option on every fetch. Refresh the
+	// visible cells too so the page never shows a stale plan.
+	async function refreshConnectionCard() {
+		const result = await kukieAjax('kukie_get_status');
+		if (!result.success || !result.data) return;
+		const d = result.data;
+		if (d.plan?.name) setText('kukie-conn-plan', d.plan.name);
+		if (d.organisation) setText('kukie-conn-org', d.organisation);
+		if (d.domain) setText('kukie-conn-domain', d.domain);
+	}
+
 	async function loadSettingsData(form, loading, content) {
 		const result = await kukieAjax('kukie_get_settings');
 
 		if (loading) loading.hidden = true;
 
 		// Reveal the form only after a successful load: unpopulated template
-		// defaults here mean banner_enabled unchecked and an empty language
-		// grid, so a blind Save would disable the banner and wipe languages.
-		// The server-rendered connection card (with the Disconnect button)
-		// stays reachable - only the settings form itself is withheld.
+		// defaults here mean banner_enabled unchecked, so a blind Save would
+		// disable the banner. The server-rendered connection card (with the
+		// Disconnect button) stays reachable - only the settings form itself
+		// is withheld.
 		if (!result.success) {
 			showNotice('kukie-settings-error', result.data?.message || kukieI18n('couldNotLoad', 'Could not load settings.'));
 			form.style.display = 'none';
@@ -687,6 +682,79 @@
 		if (verifiedStatusEl && d.verified_at) {
 			verifiedStatusEl.textContent = kukieSprintf(kukieI18n('verifiedOn', 'Verified on %s'), formatDate(d.verified_at));
 		}
+	}
+
+	// ─────────────────────────────────────────
+	// LANGUAGE TAB (Consent banner page)
+	// ─────────────────────────────────────────
+
+	function initLanguagePage() {
+		const form = document.getElementById('kukie-language-form');
+		const loading = document.getElementById('kukie-language-loading');
+		if (!form) return;
+
+		loadLanguageSettings(form, loading);
+
+		// Auto-translate toggle -> show/hide language options
+		const autoTranslateToggle = document.getElementById('kukie-auto-translate');
+		const langOptions = document.getElementById('kukie-language-options');
+		if (autoTranslateToggle && langOptions) {
+			autoTranslateToggle.addEventListener('change', () => {
+				langOptions.hidden = !autoTranslateToggle.checked;
+			});
+		}
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			hideNotice('kukie-language-error');
+
+			const saveBtn = document.getElementById('kukie-language-save');
+			setButtonLoading(saveBtn, true);
+
+			const enabledLangs = [];
+			form.querySelectorAll('input[name="enabled_languages[]"]:checked').forEach(cb => {
+				enabledLangs.push(cb.value);
+			});
+
+			// has_enabled_languages: an empty checkbox list posts no array at
+			// all; the marker tells the handler to send [] rather than leave
+			// the server value untouched.
+			const data = {
+				force_language: form.querySelector('#kukie-force-language')?.value || 'auto',
+				auto_translate: form.querySelector('#kukie-auto-translate')?.checked ? '1' : '0',
+				default_language: form.querySelector('#kukie-default-language')?.value || 'en',
+				enabled_languages: enabledLangs,
+				has_enabled_languages: '1',
+			};
+
+			const result = await kukieSaveSettings('kukie_save_settings', data);
+
+			setButtonLoading(saveBtn, false);
+
+			if (result.success) {
+				showToast(result.data.message);
+			} else {
+				showToast(result.data?.message || kukieI18n('failedToSave', 'Failed to save.'), 'error');
+			}
+		});
+	}
+
+	async function loadLanguageSettings(form, loading) {
+		const result = await kukieAjax('kukie_get_settings');
+
+		if (loading) loading.hidden = true;
+
+		// Reveal the form only after a successful load: an unpopulated grid
+		// posts an empty language list on Save.
+		if (!result.success) {
+			showNotice('kukie-language-error', result.data?.message || kukieI18n('couldNotLoad', 'Could not load settings.'));
+			return;
+		}
+
+		form.hidden = false;
+
+		const d = result.data;
+		rememberConfigVersion(d);
 
 		// Banner language override (WPML/Polylang dropdown)
 		const forceLangSelect = document.getElementById('kukie-force-language');
@@ -694,20 +762,16 @@
 			forceLangSelect.value = d.force_language || 'auto';
 		}
 
-		// Auto-translate
 		setChecked('kukie-auto-translate', d.auto_translate);
 
-		// Show/hide language options based on auto-translate state
 		const langOptions = document.getElementById('kukie-language-options');
 		if (langOptions) {
 			langOptions.hidden = !d.auto_translate;
 		}
 
-		// Populate language dropdown + checkboxes
 		const langs = d.available_languages || [];
 		const enabledLangs = d.enabled_languages || [];
 
-		// Default language dropdown
 		const langSelect = document.getElementById('kukie-default-language');
 		if (langSelect && langs.length) {
 			langSelect.replaceChildren();
@@ -720,12 +784,161 @@
 			});
 		}
 
-		// Language checkboxes grid
 		const grid = document.getElementById('kukie-languages-grid');
 		if (grid && langs.length) {
 			grid.replaceChildren();
 			langs.forEach(lang => {
 				grid.appendChild(checkboxItem('enabled_languages[]', lang.locale, lang.name, enabledLangs.includes(lang.locale), lang.is_rtl));
+			});
+		}
+	}
+
+	// ─────────────────────────────────────────
+	// BEHAVIOUR TAB (Consent banner page)
+	// ─────────────────────────────────────────
+
+	function initBehaviourPage() {
+		const form = document.getElementById('kukie-behaviour-form');
+		const loading = document.getElementById('kukie-behaviour-loading');
+		if (!form) return;
+
+		loadBehaviourSettings(form, loading);
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			hideNotice('kukie-behaviour-error');
+
+			const saveBtn = document.getElementById('kukie-behaviour-save');
+			setButtonLoading(saveBtn, true);
+
+			const flag = (id) => (document.getElementById(id)?.checked ? '1' : '0');
+			const data = {
+				show_branding: flag('kukie-show-branding'),
+				auto_block_scripts: flag('kukie-auto-block'),
+				respect_dnt: flag('kukie-respect-dnt'),
+				respect_gpc: flag('kukie-respect-gpc'),
+				reload_on_consent: flag('kukie-reload-on-consent'),
+				show_overlay: flag('kukie-show-overlay'),
+				disabled_pages: document.getElementById('kukie-disabled-pages')?.value || '',
+			};
+
+			const result = await kukieSaveSettings('kukie_save_behaviour', data);
+
+			setButtonLoading(saveBtn, false);
+
+			if (result.success) {
+				showToast(result.data.message);
+			} else {
+				showToast(result.data?.message || kukieI18n('failedToSave', 'Failed to save.'), 'error');
+			}
+		});
+	}
+
+	async function loadBehaviourSettings(form, loading) {
+		const result = await kukieAjax('kukie_get_settings');
+
+		if (loading) loading.hidden = true;
+
+		if (!result.success) {
+			showNotice('kukie-behaviour-error', result.data?.message || kukieI18n('couldNotLoad', 'Could not load settings.'));
+			return;
+		}
+
+		form.hidden = false;
+
+		const d = result.data;
+		rememberConfigVersion(d);
+
+		setChecked('kukie-show-branding', d.show_branding !== false);
+		setChecked('kukie-auto-block', d.auto_block_scripts);
+		setChecked('kukie-respect-dnt', d.respect_dnt);
+		setChecked('kukie-respect-gpc', d.respect_gpc);
+		setChecked('kukie-reload-on-consent', d.reload_on_consent);
+		setChecked('kukie-show-overlay', d.show_overlay !== false);
+		setValue('kukie-disabled-pages', Array.isArray(d.disabled_pages) ? d.disabled_pages.join('\n') : '');
+
+		// Branding removal is a plan feature: a plan that must keep branding
+		// gets the toggle locked ON (the server forces it back anyway).
+		const canRemove = d.can_remove_branding === true;
+		const branding = document.getElementById('kukie-show-branding');
+		const badge = document.getElementById('kukie-branding-locked');
+		const row = document.getElementById('kukie-branding-row');
+		if (branding) {
+			branding.disabled = !canRemove;
+			if (!canRemove) branding.checked = true;
+		}
+		if (badge) badge.hidden = canRemove;
+		if (row) row.classList.toggle('kukie-form-row--locked', !canRemove);
+	}
+
+	// ─────────────────────────────────────────
+	// IFRAME BLOCKING TAB (Consent banner page)
+	// ─────────────────────────────────────────
+
+	function initIframesPage() {
+		const form = document.getElementById('kukie-iframes-form');
+		const loading = document.getElementById('kukie-iframes-loading');
+		if (!form) return;
+
+		loadIframeSettings(form, loading);
+
+		const toggle = document.getElementById('kukie-iframe-enabled');
+		const wrap = document.getElementById('kukie-iframe-services-wrap');
+		if (toggle && wrap) {
+			toggle.addEventListener('change', () => { wrap.hidden = !toggle.checked; });
+		}
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			hideNotice('kukie-iframes-error');
+
+			const saveBtn = document.getElementById('kukie-iframes-save');
+			setButtonLoading(saveBtn, true);
+
+			const data = {
+				iframe_blocking_enabled: document.getElementById('kukie-iframe-enabled')?.checked ? '1' : '0',
+				blocked_iframe_services: Array.from(document.querySelectorAll('input[name="blocked_iframe_services[]"]:checked')).map(cb => cb.value),
+			};
+
+			const result = await kukieSaveSettings('kukie_save_iframes', data);
+
+			setButtonLoading(saveBtn, false);
+
+			if (result.success) {
+				showToast(result.data.message);
+			} else {
+				showToast(result.data?.message || kukieI18n('failedToSave', 'Failed to save.'), 'error');
+			}
+		});
+	}
+
+	async function loadIframeSettings(form, loading) {
+		const result = await kukieAjax('kukie_get_settings');
+
+		if (loading) loading.hidden = true;
+
+		if (!result.success) {
+			showNotice('kukie-iframes-error', result.data?.message || kukieI18n('couldNotLoad', 'Could not load settings.'));
+			return;
+		}
+
+		form.hidden = false;
+
+		const d = result.data;
+		rememberConfigVersion(d);
+
+		const enabled = d.iframe_blocking_enabled !== false;
+		setChecked('kukie-iframe-enabled', enabled);
+		const wrap = document.getElementById('kukie-iframe-services-wrap');
+		if (wrap) wrap.hidden = !enabled;
+
+		const grid = document.getElementById('kukie-iframe-services');
+		const services = Array.isArray(d.available_iframe_services) ? d.available_iframe_services : [];
+		const blocked = Array.isArray(d.blocked_iframe_services) ? d.blocked_iframe_services : [];
+		if (grid) {
+			grid.replaceChildren();
+			services.forEach(svc => {
+				grid.appendChild(checkboxItem('blocked_iframe_services[]', svc.id, svc.name, blocked.includes(svc.id), false));
 			});
 		}
 	}
@@ -1066,7 +1279,9 @@
 	}
 
 	function populateA11yForm(a) {
-		setChecked('kukie-a11y-enabled', a.enabled);
+		// Effective state: a plan that lost the feature reads OFF (the stored
+		// value is kept server-side for a re-upgrade; nothing is delivered).
+		setChecked('kukie-a11y-enabled', a.available !== false && a.enabled);
 
 		const posRadio = document.querySelector(`input[name="kukie_a11y_position"][value="${a.position || 'bottom-right'}"]`);
 		if (posRadio) posRadio.checked = true;
@@ -1305,6 +1520,18 @@
 
 		if (document.getElementById('kukie-settings-form')) {
 			initSettingsPage();
+		}
+
+		if (document.getElementById('kukie-language-form')) {
+			initLanguagePage();
+		}
+
+		if (document.getElementById('kukie-behaviour-form')) {
+			initBehaviourPage();
+		}
+
+		if (document.getElementById('kukie-iframes-form')) {
+			initIframesPage();
 		}
 
 		if (document.getElementById('kukie-a11y-form')) {

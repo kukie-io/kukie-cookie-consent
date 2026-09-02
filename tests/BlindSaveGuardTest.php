@@ -54,13 +54,14 @@ final class BlindSaveGuardTest extends Kukie_Test_Case {
 		$guarded = array_unique( $matches[1] );
 		sort( $guarded );
 
-		// Five since 1.8.0: the Accessibility widget page saves through the
-		// same wrapper (its whole block is server-owned, so a blind save
-		// there would post template defaults over the dashboard's values).
+		// Seven since 1.8.0: the Accessibility widget page and the Behaviour and
+		// iFrame blocking tabs save through the same wrapper (their blocks are
+		// server-owned, so a blind save would post template defaults over the
+		// dashboard's values).
 		$this->assertSame(
-			[ 'kukie_save_a11y', 'kukie_save_banner_design', 'kukie_save_gcm', 'kukie_save_settings', 'kukie_save_uet' ],
+			[ 'kukie_save_a11y', 'kukie_save_banner_design', 'kukie_save_behaviour', 'kukie_save_gcm', 'kukie_save_iframes', 'kukie_save_settings', 'kukie_save_uet' ],
 			$guarded,
-			'All five save handlers must go through the guarded wrapper.'
+			'All seven save handlers must go through the guarded wrapper.'
 		);
 	}
 

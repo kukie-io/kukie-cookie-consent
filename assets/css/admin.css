@@ -1934,3 +1934,48 @@
 	clip-path: inset(50%) !important;
 	word-wrap: normal !important;
 }
+
+/* Textareas share the input skin but grow with their rows */
+.kukie-textarea {
+	min-height: 0;
+	height: auto;
+	font-family: Menlo, Consolas, monospace;
+	font-size: 13px;
+	line-height: 1.6;
+	resize: vertical;
+}
+
+/* Plan-locked row (Show Branding on plans that must keep it) */
+.kukie-form-row--locked {
+	opacity: 0.6;
+}
+
+.kukie-lock-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	margin-left: 6px;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: #f1f5f9;
+	color: #64748b;
+	font-size: 11px;
+	font-weight: 600;
+	vertical-align: middle;
+}
+
+.kukie-lock-badge .dashicons {
+	font-size: 12px;
+	width: 12px;
+	height: 12px;
+	line-height: 12px;
+}
+
+/* Regions tab CTA glyph */
+.kukie-cta-glyph {
+	font-size: 32px;
+	width: 32px;
+	height: 32px;
+	color: #2563eb;
+	margin-bottom: 8px;
+}

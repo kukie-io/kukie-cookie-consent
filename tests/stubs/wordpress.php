@@ -369,6 +369,10 @@ function absint( mixed $value ): int {
 	return abs( (int) $value );
 }
 
+function sanitize_textarea_field( mixed $str ): string {
+	return is_scalar( $str ) ? trim( strip_tags( (string) $str ) ) : '';
+}
+
 function sanitize_key( mixed $key ): string {
 	$key = is_scalar( $key ) ? strtolower( (string) $key ) : '';
 	return (string) preg_replace( '/[^a-z0-9_\-]/', '', $key );

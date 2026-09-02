@@ -50,21 +50,6 @@ $kukie_plugin = Kukie_Plugin::instance();
 		</p>
 	</div>
 
-	<div class="kukie-card">
-		<h2 class="kukie-card-title"><?php esc_html_e( 'Script Blocking', 'kukie-cookie-consent' ); ?></h2>
-
-		<div class="kukie-form-row">
-			<div class="kukie-form-row-label">
-				<span id="kukie-auto-block-label"><?php esc_html_e( 'Auto-block third-party scripts', 'kukie-cookie-consent' ); ?></span>
-				<span class="kukie-form-row-hint" id="kukie-auto-block-hint"><?php esc_html_e( 'Automatically block known tracking scripts until consent is given.', 'kukie-cookie-consent' ); ?></span>
-			</div>
-			<label class="kukie-toggle">
-				<input type="checkbox" role="switch" name="auto_block_scripts" id="kukie-auto-block" value="1" aria-labelledby="kukie-auto-block-label" aria-describedby="kukie-auto-block-hint">
-				<span class="kukie-toggle-slider" aria-hidden="true"></span>
-			</label>
-		</div>
-	</div>
-
 	<div class="kukie-form-actions">
 		<button type="submit" class="kukie-btn-primary" id="kukie-gcm-save">
 			<span class="kukie-btn-text"><?php esc_html_e( 'Save Settings', 'kukie-cookie-consent' ); ?></span>

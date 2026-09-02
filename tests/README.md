@@ -34,6 +34,8 @@ harness is scoped to it rather than to line coverage.
 | `ActivationAndMirrorTest` | the admin-bar mirror tracks dashboard-side toggles; the one-time connect redirect is reachable and fires once | KUK-QA-2026-387, 389 |
 | `AccessibilityWidgetSaveTest` (1.8.0) | the Accessibility widget save coerces every value to the server whitelists, forwards the block unchanged, mirrors NOTHING locally, and turns the plan-gate 403 into a structured upgrade error | feature lock, no finding |
 | `LegacyPageRedirectTest` (1.8.0) | the pre-1.8.0 page slugs redirect to their Consent banner tab; the tab selector is whitelisted | feature lock, no finding |
+| `ConnectionMirrorTest` (1.8.0) | /status refreshes the stored plan name, organisation and domain; never into a disconnected install | feature lock, no finding |
+| `SettingsSaveTest` (1.8.0 additions) | the shared settings handler is presence-based: a Settings-page save never touches language fields, a Language-tab save never touches banner_enabled or placement | feature lock, no finding |
 
 `SettingsSaveTest` and `ApiKeyTrustTest` additionally cover the 1.7.2
 concurrent-disconnect hardening: a response landing after another request

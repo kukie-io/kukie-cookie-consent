@@ -7,7 +7,7 @@
     "gtm_container_id": null,
     "ms_uet_enabled": false,
     "auto_block_scripts": true,
-    "auto_translate": false,
+    "auto_translate": true,
     "default_language": "en",
     "enabled_languages": [
         "en",
@@ -24,8 +24,73 @@
         "offset_x": 20,
         "offset_y": 20
     },
+    "show_branding": false,
+    "can_remove_branding": true,
+    "respect_dnt": true,
+    "respect_gpc": false,
+    "reload_on_consent": false,
+    "show_overlay": true,
+    "disabled_pages": [
+        "\/checkout\/*",
+        "\/account"
+    ],
+    "iframe_blocking_enabled": true,
+    "blocked_iframe_services": [
+        "youtube",
+        "google-maps"
+    ],
+    "available_iframe_services": [
+        {
+            "id": "youtube",
+            "name": "YouTube"
+        },
+        {
+            "id": "vimeo",
+            "name": "Vimeo"
+        },
+        {
+            "id": "dailymotion",
+            "name": "Dailymotion"
+        },
+        {
+            "id": "google-maps",
+            "name": "Google Maps"
+        },
+        {
+            "id": "facebook",
+            "name": "Facebook"
+        },
+        {
+            "id": "instagram",
+            "name": "Instagram"
+        },
+        {
+            "id": "twitter",
+            "name": "X (Twitter)"
+        },
+        {
+            "id": "tiktok",
+            "name": "TikTok"
+        },
+        {
+            "id": "linkedin",
+            "name": "LinkedIn"
+        },
+        {
+            "id": "spotify",
+            "name": "Spotify"
+        },
+        {
+            "id": "recaptcha",
+            "name": "reCAPTCHA"
+        },
+        {
+            "id": "hubspot",
+            "name": "HubSpot"
+        }
+    ],
     "default_consent_model": "opt_in",
-    "verified_at": "2026-09-01T20:49:31+00:00",
+    "verified_at": "2026-09-02T08:29:02+00:00",
     "available_languages": [
         {
             "locale": "bg",
