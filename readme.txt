@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,7 +173,7 @@ Banner translations (titles, descriptions, buttons, cookie categories) are manag
 5. Enter your API key from the [Kukie.io dashboard](https://app.kukie.io)
 6. Your cookie consent banner is now active
 
-The plugin adds four admin pages under **Kukie**: **Dashboard** (status, consent counts, scans), **Consent banner** (Design, Google Consent Mode v2 and Microsoft UET tabs), **Accessibility widget** and **Settings** (script position, languages, connection).
+The plugin adds four admin pages under **Kukie**: **Dashboard** (status, consent counts, scans), **Consent banner** (Design, Behaviour, iFrame blocking, Language, Google Consent Mode v2, Microsoft UET and Regions tabs), **Accessibility widget** and **Settings** (script position, hide for administrators, connection).
 
 Alternatively, download the plugin from [WordPress.org](https://wordpress.org/plugins/kukie-cookie-consent/) and upload the ZIP file via **Plugins > Add New > Upload Plugin**.
 
@@ -241,6 +241,10 @@ Yes. All consent events are logged with timestamps, consent choices, and anonymi
 
 Yes. A cookie consent banner is only one part of privacy compliance. You also need a Privacy Policy and Cookie Policy. Kukie.io includes generators for both on all plans, including the free plan.
 
+= Can I hide the banner for administrators? =
+
+Yes. Turn on **Hide for administrators** on the plugin's Settings page. The banner is then not loaded for logged-in administrators, which keeps front-end page builders such as Bricks or Elementor working after cookies were rejected. Visitors still see the banner. Developers can widen or narrow the rule (for example to editors who use the builder) with the `kukie_hide_banner_for_user` filter.
+
 = Is Kukie suitable for agencies managing multiple sites? =
 
 Yes. Kukie.io supports multi-site management with team roles (owner, admin, editor). The free plan supports up to 5 sites, and paid plans support up to 100 or unlimited.
@@ -257,6 +261,9 @@ Yes. Kukie.io supports multi-site management with team roles (owner, admin, edit
 8. Revisit consent button settings - position, style, icon, and colour customisation
 
 == Changelog ==
+
+= 1.8.2 =
+* Added: "Hide for administrators" on the Settings page. When on, the banner is not loaded for logged-in administrators, so front-end page builders such as Bricks or Elementor keep working after cookies were rejected. Visitors still see the banner. Off by default. Developers can widen or narrow the rule with the kukie_hide_banner_for_user filter.
 
 = 1.8.1 =
 * Translations: the admin interface added in 1.8.0 is now fully translated into German, Spanish, French, Italian, Japanese, Dutch, Polish, Brazilian Portuguese, Romanian and Turkish (Bulgarian was already complete).

@@ -111,6 +111,17 @@ $kukie_app_url = 'https://app.kukie.io';
 					<p class="kukie-help-text"><?php esc_html_e( 'Add this code to your theme header template.', 'kukie-cookie-consent' ); ?></p>
 				</div>
 
+				<div class="kukie-form-row">
+					<div class="kukie-form-row-label">
+						<span id="kukie-disable-for-admins-label"><?php esc_html_e( 'Hide for administrators', 'kukie-cookie-consent' ); ?></span>
+						<span class="kukie-form-row-hint" id="kukie-disable-for-admins-hint"><?php esc_html_e( 'Do not load the banner for logged-in administrators. Turn this on if a page builder such as Bricks or Elementor stops working after cookies are rejected. Visitors still see the banner.', 'kukie-cookie-consent' ); ?></span>
+					</div>
+					<label class="kukie-toggle">
+						<input type="checkbox" role="switch" name="disable_for_admins" id="kukie-disable-for-admins" value="1" aria-labelledby="kukie-disable-for-admins-label" aria-describedby="kukie-disable-for-admins-hint">
+						<span class="kukie-toggle-slider" aria-hidden="true"></span>
+					</label>
+				</div>
+
 				<div class="kukie-form-row kukie-form-row--last">
 					<div class="kukie-form-row-label">
 						<span id="kukie-verify-label"><?php esc_html_e( 'Verification', 'kukie-cookie-consent' ); ?></span>

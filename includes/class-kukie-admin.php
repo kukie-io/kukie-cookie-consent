@@ -757,8 +757,9 @@ class Kukie_Admin {
 		// transient expired.
 		$cached = $fresh ? false : get_transient( 'kukie_settings_cache' );
 		if ( is_array( $cached ) ) {
-			$cached['script_position'] = $this->plugin->get_option( 'script_position', 'head' );
-			$cached['force_language']  = $this->plugin->get_option( 'force_language', 'auto' );
+			$cached['script_position']    = $this->plugin->get_option( 'script_position', 'head' );
+			$cached['force_language']     = $this->plugin->get_option( 'force_language', 'auto' );
+			$cached['disable_for_admins'] = (bool) $this->plugin->get_option( 'disable_for_admins', false );
 			wp_send_json_success( $cached );
 		}
 
@@ -782,9 +783,10 @@ class Kukie_Admin {
 			set_transient( 'kukie_settings_cache', $response['data'], 10 * MINUTE_IN_SECONDS );
 		}
 
-		$data                    = is_array( $response['data'] ) ? $response['data'] : [];
-		$data['script_position'] = $this->plugin->get_option( 'script_position', 'head' );
-		$data['force_language']  = $this->plugin->get_option( 'force_language', 'auto' );
+		$data                       = is_array( $response['data'] ) ? $response['data'] : [];
+		$data['script_position']    = $this->plugin->get_option( 'script_position', 'head' );
+		$data['force_language']     = $this->plugin->get_option( 'force_language', 'auto' );
+		$data['disable_for_admins'] = (bool) $this->plugin->get_option( 'disable_for_admins', false );
 
 		wp_send_json_success( $data );
 	}
@@ -1069,6 +1071,13 @@ class Kukie_Admin {
 				$force_language = 'auto';
 			}
 			$local['force_language'] = $force_language;
+		}
+
+		// Local-only: hide the banner for administrators (page-builder
+		// safety, read per request by Kukie_Script_Injector). Never synced -
+		// it describes WordPress users, which Kukie.io knows nothing about.
+		if ( isset( $_POST['disable_for_admins'] ) ) {
+			$local['disable_for_admins'] = rest_sanitize_boolean( $_POST['disable_for_admins'] );
 		}
 
 		// API-synced settings

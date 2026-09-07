@@ -140,6 +140,10 @@ class Kukie_Script_Injector {
 			return;
 		}
 
+		if ( $this->is_hidden_for_current_user() ) {
+			return;
+		}
+
 		$site_key = $this->plugin->get_option( 'site_key', '' );
 
 		if ( empty( $site_key ) ) {
@@ -168,6 +172,31 @@ class Kukie_Script_Injector {
 				'in_footer' => ( $position === 'body' ),
 			]
 		);
+	}
+
+	/**
+	 * Whether the banner is withheld from the current visitor because the
+	 * "Hide for administrators" setting is on and they can manage the site.
+	 *
+	 * Front-end page builders (Bricks, Elementor and others) run on the public
+	 * side of the site and can break when their own cookies or scripts are
+	 * blocked after a rejected consent; hiding the banner for administrators
+	 * keeps the builder working while visitors still see the banner. Decided
+	 * per request on wp_enqueue_scripts (never in init(), which runs before
+	 * the current user is known), so a cached page for a visitor is never
+	 * served without the script.
+	 *
+	 * Filter: `kukie_hide_banner_for_user` receives the decision plus the
+	 * current user id, so a site can widen it (editors who use the builder)
+	 * or narrow it.
+	 *
+	 * @since 1.8.2
+	 */
+	public function is_hidden_for_current_user(): bool {
+		$hidden = (bool) $this->plugin->get_option( 'disable_for_admins', false )
+			&& current_user_can( 'manage_options' );
+
+		return (bool) apply_filters( 'kukie_hide_banner_for_user', $hidden, get_current_user_id() );
 	}
 
 	/**
@@ -220,7 +249,7 @@ class Kukie_Script_Injector {
 		$banner_enabled = $this->plugin->get_option( 'banner_enabled', false );
 		$dot_color      = $banner_enabled ? '#22c55e' : '#ef4444';
 
-		$wp_admin_bar->add_node( [
+		$node = [
 			'id'    => 'kukie-status',
 			'title' => wp_kses(
 				sprintf(
@@ -234,6 +263,16 @@ class Kukie_Script_Injector {
 				]
 			),
 			'href'  => admin_url( 'admin.php?page=kukie' ),
-		] );
+		];
+
+		// The dot still reports the site-wide banner state; the tooltip is
+		// what tells an administrator why THEY do not see the banner.
+		if ( $this->is_hidden_for_current_user() ) {
+			$node['meta'] = [
+				'title' => __( 'The banner is hidden for administrators. Visitors still see it.', 'kukie-cookie-consent' ),
+			];
+		}
+
+		$wp_admin_bar->add_node( $node );
 	}
 }

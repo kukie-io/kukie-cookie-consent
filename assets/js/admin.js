@@ -550,6 +550,7 @@
 			const data = {
 				banner_enabled: form.querySelector('#kukie-banner-enabled')?.checked ? '1' : '0',
 				script_position: form.querySelector('input[name="script_position"]:checked')?.value || 'head',
+				disable_for_admins: form.querySelector('#kukie-disable-for-admins')?.checked ? '1' : '0',
 			};
 
 			const result = await kukieSaveSettings('kukie_save_settings', data);
@@ -648,6 +649,9 @@
 
 		// Banner enabled
 		setChecked('kukie-banner-enabled', d.banner_enabled);
+
+		// Hide for administrators (local-only, never comes from the API)
+		setChecked('kukie-disable-for-admins', d.disable_for_admins);
 
 		// Script position
 		const posRadio = form.querySelector(`input[name="script_position"][value="${d.script_position || 'head'}"]`);

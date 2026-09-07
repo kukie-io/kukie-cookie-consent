@@ -150,6 +150,47 @@ final class SettingsSaveTest extends Kukie_Test_Case {
 		$this->assertFalse( $settings['banner_enabled'] );
 	}
 
+	public function test_a_settings_page_save_commits_hide_for_administrators_locally_only(): void {
+		// 1.8.2: disable_for_admins describes WordPress users, so it is
+		// stored locally and never rides to the API.
+		$this->seedConnectedInstall();
+		$_POST = [ 'banner_enabled' => '1', 'script_position' => 'head', 'disable_for_admins' => '1', 'config_version' => '5' ];
+
+		kukie_test_queue_response( 200, [ 'message' => 'Settings updated.' ] );
+		kukie_test_queue_response( 200, $this->settingsPayload() );
+
+		$admin = new Kukie_Admin( Kukie_Plugin::instance() );
+		$this->captureJson( fn () => $admin->ajax_save_settings() );
+
+		$this->assertArrayNotHasKey( 'disable_for_admins', $this->putBody() );
+		$this->assertTrue( kukie_test_stored_settings()['disable_for_admins'] );
+	}
+
+	public function test_hide_for_administrators_is_untouched_when_the_form_does_not_post_it(): void {
+		$this->seedConnectedInstall( [ 'disable_for_admins' => true ] );
+		$this->postSave();
+
+		kukie_test_queue_response( 200, $this->settingsPayload() );
+		kukie_test_queue_response( 200, $this->settingsPayload() );
+
+		$admin = new Kukie_Admin( Kukie_Plugin::instance() );
+		$this->captureJson( fn () => $admin->ajax_save_settings() );
+
+		$this->assertTrue( kukie_test_stored_settings()['disable_for_admins'], 'Presence-based: an absent field is left alone.' );
+	}
+
+	public function test_a_failed_save_leaves_hide_for_administrators_untouched(): void {
+		$this->seedConnectedInstall( [ 'disable_for_admins' => false ] );
+		$_POST = [ 'banner_enabled' => '1', 'script_position' => 'head', 'disable_for_admins' => '1', 'config_version' => '5' ];
+
+		kukie_test_queue_response( 500, [ 'message' => 'Server Error' ] );
+
+		$admin = new Kukie_Admin( Kukie_Plugin::instance() );
+		$this->captureJson( fn () => $admin->ajax_save_settings() );
+
+		$this->assertFalse( kukie_test_stored_settings()['disable_for_admins'], 'Same discipline as script_position: committed only after the PUT succeeded.' );
+	}
+
 	public function test_a_language_tab_save_never_touches_banner_enabled_or_placement(): void {
 		$this->seedConnectedInstall( [ 'banner_enabled' => false, 'script_position' => 'manual' ] );
 		$_POST = [

@@ -61,6 +61,52 @@ final class BannerInjectionGateTest extends Kukie_Test_Case {
 		);
 	}
 
+	/**
+	 * "Hide for administrators" (1.8.2): a page-builder safety valve. It is
+	 * decided per request in enqueue_banner_script(), not in init(), because
+	 * the current user is not known when init() registers the hook.
+	 */
+	public function test_hide_for_administrators_withholds_the_banner_from_an_administrator(): void {
+		$this->seedConnectedInstall( [ 'disable_for_admins' => true ] );
+		$GLOBALS['kukie_test_can_manage'] = true;
+
+		$plugin = Kukie_Plugin::instance();
+		( new Kukie_Script_Injector( $plugin ) )->enqueue_banner_script();
+
+		$this->assertArrayNotHasKey( 'kukie-banner-script', $GLOBALS['kukie_test_enqueued'] );
+	}
+
+	public function test_hide_for_administrators_leaves_the_banner_for_visitors(): void {
+		$this->seedConnectedInstall( [ 'disable_for_admins' => true ] );
+		$GLOBALS['kukie_test_can_manage'] = false;
+
+		$plugin = Kukie_Plugin::instance();
+		( new Kukie_Script_Injector( $plugin ) )->enqueue_banner_script();
+
+		$this->assertArrayHasKey( 'kukie-banner-script', $GLOBALS['kukie_test_enqueued'], 'The setting is about administrators only; visitors must always get the banner.' );
+	}
+
+	public function test_an_administrator_gets_the_banner_while_the_setting_is_off(): void {
+		$this->seedConnectedInstall();
+		$GLOBALS['kukie_test_can_manage'] = true;
+
+		$plugin = Kukie_Plugin::instance();
+		( new Kukie_Script_Injector( $plugin ) )->enqueue_banner_script();
+
+		$this->assertArrayHasKey( 'kukie-banner-script', $GLOBALS['kukie_test_enqueued'], 'Default off: nothing changes for existing installs.' );
+	}
+
+	public function test_the_hide_filter_can_widen_the_decision(): void {
+		$this->seedConnectedInstall();
+		$GLOBALS['kukie_test_can_manage'] = false;
+		kukie_test_set_filter( 'kukie_hide_banner_for_user', static fn ( bool $hidden, int $user_id ): bool => $user_id === 1 );
+
+		$plugin = Kukie_Plugin::instance();
+		( new Kukie_Script_Injector( $plugin ) )->enqueue_banner_script();
+
+		$this->assertArrayNotHasKey( 'kukie-banner-script', $GLOBALS['kukie_test_enqueued'], 'A site may hide the banner for its builder-using editors through the filter.' );
+	}
+
 	public function test_the_enqueued_url_is_built_from_the_site_key_not_the_stored_embed_url(): void {
 		// Legacy installs hold a stale app.kukie.io embed_url that no longer
 		// serves anything, so injection must never trust it.
