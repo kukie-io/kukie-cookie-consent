@@ -45,6 +45,7 @@ Everything below is on the **free plan** unless it names a plan.
 * Your own background, text and button colours.
 * Custom CSS and a banner logo (Pro plan and above).
 * Remove the "Powered by Kukie.io" line (Agency plan and above).
+* Preferences modal: its width, button layout and order, background overlay, policy links and title icon, set from the plugin's Consent banner page.
 
 **Languages and accessibility**
 
@@ -171,7 +172,7 @@ Banner texts and their translations (titles, descriptions, buttons, cookie categ
 5. Paste the API key from your site on [app.kukie.io](https://app.kukie.io).
 6. Your consent banner is live.
 
-The plugin adds five admin pages under **Kukie.io**: **Dashboard** (banner status, consent counts, scans), **Consent banner** (Design, Behaviour, iFrame blocking, Language, Google Consent Mode v2, Microsoft UET and Regions tabs), **Accessibility widget**, **Uptime monitoring** and **Settings** (script position, hide for administrators, connection).
+The plugin adds five admin pages under **Kukie.io**: **Dashboard** (banner status, consent counts, scans), **Consent banner** (Design, Preferences modal, Behaviour, iFrame blocking, Language, Google Consent Mode v2, Microsoft UET and Regions tabs), **Accessibility widget**, **Uptime monitoring** and **Settings** (script position, hide for administrators, connection).
 
 You can also download the plugin from [WordPress.org](https://wordpress.org/plugins/kukie-cookie-consent/) and upload the ZIP file in **Plugins > Add New > Upload Plugin**.
 
@@ -271,6 +272,7 @@ Yes. You can manage many sites with team roles (Owner, Admin, Editor). The free 
 = 1.9.0 =
 * Added: Uptime monitoring page. On plans that include it, turn monitoring on, choose the page to check and the check interval, and switch the owner's alert emails and the monthly report on or off. The page shows whether the site is up, uptime for the last 24 hours, 7 days and 30 days, the average response time, the SSL certificate's expiry date, recent incidents, and the checker's addresses to allow in a firewall or security plugin. On other plans it shows what the feature does and which plan includes it. Needs the Kukie.io service update of 1 October 2026.
 * Added: an Uptime monitoring card on the dashboard.
+* Added: a Preferences modal tab on the Consent banner page. Set the modal's width, whether its three buttons sit on one row or stacked, their order, the background overlay, the policy links and the icon or logo next to its title, with a preview. The modal's texts and button colours stay on Kukie.io. Needs the Kukie.io service update of 1 October 2026.
 * Added: a running cookie scan now shows its progress on the dashboard ("Scanning page 12 of 40") instead of figures up to five minutes old.
 * Added: Mexican and Argentinian Spanish sites (WPML, Polylang or the WordPress language) now get the matching banner translation, and both can be chosen as the banner language.
 * Changed: every admin page was reworded: sentence-case labels, plainer descriptions, and error messages that say what to do next. Settings pages use "Save changes".

@@ -31,19 +31,23 @@ const status = { entitled: json('status-entitled.json'), locked: json('status-lo
 // the Laravel suite on 2026-10-01 (PluginController::uptime / status).
 const uptime = { entitled: json('uptime-entitled.json'), locked: json('uptime-locked.json') };
 const uptimeBlocks = json('uptime-status-blocks.json');
+// 1.9.0: the preferences_modal block of GET /settings (captured 2026-10-01).
+const modalBlocks = json('settings-preferences-modal.json');
+settings.entitled = { ...settings.entitled, preferences_modal: modalBlocks.entitled };
+settings.locked = { ...settings.locked, preferences_modal: modalBlocks.locked };
 status.entitled = { ...status.entitled, uptime_monitoring: uptimeBlocks.entitled };
 status.locked = { ...status.locked, uptime_monitoring: uptimeBlocks.locked };
 // A pre-1.8.0 service answer: neither block.
 const noBlockStatus = { ...status.entitled }; delete noBlockStatus.accessibility_widget; delete noBlockStatus.uptime_monitoring;
 // Pre-1.8.0 API answer: same payload without the block.
-const noBlock = { ...settings.entitled }; delete noBlock.accessibility_widget;
+const noBlock = { ...settings.entitled }; delete noBlock.accessibility_widget; delete noBlock.preferences_modal;
 
 
 // Render the three pages first (PHP + the WordPress stubs).
 for (const tpl of ['admin-accessibility.php', 'admin-dashboard.php', 'admin-settings.php', 'admin-uptime.php']) {
   execFileSync(process.env.KUKIE_PHP || 'php', [path.join(HERE, 'render.php'), tpl], { stdio: 'inherit' });
 }
-for (const tab of ['design', 'behaviour', 'iframes', 'language', 'gcm', 'uet', 'regions']) {
+for (const tab of ['design', 'modal', 'behaviour', 'iframes', 'language', 'gcm', 'uet', 'regions']) {
   execFileSync(process.env.KUKIE_PHP || 'php', [path.join(HERE, 'render.php'), 'admin-banner.php', 'kukie-banner', tab], { stdio: 'inherit' });
 }
 
@@ -240,7 +244,7 @@ for (const [scenario, expected] of [['entitled', 'On'], ['locked', 'Not in plan'
     overlay: document.getElementById('kukie-show-overlay').checked,
     pages: document.getElementById('kukie-disabled-pages').value,
   }));
-  check('behaviour tab: seven tabs in order', JSON.stringify(st.tabs) === JSON.stringify(['Design', 'Behaviour', 'iFrame blocking', 'Language', 'Google Consent Mode v2', 'Microsoft UET', 'Regions']), JSON.stringify(st.tabs));
+  check('behaviour tab: eight tabs in order', JSON.stringify(st.tabs) === JSON.stringify(['Design', 'Preferences modal', 'Behaviour', 'iFrame blocking', 'Language', 'Google Consent Mode v2', 'Microsoft UET', 'Regions']), JSON.stringify(st.tabs));
   check('behaviour tab (branding removable): toggles populated, branding editable', st.formVisible && !st.branding && !st.brandingDisabled && !st.badgeVisible && st.dnt && !st.gpc && st.overlay && st.pages === '/checkout/*\n/account', JSON.stringify(st) + ' ' + errors.join('|'));
   await page.screenshot({ path: path.join(E2E, 'shot-behaviour.png'), fullPage: true });
   await page.close();
@@ -297,6 +301,59 @@ for (const [scenario, expected] of [['entitled', 'On'], ['locked', 'Not in plan'
   await page.close();
 }
 
+// 7b. Preferences modal tab (1.9.0)
+{
+  const { page, errors } = await open(browser, 'admin-banner-modal.html', 'entitled');
+  const read = () => page.evaluate(() => ({
+    formVisible: getComputedStyle(document.getElementById('kukie-modal-form')).display !== 'none',
+    layout: document.querySelector('input[name="kukie_modal_layout"]:checked')?.value,
+    order: Array.from(document.querySelectorAll('#kukie-modal-order .kukie-order-name')).map(e => e.textContent),
+    slots: Array.from(document.querySelectorAll('#kukie-modal-order .kukie-order-pos')).map(e => e.textContent),
+    preview: Array.from(document.querySelectorAll('#kukie-mpv-btns .kukie-mpv-btn')).map(e => e.textContent),
+    width: document.getElementById('kukie-modal-width').value,
+    overlay: document.querySelector('input[name="kukie_modal_overlay"]:checked')?.value,
+    follow: document.getElementById('kukie-modal-overlay-follow').textContent.trim(),
+    dimmed: document.getElementById('kukie-modal-preview').dataset.overlay,
+    iconDisabled: document.getElementById('kukie-modal-icon').disabled,
+  }));
+  const st = await read();
+  check('modal tab: loaded with the stored layout, order, width and overlay', st.formVisible && st.layout === 'row' && JSON.stringify(st.order) === JSON.stringify(['Accept all', 'Save preferences', 'Reject all']) && st.width === '700' && st.overlay === 'banner' && st.follow === 'Same as the banner (currently on)' && st.dimmed === '1' && !st.iconDisabled, JSON.stringify(st));
+  check('modal tab: the preview follows the order', JSON.stringify(st.preview) === JSON.stringify(st.order), JSON.stringify(st.preview));
+  // Move "Accept all" later with the keyboard: focus stays on the button.
+  await page.focus('.kukie-order-move[data-key="accept"][data-dir="later"]');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(100);
+  const moved = await read();
+  const focused = await page.evaluate(() => ({ key: document.activeElement?.dataset?.key, status: document.getElementById('kukie-modal-order-status').textContent }));
+  check('modal tab: an arrow swaps neighbours, keeps focus and announces it', JSON.stringify(moved.order) === JSON.stringify(['Save preferences', 'Accept all', 'Reject all']) && JSON.stringify(moved.preview) === JSON.stringify(moved.order) && focused.key === 'accept' && focused.status === 'Accept all moved to Middle', JSON.stringify(moved.order) + JSON.stringify(focused));
+  // The native radios are visually hidden inside their option cards: click the label.
+  await page.click('label:has(input[name="kukie_modal_layout"][value="stacked"])');
+  await page.click('label:has(input[name="kukie_modal_overlay"][value="off"])');
+  await page.waitForTimeout(100);
+  const stacked = await read();
+  check('modal tab: stacked renames the slots, Hide lifts the dimming', JSON.stringify(stacked.slots) === JSON.stringify(['Top left', 'Top right', 'Full width below']) && stacked.dimmed === '0', JSON.stringify(stacked));
+  await page.fill('#kukie-modal-width', '200');
+  await page.click('#kukie-modal-save');
+  await page.waitForTimeout(150);
+  const bad = await page.evaluate(() => ({ err: getComputedStyle(document.getElementById('kukie-modal-error')).display !== 'none', aria: document.getElementById('kukie-modal-width').getAttribute('aria-invalid') }));
+  check('modal tab: a width out of range is refused on the page', bad.err && bad.aria === 'true', JSON.stringify(bad));
+  check('modal tab: no JS errors', errors.length === 0, errors.join(' | '));
+  await page.fill('#kukie-modal-width', '700');
+  await page.screenshot({ path: path.join(E2E, 'shot-modal.png'), fullPage: true });
+  await page.close();
+}
+{
+  const { page } = await open(browser, 'admin-banner-modal.html', 'locked');
+  const st = await page.evaluate(() => ({ iconDisabled: document.getElementById('kukie-modal-icon').disabled, iconChecked: document.getElementById('kukie-modal-icon').checked, badge: getComputedStyle(document.getElementById('kukie-modal-icon-locked')).display !== 'none', logoDisabled: document.getElementById('kukie-modal-logo').disabled }));
+  check('modal tab (branding required): title icon locked on, logo fields disabled', st.iconDisabled && st.iconChecked && st.badge && st.logoDisabled, JSON.stringify(st));
+  await page.close();
+}
+{
+  const { page } = await open(browser, 'admin-banner-modal.html', 'noblock');
+  const st = await page.evaluate(() => ({ err: getComputedStyle(document.getElementById('kukie-modal-error')).display !== 'none', form: getComputedStyle(document.getElementById('kukie-modal-form')).display !== 'none' }));
+  check('modal tab (older service): error shown, nothing to save', st.err && !st.form, JSON.stringify(st));
+  await page.close();
+}
 // 8. Uptime monitoring page (1.9.0)
 {
   const { page, errors } = await open(browser, 'admin-uptime.html', 'entitled');

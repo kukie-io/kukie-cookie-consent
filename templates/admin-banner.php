@@ -1,6 +1,6 @@
 <?php
 /**
- * Consent banner page: one page, seven tabs (Design / Behaviour / iFrame
+ * Consent banner page: one page, eight tabs (Design / Preferences modal (since 1.9.0) / Behaviour / iFrame
  * blocking / Language / Google Consent Mode v2 / Microsoft UET / Regions). The tab partials are the pre-1.8.0 per-page templates with
  * their page chrome removed; only the active tab's partial is included.
  *
@@ -16,6 +16,7 @@ $kukie_app_url = 'https://app.kukie.io';
 $kukie_tab     = Kukie_Admin::current_banner_tab();
 $kukie_tabs    = [
 	'design'    => __( 'Design', 'kukie-cookie-consent' ),
+	'modal'     => __( 'Preferences modal', 'kukie-cookie-consent' ),
 	'behaviour' => __( 'Behaviour', 'kukie-cookie-consent' ),
 	'iframes'   => __( 'iFrame blocking', 'kukie-cookie-consent' ),
 	'language'  => __( 'Language', 'kukie-cookie-consent' ),
@@ -24,7 +25,7 @@ $kukie_tabs    = [
 	'regions'   => __( 'Regions', 'kukie-cookie-consent' ),
 ];
 ?>
-<div class="wrap kukie-wrap<?php echo 'design' === $kukie_tab ? ' kukie-wrap--wide' : ''; ?>">
+<div class="wrap kukie-wrap<?php echo in_array( $kukie_tab, [ 'design', 'modal' ], true ) ? ' kukie-wrap--wide' : ''; ?>">
 	<div class="kukie-header">
 		<h1><?php esc_html_e( 'Consent banner', 'kukie-cookie-consent' ); ?></h1>
 		<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
@@ -48,6 +49,9 @@ $kukie_tabs    = [
 	// Literal paths only (the tab value is whitelisted, but a literal keeps
 	// the include set enumerable for static review).
 	switch ( $kukie_tab ) {
+		case 'modal':
+			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-modal.php';
+			break;
 		case 'behaviour':
 			require KUKIE_PLUGIN_DIR . 'templates/admin-banner-behaviour.php';
 			break;

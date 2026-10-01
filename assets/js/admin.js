@@ -1400,6 +1400,244 @@
 	}
 
 	// ─────────────────────────────────────────
+	// PREFERENCES MODAL TAB (Consent banner page, 1.9.0)
+	// ─────────────────────────────────────────
+
+	const MODAL_BUTTON_LABELS = {
+		reject: ['btnReject', 'Reject all'],
+		save: ['btnSave', 'Save preferences'],
+		accept: ['btnAccept', 'Accept all'],
+	};
+
+	let modalOrder = ['reject', 'save', 'accept'];
+	let modalCanCustomiseIcon = false;
+
+	function modalButtonLabel(key) {
+		const entry = MODAL_BUTTON_LABELS[key];
+		return entry ? kukieI18n(entry[0], entry[1]) : key;
+	}
+
+	function modalSlotNames() {
+		const stacked = document.querySelector('input[name="kukie_modal_layout"]:checked')?.value === 'stacked';
+		return stacked
+			? [kukieI18n('slotTopLeft', 'Top left'), kukieI18n('slotTopRight', 'Top right'), kukieI18n('slotBelow', 'Full width below')]
+			: [kukieI18n('slotLeft', 'Left'), kukieI18n('slotMiddle', 'Middle'), kukieI18n('slotRight', 'Right')];
+	}
+
+	function initModalPage() {
+		const form = document.getElementById('kukie-modal-form');
+		if (!form) return;
+
+		loadModalSettings(form);
+
+		form.querySelectorAll('input[name="kukie_modal_layout"], input[name="kukie_modal_overlay"]').forEach(radio => {
+			radio.addEventListener('change', () => { renderModalOrder(); updateModalPreview(); });
+		});
+		['kukie-modal-links', 'kukie-modal-icon', 'kukie-modal-logo', 'kukie-modal-width'].forEach(id => {
+			document.getElementById(id)?.addEventListener('input', updateModalPreview);
+			document.getElementById(id)?.addEventListener('change', updateModalPreview);
+		});
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			hideNotice('kukie-modal-error');
+
+			const widthField = document.getElementById('kukie-modal-width');
+			const width = widthField ? widthField.value.trim() : '';
+			// badInput: a number field holding unparsable text reports '' -
+			// without this check that would silently save the default 600.
+			const badInput = widthField && widthField.validity && widthField.validity.badInput;
+			if (badInput || (width !== '' && !(/^[0-9]{3,4}$/.test(width) && Number(width) >= 320 && Number(width) <= 1200))) {
+				widthField.setAttribute('aria-invalid', 'true');
+				showError('kukie-modal-error', kukieI18n('modalWidthInvalid', 'Enter a width from 320 to 1200 pixels, or leave it empty for 600 pixels.'));
+				widthField.focus();
+				return;
+			}
+			if (widthField) widthField.removeAttribute('aria-invalid');
+
+			const data = {
+				button_layout: document.querySelector('input[name="kukie_modal_layout"]:checked')?.value || 'row',
+				button_order: modalOrder.slice(),
+				max_width: width,
+				show_policy_links: document.getElementById('kukie-modal-links')?.checked ? '1' : '0',
+				show_overlay: document.querySelector('input[name="kukie_modal_overlay"]:checked')?.value || 'banner',
+			};
+			// The title icon is a branding-removal feature: a plan that must
+			// keep branding sends none of it (the server would drop it).
+			if (modalCanCustomiseIcon) {
+				data.show_icon = document.getElementById('kukie-modal-icon')?.checked ? '1' : '0';
+				data.logo_url = document.getElementById('kukie-modal-logo')?.value.trim() || '';
+				data.logo_max_width = document.getElementById('kukie-modal-logo-width')?.value || '60';
+				data.logo_border_radius = document.getElementById('kukie-modal-logo-radius')?.value || '0';
+			}
+
+			const saveBtn = document.getElementById('kukie-modal-save');
+			setButtonLoading(saveBtn, true);
+			const result = await kukieSaveSettings('kukie_save_preferences_modal', data);
+			setButtonLoading(saveBtn, false);
+			handleSaveResult(result, 'kukie-modal-error');
+		});
+	}
+
+	async function loadModalSettings(form) {
+		const loading = document.getElementById('kukie-modal-loading');
+		const result = await kukieAjax('kukie_get_settings');
+
+		if (loading) loading.hidden = true;
+
+		if (!result.success) {
+			showError('kukie-modal-error', result.data?.message || kukieI18n('couldNotLoad', "Couldn't load the settings. Reload the page to try again."));
+			return;
+		}
+
+		const d = result.data;
+		const m = d.preferences_modal;
+		// A Kukie.io service from before 1 October 2026 has no block: nothing
+		// safe to render, and nothing safe to save.
+		if (!m || typeof m !== 'object') {
+			showError('kukie-modal-error', kukieI18n('modalNoBlock', "Couldn't load the preferences modal settings from Kukie.io. Try again in a few minutes."));
+			return;
+		}
+
+		rememberConfigVersion(d);
+		form.hidden = false;
+
+		const layout = form.querySelector(`input[name="kukie_modal_layout"][value="${m.button_layout === 'stacked' ? 'stacked' : 'row'}"]`);
+		if (layout) layout.checked = true;
+		modalOrder = Array.isArray(m.button_order) && m.button_order.length === 3 ? m.button_order.slice() : ['reject', 'save', 'accept'];
+		setValue('kukie-modal-width', typeof m.max_width === 'number' ? String(m.max_width) : '');
+
+		const overlayValue = m.show_overlay === true ? 'on' : (m.show_overlay === false ? 'off' : 'banner');
+		const overlay = form.querySelector(`input[name="kukie_modal_overlay"][value="${overlayValue}"]`);
+		if (overlay) overlay.checked = true;
+		setText('kukie-modal-overlay-follow', kukieSprintf(
+			kukieI18n('overlayFollow', 'Same as the banner (currently %s)'),
+			m.banner_show_overlay ? kukieI18n('onLower', 'on') : kukieI18n('offLower', 'off')
+		));
+		document.getElementById('kukie-modal-preview')?.setAttribute('data-banner-overlay', m.banner_show_overlay ? '1' : '0');
+
+		setChecked('kukie-modal-links', m.show_policy_links !== false);
+
+		modalCanCustomiseIcon = m.can_customise_icon === true;
+		const icon = document.getElementById('kukie-modal-icon');
+		if (icon) {
+			icon.checked = m.show_icon !== false;
+			icon.disabled = !modalCanCustomiseIcon;
+		}
+		const badge = document.getElementById('kukie-modal-icon-locked');
+		if (badge) badge.hidden = modalCanCustomiseIcon;
+		document.getElementById('kukie-modal-icon-row')?.classList.toggle('kukie-form-row--locked', !modalCanCustomiseIcon);
+		setValue('kukie-modal-logo', m.logo_url || '');
+		setValue('kukie-modal-logo-width', String(m.logo_max_width ?? 60));
+		setValue('kukie-modal-logo-radius', String(m.logo_border_radius ?? 0));
+		['kukie-modal-logo', 'kukie-modal-logo-width', 'kukie-modal-logo-radius'].forEach(id => {
+			const field = document.getElementById(id);
+			if (field) field.disabled = !modalCanCustomiseIcon;
+		});
+
+		renderModalOrder();
+		updateModalPreview();
+	}
+
+	// Three slots, each with the button's name and two arrows. The arrows
+	// swap the button with its neighbour; focus stays on the same button so
+	// a keyboard user can keep moving it.
+	function renderModalOrder(focusKey, focusDirection) {
+		const list = document.getElementById('kukie-modal-order');
+		if (!list) return;
+		const slots = modalSlotNames();
+
+		list.replaceChildren(...modalOrder.map((key, index) => {
+			const item = document.createElement('li');
+			item.className = 'kukie-order-slot';
+
+			const text = document.createElement('span');
+			text.className = 'kukie-order-text';
+			const slot = document.createElement('span');
+			slot.className = 'kukie-order-pos';
+			slot.textContent = slots[index];
+			const name = document.createElement('span');
+			name.className = 'kukie-order-name';
+			name.textContent = modalButtonLabel(key);
+			text.append(slot, name);
+
+			const arrows = document.createElement('span');
+			arrows.className = 'kukie-order-arrows';
+			[['earlier', -1, 'dashicons-arrow-left-alt2', 'moveEarlier', 'Move %s earlier'], ['later', 1, 'dashicons-arrow-right-alt2', 'moveLater', 'Move %s later']].forEach(([dir, step, iconClass, i18nKey, fallback]) => {
+				const btn = document.createElement('button');
+				btn.type = 'button';
+				btn.className = 'kukie-btn-icon kukie-order-move';
+				btn.dataset.key = key;
+				btn.dataset.dir = dir;
+				btn.setAttribute('aria-label', kukieSprintf(kukieI18n(i18nKey, fallback), modalButtonLabel(key)));
+				const target = index + step;
+				if (target < 0 || target > 2) {
+					btn.disabled = true;
+				}
+				const icon = document.createElement('span');
+				icon.className = `dashicons ${iconClass}`;
+				icon.setAttribute('aria-hidden', 'true');
+				btn.appendChild(icon);
+				btn.addEventListener('click', () => {
+					if (target < 0 || target > 2) return;
+					const next = modalOrder.slice();
+					[next[index], next[target]] = [next[target], next[index]];
+					modalOrder = next;
+					renderModalOrder(key, dir);
+					updateModalPreview();
+					setText('kukie-modal-order-status', kukieSprintf(kukieI18n('movedTo', '%1$s moved to %2$s'), modalButtonLabel(key), modalSlotNames()[target]));
+				});
+				arrows.appendChild(btn);
+			});
+
+			item.append(text, arrows);
+			return item;
+		}));
+
+		if (focusKey) {
+			// Same button, same direction if it can still move, else the other arrow.
+			const same = list.querySelector(`.kukie-order-move[data-key="${focusKey}"][data-dir="${focusDirection}"]:not(:disabled)`)
+				|| list.querySelector(`.kukie-order-move[data-key="${focusKey}"]:not(:disabled)`);
+			if (same) same.focus();
+		}
+	}
+
+	function updateModalPreview() {
+		const preview = document.getElementById('kukie-modal-preview');
+		const btns = document.getElementById('kukie-mpv-btns');
+		if (!preview || !btns) return;
+
+		const layout = document.querySelector('input[name="kukie_modal_layout"]:checked')?.value || 'row';
+		btns.dataset.layout = layout;
+		btns.replaceChildren(...modalOrder.map(key => {
+			const b = document.createElement('span');
+			b.className = 'kukie-mpv-btn' + (key === 'accept' ? ' kukie-mpv-btn--primary' : '');
+			b.textContent = modalButtonLabel(key);
+			return b;
+		}));
+
+		const overlay = document.querySelector('input[name="kukie_modal_overlay"]:checked')?.value || 'banner';
+		const dim = overlay === 'on' || (overlay === 'banner' && preview.getAttribute('data-banner-overlay') === '1');
+		preview.dataset.overlay = dim ? '1' : '0';
+
+		const links = document.getElementById('kukie-mpv-links');
+		if (links) links.hidden = !document.getElementById('kukie-modal-links')?.checked;
+
+		const iconOn = document.getElementById('kukie-modal-icon')?.checked !== false;
+		const logo = (document.getElementById('kukie-modal-logo')?.value || '').trim();
+		const icon = document.getElementById('kukie-mpv-icon');
+		if (icon) {
+			icon.hidden = !iconOn;
+			icon.classList.toggle('kukie-mpv-icon--logo', iconOn && modalCanCustomiseIcon && /^https?:\/\//.test(logo));
+		}
+
+		const width = Number(document.getElementById('kukie-modal-width')?.value) || 600;
+		// The sketch keeps the proportion of the chosen width to a 1280px screen.
+		const share = Math.max(30, Math.min(94, Math.round((Math.min(Math.max(width, 320), 1200) / 1280) * 100 * 1.4)));
+		preview.style.setProperty('--kukie-mpv-width', share + '%');
+	}
+
+	// ─────────────────────────────────────────
 	// ACCESSIBILITY WIDGET PAGE
 	// ─────────────────────────────────────────
 
@@ -2269,6 +2507,10 @@
 
 		if (document.getElementById('kukie-uptime-content')) {
 			initUptimePage();
+		}
+
+		if (document.getElementById('kukie-modal-form')) {
+			initModalPage();
 		}
 	});
 })();

@@ -1,0 +1,38 @@
+{
+    "entitled": {
+        "button_layout": "row",
+        "button_order": [
+            "accept",
+            "save",
+            "reject"
+        ],
+        "max_width": 700,
+        "show_policy_links": true,
+        "show_overlay": null,
+        "show_icon": true,
+        "logo_url": null,
+        "logo_max_width": 60,
+        "logo_border_radius": 0,
+        "custom_button_colors": false,
+        "can_customise_icon": true,
+        "banner_show_overlay": true
+    },
+    "locked": {
+        "button_layout": "row",
+        "button_order": [
+            "reject",
+            "save",
+            "accept"
+        ],
+        "max_width": null,
+        "show_policy_links": true,
+        "show_overlay": null,
+        "show_icon": true,
+        "logo_url": null,
+        "logo_max_width": 60,
+        "logo_border_radius": 0,
+        "custom_button_colors": false,
+        "can_customise_icon": false,
+        "banner_show_overlay": true
+    }
+}

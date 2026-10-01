@@ -31,7 +31,15 @@ class Kukie_Admin {
 	];
 
 	/** Tabs of the Consent banner page, in display order. */
-	public const BANNER_TABS = [ 'design', 'behaviour', 'iframes', 'language', 'gcm', 'uet', 'regions' ];
+	public const BANNER_TABS = [ 'design', 'modal', 'behaviour', 'iframes', 'language', 'gcm', 'uet', 'regions' ];
+
+	/**
+	 * Preferences modal buttons (the server's PREFERENCES_MODAL_BUTTONS); an
+	 * order is a permutation of these three.
+	 *
+	 * @since 1.9.0
+	 */
+	public const MODAL_BUTTONS = [ 'reject', 'save', 'accept' ];
 
 	/** Accessibility widget whitelists - mirrors the server's, which is authoritative. */
 	public const A11Y_POSITIONS = [ 'bottom-right', 'bottom-left' ];
@@ -74,6 +82,7 @@ class Kukie_Admin {
 		add_action( 'wp_ajax_kukie_save_a11y', [ $this, 'ajax_save_a11y' ] );
 		add_action( 'wp_ajax_kukie_save_behaviour', [ $this, 'ajax_save_behaviour' ] );
 		add_action( 'wp_ajax_kukie_save_iframes', [ $this, 'ajax_save_iframes' ] );
+		add_action( 'wp_ajax_kukie_save_preferences_modal', [ $this, 'ajax_save_preferences_modal' ] );
 		add_action( 'wp_ajax_kukie_trigger_scan', [ $this, 'ajax_trigger_scan' ] );
 		add_action( 'wp_ajax_kukie_scan_status', [ $this, 'ajax_scan_status' ] );
 		add_action( 'wp_ajax_kukie_verify', [ $this, 'ajax_verify' ] );
@@ -431,6 +440,28 @@ class Kukie_Admin {
 			'causeTransport'    => __( 'A network error interrupted the check.', 'kukie-cookie-consent' ),
 			'causeUnknown'      => __( 'The site could not be reached.', 'kukie-cookie-consent' ),
 			'uptimeSaved'       => __( 'Uptime monitoring settings saved', 'kukie-cookie-consent' ),
+			// Preferences modal tab (1.9.0)
+			'modalNoBlock'      => __( "Couldn't load the preferences modal settings from Kukie.io. Try again in a few minutes.", 'kukie-cookie-consent' ),
+			'modalWidthInvalid' => __( 'Enter a width from 320 to 1200 pixels, or leave it empty for 600 pixels.', 'kukie-cookie-consent' ),
+			'btnReject'         => __( 'Reject all', 'kukie-cookie-consent' ),
+			'btnSave'           => __( 'Save preferences', 'kukie-cookie-consent' ),
+			'btnAccept'         => __( 'Accept all', 'kukie-cookie-consent' ),
+			'slotLeft'          => __( 'Left', 'kukie-cookie-consent' ),
+			'slotMiddle'        => __( 'Middle', 'kukie-cookie-consent' ),
+			'slotRight'         => __( 'Right', 'kukie-cookie-consent' ),
+			'slotTopLeft'       => __( 'Top left', 'kukie-cookie-consent' ),
+			'slotTopRight'      => __( 'Top right', 'kukie-cookie-consent' ),
+			'slotBelow'         => __( 'Full width below', 'kukie-cookie-consent' ),
+			/* translators: %s: button name, for example "Reject all" */
+			'moveEarlier'       => __( 'Move %s earlier', 'kukie-cookie-consent' ),
+			/* translators: %s: button name, for example "Reject all" */
+			'moveLater'         => __( 'Move %s later', 'kukie-cookie-consent' ),
+			/* translators: 1: button name, 2: position name such as "Left" */
+			'movedTo'           => __( '%1$s moved to %2$s', 'kukie-cookie-consent' ),
+			/* translators: %s: "on" or "off", the banner's own overlay setting */
+			'overlayFollow'     => __( "Same as the banner (currently %s)", 'kukie-cookie-consent' ),
+			'onLower'           => __( 'on', 'kukie-cookie-consent' ),
+			'offLower'          => __( 'off', 'kukie-cookie-consent' ),
 		];
 	}
 
@@ -1470,6 +1501,87 @@ class Kukie_Admin {
 		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
 		$this->send_settings_saved( $client, __( 'iFrame blocking settings saved', 'kukie-cookie-consent' ), $config_version, $put_data );
+	}
+
+	/**
+	 * Consent banner > Preferences modal tab: the Banner Editor's Preferences
+	 * modal settings the plugin manages (layout, button order, overlay,
+	 * policy links, title icon). The per-language texts and the modal's own
+	 * button colours stay on the Kukie.io dashboard, like the banner's.
+	 *
+	 * Every value is coerced to what the server accepts before the PUT; an
+	 * invalid width is refused here with a readable message rather than sent.
+	 * The server merges the block over the stored one and drops the title
+	 * icon fields for a plan that must keep branding.
+	 *
+	 * @since 1.9.0
+	 */
+	public function ajax_save_preferences_modal(): void {
+		check_ajax_referer( 'kukie_admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
+		}
+
+		$modal = [];
+
+		$layout = sanitize_key( wp_unslash( $_POST['button_layout'] ?? '' ) );
+		if ( in_array( $layout, [ 'row', 'stacked' ], true ) ) {
+			$modal['button_layout'] = $layout;
+		}
+
+		$order = isset( $_POST['button_order'] ) && is_array( $_POST['button_order'] )
+			? array_values( array_map( 'sanitize_key', wp_unslash( $_POST['button_order'] ) ) )
+			: [];
+		$sorted = $order;
+		sort( $sorted );
+		$expected = self::MODAL_BUTTONS;
+		sort( $expected );
+		if ( $sorted === $expected ) {
+			$modal['button_order'] = $order;
+		}
+
+		if ( isset( $_POST['max_width'] ) ) {
+			$width = trim( sanitize_text_field( wp_unslash( $_POST['max_width'] ) ) );
+			if ( $width === '' ) {
+				$modal['max_width'] = null;
+			} elseif ( preg_match( '/^[0-9]{3,4}$/', $width ) && (int) $width >= 320 && (int) $width <= 1200 ) {
+				$modal['max_width'] = (int) $width;
+			} else {
+				wp_send_json_error( [ 'message' => __( 'Enter a width from 320 to 1200 pixels, or leave it empty for 600 pixels.', 'kukie-cookie-consent' ) ] );
+			}
+		}
+
+		if ( isset( $_POST['show_policy_links'] ) ) {
+			$modal['show_policy_links'] = rest_sanitize_boolean( wp_unslash( $_POST['show_policy_links'] ) );
+		}
+
+		// 'banner' = follow the banner's overlay (null), 'on' / 'off' = the
+		// modal's own choice.
+		if ( isset( $_POST['show_overlay'] ) ) {
+			$overlay = sanitize_key( wp_unslash( $_POST['show_overlay'] ) );
+			$modal['show_overlay'] = $overlay === 'on' ? true : ( $overlay === 'off' ? false : null );
+		}
+
+		// Title icon: only when the form sent it (the tab omits these fields
+		// on a plan that must keep branding; the server would drop them).
+		if ( isset( $_POST['show_icon'] ) ) {
+			$modal['show_icon'] = rest_sanitize_boolean( wp_unslash( $_POST['show_icon'] ) );
+		}
+		if ( isset( $_POST['logo_url'] ) ) {
+			$logo = esc_url_raw( trim( sanitize_text_field( wp_unslash( $_POST['logo_url'] ) ) ), [ 'https', 'http' ] );
+			$modal['logo_url'] = $logo !== '' ? $logo : null;
+		}
+		if ( isset( $_POST['logo_max_width'] ) ) {
+			$modal['logo_max_width'] = max( 40, min( 100, absint( wp_unslash( $_POST['logo_max_width'] ) ) ) );
+		}
+		if ( isset( $_POST['logo_border_radius'] ) ) {
+			$modal['logo_border_radius'] = max( 0, min( 50, absint( wp_unslash( $_POST['logo_border_radius'] ) ) ) );
+		}
+
+		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( [ 'preferences_modal' => $modal ] );
+
+		$this->send_settings_saved( $client, __( 'Preferences modal settings saved. Your site shows them within a few minutes.', 'kukie-cookie-consent' ), $config_version, $put_data );
 	}
 
 	/**

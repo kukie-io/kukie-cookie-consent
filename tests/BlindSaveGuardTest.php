@@ -68,9 +68,9 @@ final class BlindSaveGuardTest extends Kukie_Test_Case {
 		// server-owned, so a blind save would post template defaults over the
 		// dashboard's values).
 		$this->assertSame(
-			[ 'kukie_save_a11y', 'kukie_save_banner_design', 'kukie_save_behaviour', 'kukie_save_gcm', 'kukie_save_iframes', 'kukie_save_settings', 'kukie_save_uet' ],
+			[ 'kukie_save_a11y', 'kukie_save_banner_design', 'kukie_save_behaviour', 'kukie_save_gcm', 'kukie_save_iframes', 'kukie_save_preferences_modal', 'kukie_save_settings', 'kukie_save_uet' ],
 			$guarded,
-			'All seven save handlers must go through the guarded wrapper.'
+			'All eight banner-config save handlers must go through the guarded wrapper (the Preferences modal tab joined in 1.9.0).'
 		);
 	}
 
