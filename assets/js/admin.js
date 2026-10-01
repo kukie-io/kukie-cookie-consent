@@ -1481,7 +1481,12 @@
 
 	async function loadModalSettings(form) {
 		const loading = document.getElementById('kukie-modal-loading');
-		const result = await kukieAjax('kukie_get_settings');
+		// fresh=1: never read this tab from the 10-minute settings cache. The
+		// block arrived with a Kukie.io service update, so a payload cached
+		// just before that update has no block at all (seen on a real site the
+		// day it shipped), and the title-icon lock follows the plan, which
+		// changes on the Kukie.io side - the Accessibility widget page's rule.
+		const result = await kukieAjax('kukie_get_settings', { fresh: '1' });
 
 		if (loading) loading.hidden = true;
 

@@ -124,4 +124,27 @@ final class PreferencesModalSaveTest extends Kukie_Test_Case {
 
 		$this->assertNull( $this->putBody()['preferences_modal']['logo_url'] );
 	}
+
+	public function test_the_tab_loads_fresh_settings_never_the_cached_payload(): void {
+		// A payload cached before the service update that added the block
+		// made the tab report "Couldn't load" on a real site; the tab must
+		// bypass the 10-minute transient like the Accessibility widget page.
+		$js = (string) file_get_contents( KUKIE_PLUGIN_DIR . 'assets/js/admin.js' );
+
+		$this->assertMatchesRegularExpression(
+			"/async function loadModalSettings\\([^)]*\\)\\s*\\{[^}]*kukieAjax\\(\\s*'kukie_get_settings',\\s*\\{\\s*fresh:\\s*'1'\\s*\\}\\s*\\)/s",
+			$js
+		);
+
+		// And the PHP side really bypasses the transient on fresh=1.
+		$this->seedConnectedInstall();
+		set_transient( 'kukie_settings_cache', [ 'config_version' => 1 ], 600 );
+		$_POST = [ 'fresh' => '1' ];
+		kukie_test_queue_response( 200, $this->settingsPayload( [ 'preferences_modal' => [ 'button_layout' => 'row' ] ] ) );
+
+		$admin    = new Kukie_Admin( Kukie_Plugin::instance() );
+		$response = $this->captureJson( fn () => $admin->ajax_get_settings() );
+
+		$this->assertSame( 'row', $response->data['preferences_modal']['button_layout'] );
+	}
 }
