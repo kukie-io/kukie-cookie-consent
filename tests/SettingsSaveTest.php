@@ -258,6 +258,8 @@ final class SettingsSaveTest extends Kukie_Test_Case {
 		$admin    = new Kukie_Admin( Kukie_Plugin::instance() );
 		$response = $this->captureJson( fn () => $admin->ajax_save_settings() );
 
-		$this->assertSame( 'API error.', $response->message() );
+		// 1.9.0 reworded the fallback (the writing standard's "Couldn't ..."
+		// form); the invariant is a readable message, never an empty one.
+		$this->assertSame( "Couldn't reach Kukie.io. Try again in a few minutes.", $response->message() );
 	}
 }

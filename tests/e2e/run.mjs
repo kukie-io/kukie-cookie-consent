@@ -27,12 +27,20 @@ const E2E = OUT; // rendered pages + screenshots
 const json = (n) => JSON.parse(fs.readFileSync(path.join(HERE, 'fixtures', n), 'utf8'));
 const settings = { entitled: json('settings-entitled.json'), locked: json('settings-locked.json') };
 const status = { entitled: json('status-entitled.json'), locked: json('status-locked.json') };
+// 1.9.0: GET /uptime payloads and the compact /status block, captured from
+// the Laravel suite on 2026-10-01 (PluginController::uptime / status).
+const uptime = { entitled: json('uptime-entitled.json'), locked: json('uptime-locked.json') };
+const uptimeBlocks = json('uptime-status-blocks.json');
+status.entitled = { ...status.entitled, uptime_monitoring: uptimeBlocks.entitled };
+status.locked = { ...status.locked, uptime_monitoring: uptimeBlocks.locked };
+// A pre-1.8.0 service answer: neither block.
+const noBlockStatus = { ...status.entitled }; delete noBlockStatus.accessibility_widget; delete noBlockStatus.uptime_monitoring;
 // Pre-1.8.0 API answer: same payload without the block.
 const noBlock = { ...settings.entitled }; delete noBlock.accessibility_widget;
-const noBlockStatus = { ...status.entitled }; delete noBlockStatus.accessibility_widget;
+
 
 // Render the three pages first (PHP + the WordPress stubs).
-for (const tpl of ['admin-accessibility.php', 'admin-dashboard.php', 'admin-settings.php']) {
+for (const tpl of ['admin-accessibility.php', 'admin-dashboard.php', 'admin-settings.php', 'admin-uptime.php']) {
   execFileSync(process.env.KUKIE_PHP || 'php', [path.join(HERE, 'render.php'), tpl], { stdio: 'inherit' });
 }
 for (const tab of ['design', 'behaviour', 'iframes', 'language', 'gcm', 'uet', 'regions']) {
@@ -66,6 +74,16 @@ async function open(browser, file, scenario) {
         data = { ...s, script_position: 'head', force_language: 'auto' };
       } else if (action === 'kukie_get_status') {
         data = scenario === 'noblock' ? noBlockStatus : status[scenario];
+      } else if (action === 'kukie_get_uptime') {
+        if (scenario === 'noblock') {
+          return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: false, data: { message: "Couldn't load uptime monitoring from Kukie.io. Try again in a few minutes." } }) });
+        }
+        data = uptime[scenario];
+      } else if (action === 'kukie_save_uptime') {
+        // Record what the form posted, so the run can assert an untouched
+        // interval is not sent.
+        globalThis.__lastUptimePost = body;
+        data = { message: 'Uptime monitoring settings saved', uptime: uptime.entitled };
       } else {
         data = { message: 'ok', config_version: 8 };
       }
@@ -145,18 +163,23 @@ const browser = await chromium.launch();
   await page.close();
 }
 // 4. Dashboard, entitled + enabled -> Active; locked -> Not in plan; no block -> "-"
-for (const [scenario, expected] of [['entitled', 'Active'], ['locked', 'Not in plan'], ['noblock', '-']]) {
+for (const [scenario, expected] of [['entitled', 'On'], ['locked', 'Not in plan'], ['noblock', '-']]) {
   const { page, errors } = await open(browser, 'admin-dashboard.html', scenario);
   const txt = await page.evaluate(() => document.getElementById('kukie-stat-a11y').textContent.trim());
   check(`dashboard ${scenario}: a11y card = "${expected}"`, txt === expected, `got "${txt}" errors=${errors.join('|')}`);
+  const upTxt = await page.evaluate(() => document.getElementById('kukie-stat-uptime').textContent.trim());
+  const upExpected = { entitled: 'Up', locked: 'Not in plan', noblock: '-' }[scenario];
+  check(`dashboard ${scenario}: uptime card = "${upExpected}"`, upTxt === upExpected, `got "${upTxt}"`);
   if (scenario === 'entitled') {
     const dash = await page.evaluate(() => ({
       order: Array.from(document.querySelectorAll('#kukie-overview-cards .kukie-stat-label')).map(e => Array.from(e.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim()),
       linkCards: Array.from(document.querySelectorAll('#kukie-overview-cards a.kukie-stat-card--link')).map(a => ({ label: a.querySelector('.kukie-stat-label').textContent.trim(), newTab: a.target === '_blank', marker: !!a.querySelector('.kukie-stat-card-go'), sr: !!a.querySelector('.screen-reader-text') })),
       externalWithoutSr: Array.from(document.querySelectorAll('a[target="_blank"]')).filter(a => !a.querySelector('.screen-reader-text')).length,
     }));
-    check('dashboard: card order', JSON.stringify(dash.order) === JSON.stringify(['Cookie Banner Status', 'Accessibility widget', 'Verification', 'Consents Today', 'Plan']), JSON.stringify(dash.order));
-    check('dashboard: link cards marked (a11y same-tab arrow, plan new-tab icon + sr text)', dash.linkCards.length === 2 && dash.linkCards.every(c => c.marker) && dash.linkCards[1].newTab && dash.linkCards[1].sr && !dash.linkCards[0].newTab, JSON.stringify(dash.linkCards));
+    check('dashboard: card order (health row, then features and plan)', JSON.stringify(dash.order) === JSON.stringify(['Consent banner', 'Verification', 'Consents today', 'Accessibility widget', 'Uptime monitoring', 'Plan']), JSON.stringify(dash.order));
+    check('dashboard: link cards marked (same-tab arrows, plan new-tab icon + sr text)', dash.linkCards.length === 4 && dash.linkCards.every(c => c.marker) && dash.linkCards[3].newTab && dash.linkCards[3].sr && dash.linkCards.slice(0, 3).every(c => !c.newTab), JSON.stringify(dash.linkCards));
+    const grid = await page.evaluate(() => { const g = document.getElementById('kukie-overview-cards'); return getComputedStyle(g).gridTemplateColumns.split(' ').length; });
+    check('dashboard: six cards three to a row on a wide screen', grid === 3, String(grid));
     check('dashboard: every new-tab link carries screen-reader text', dash.externalWithoutSr === 0, String(dash.externalWithoutSr));
     const geo = await page.evaluate(() => {
       const plan = document.querySelector('#kukie-stat-plan').getBoundingClientRect();
@@ -271,6 +294,114 @@ for (const [scenario, expected] of [['entitled', 'Active'], ['locked', 'Not in p
   const { page } = await open(browser, 'admin-banner-gcm.html', 'entitled');
   const st = await page.evaluate(() => ({ autoBlockGone: !document.getElementById('kukie-auto-block'), gcm: document.getElementById('kukie-gcm-enabled') !== null }));
   check('gcm tab: script blocking moved to Behaviour', st.autoBlockGone && st.gcm, JSON.stringify(st));
+  await page.close();
+}
+
+// 8. Uptime monitoring page (1.9.0)
+{
+  const { page, errors } = await open(browser, 'admin-uptime.html', 'entitled');
+  const st = await page.evaluate(() => ({
+    loadingVisible: getComputedStyle(document.getElementById('kukie-uptime-loading')).display !== 'none',
+    lockedVisible: getComputedStyle(document.getElementById('kukie-uptime-locked')).display !== 'none',
+    unlockedVisible: getComputedStyle(document.getElementById('kukie-uptime-unlocked')).display !== 'none',
+    state: document.getElementById('kukie-uptime-status').dataset.state,
+    title: document.getElementById('kukie-uptime-status-title').textContent.trim(),
+    body: document.getElementById('kukie-uptime-status-body').textContent.trim(),
+    enabled: document.getElementById('kukie-uptime-enabled').checked,
+    url: document.getElementById('kukie-uptime-url').value,
+    urlHint: document.getElementById('kukie-uptime-url-hint').textContent.trim(),
+    intervals: Array.from(document.querySelectorAll('input[name="kukie_uptime_interval"]')).map(i => ({ v: i.value, c: i.checked, d: i.disabled })),
+    lockBadge: document.querySelector('.kukie-interval-lock')?.textContent.trim(),
+    recipients: document.getElementById('kukie-uptime-recipients').textContent.trim(),
+    incidents: document.querySelectorAll('#kukie-uptime-incidents tr').length,
+    cause: document.querySelector('#kukie-uptime-incidents tr td:last-child')?.textContent.trim(),
+    duration: document.querySelector('#kukie-uptime-incidents tr td:nth-child(2)')?.textContent.trim(),
+    ipv4: document.getElementById('kukie-uptime-ipv4').textContent.trim(),
+    ssl: document.getElementById('kukie-uptime-ssl').textContent.trim(),
+    pct: document.getElementById('kukie-uptime-24h').textContent.trim(),
+    emailsLeaked: document.body.innerHTML.includes('ops@obshti-uslovia.com'),
+  }));
+  check('uptime entitled: unlocked, spinner hidden', !st.loadingVisible && !st.lockedVisible && st.unlockedVisible, JSON.stringify(st));
+  check('uptime entitled: status card says up with the last check', st.state === 'up' && st.title === 'Your site is up' && /^Last checked /.test(st.body) && / 312 ms$/.test(st.body), JSON.stringify(st));
+  check('uptime entitled: settings populated, URL hint names both hosts', st.enabled && st.url === 'https://obshti-uslovia.com' && st.urlHint.includes('www.obshti-uslovia.com'), JSON.stringify(st));
+  check('uptime entitled: plan cadence selected, faster one locked with its plan', st.intervals.find(i => i.v === '180')?.c && st.intervals.find(i => i.v === '60')?.d && st.lockBadge === 'Unlimited plan and above', JSON.stringify(st.intervals) + ' ' + st.lockBadge);
+  check('uptime entitled: recipients shown as a count, never the address', st.recipients === '1' && !st.emailsLeaked, JSON.stringify(st));
+  check('uptime entitled: incidents with plain-words cause and duration', st.incidents === 2 && st.cause === 'The site answered with HTTP 503.' && st.duration === '7 min', JSON.stringify(st));
+  check('uptime entitled: checker details and stats', st.ipv4.length > 6 && /^Expires /.test(st.ssl) && /%$/.test(st.pct), JSON.stringify(st));
+  check('uptime entitled: no JS errors', errors.length === 0, errors.join(' | '));
+  await page.screenshot({ path: path.join(E2E, 'shot-uptime-entitled.png'), fullPage: true });
+
+  // Client-side URL check, then a save that re-renders from the answer.
+  await page.fill('#kukie-uptime-url', 'not a url');
+  await page.click('#kukie-uptime-save');
+  await page.waitForTimeout(200);
+  const invalid = await page.evaluate(() => ({ err: getComputedStyle(document.getElementById('kukie-uptime-error')).display !== 'none', aria: document.getElementById('kukie-uptime-url').getAttribute('aria-invalid'), focused: document.activeElement?.id }));
+  check('uptime entitled: an invalid URL is refused on the page and focused', invalid.err && invalid.aria === 'true' && invalid.focused === 'kukie-uptime-url', JSON.stringify(invalid));
+  await page.fill('#kukie-uptime-url', 'https://obshti-uslovia.com/');
+  await page.click('#kukie-uptime-save');
+  await page.waitForTimeout(400);
+  const saved = await page.evaluate(() => ({ err: getComputedStyle(document.getElementById('kukie-uptime-error')).display !== 'none', toast: document.querySelector('.kukie-toast')?.textContent.trim() }));
+  check('uptime entitled: save shows the toast and clears the error', !saved.err && saved.toast === 'Uptime monitoring settings saved', JSON.stringify(saved));
+  check('uptime entitled: an untouched interval is not posted (a clamped stored choice survives)', !/name="check_interval_seconds"/.test(globalThis.__lastUptimePost || '') && /name="url"/.test(globalThis.__lastUptimePost || ''), String(globalThis.__lastUptimePost || '').slice(0, 80));
+  await page.close();
+}
+{
+  const { page, errors } = await open(browser, 'admin-uptime.html', 'locked');
+  const st = await page.evaluate(() => ({
+    lockedVisible: getComputedStyle(document.getElementById('kukie-uptime-locked')).display !== 'none',
+    unlockedVisible: getComputedStyle(document.getElementById('kukie-uptime-unlocked')).display !== 'none',
+    text: document.getElementById('kukie-uptime-locked-text').textContent.trim(),
+    button: document.getElementById('kukie-uptime-upgrade-label').textContent.trim(),
+    rows: Array.from(document.querySelectorAll('#kukie-uptime-plans tr')).map(tr => Array.from(tr.children).map(c => c.textContent.trim())),
+    formInDom: getComputedStyle(document.getElementById('kukie-uptime-form').closest('#kukie-uptime-unlocked')).display === 'none',
+  }));
+  check('uptime locked: pitch with the plan to upgrade to, no settings', st.lockedVisible && !st.unlockedVisible && st.formInDom && st.text === 'Uptime monitoring is available on the Agency plan and above. Upgrade to turn it on.' && st.button === 'Upgrade to Agency', JSON.stringify(st));
+  check('uptime locked: plan table with whole-phrase cadences', JSON.stringify(st.rows) === JSON.stringify([['Agency', 'Every 3 minutes', '30 days'], ['Unlimited', 'Every minute', '1 year']]), JSON.stringify(st.rows));
+  check('uptime locked: no JS errors', errors.length === 0, errors.join(' | '));
+  await page.screenshot({ path: path.join(E2E, 'shot-uptime-locked.png'), fullPage: true });
+  await page.close();
+}
+{
+  const { page } = await open(browser, 'admin-uptime.html', 'noblock');
+  const st = await page.evaluate(() => ({
+    loadingVisible: getComputedStyle(document.getElementById('kukie-uptime-loading')).display !== 'none',
+    errorVisible: getComputedStyle(document.getElementById('kukie-uptime-error')).display !== 'none',
+    contentVisible: getComputedStyle(document.getElementById('kukie-uptime-content')).display !== 'none',
+  }));
+  check('uptime older service: error shown, nothing to save', !st.loadingVisible && st.errorVisible && !st.contentVisible, JSON.stringify(st));
+  await page.close();
+}
+// 8b. Phone width: no horizontal scroll on the new page and the dashboard
+for (const file of ['admin-uptime.html', 'admin-dashboard.html']) {
+  const { page } = await open(browser, file, 'entitled');
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.waitForTimeout(200);
+  const w = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
+  check(`${file}: no horizontal scroll at 360px`, w.scroll <= w.client + 1, JSON.stringify(w));
+  await page.screenshot({ path: path.join(E2E, `shot-${file.replace('.html', '')}-360.png`), fullPage: true });
+  await page.close();
+}
+// 9. Keyboard focus is an outline, never the hover fill (the 1.8.0 regression)
+{
+  const { page } = await open(browser, 'admin-settings.html', 'entitled');
+  await page.focus('#kukie-verify-btn');
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  const st = await page.evaluate(() => { const b = document.getElementById('kukie-verify-btn'); const cs = getComputedStyle(b); return { outline: cs.outlineStyle, bg: cs.backgroundColor, focused: document.activeElement === b }; });
+  check('focus: secondary button shows an outline and keeps its white fill', st.focused && st.outline === 'solid' && st.bg === 'rgb(255, 255, 255)', JSON.stringify(st));
+  await page.close();
+}
+// 10. Disconnect opens the accessible dialog, Cancel keeps the connection
+{
+  const { page } = await open(browser, 'admin-settings.html', 'entitled');
+  await page.click('#kukie-disconnect-btn');
+  await page.waitForTimeout(150);
+  const st = await page.evaluate(() => { const d = document.querySelector('dialog.kukie-dialog'); return { open: !!d && d.open, title: d?.querySelector('h2')?.textContent, focused: document.activeElement?.textContent }; });
+  check('disconnect: a dialog names the action, focus on Cancel', st.open && st.title === 'Disconnect from Kukie.io?' && st.focused === 'Cancel', JSON.stringify(st));
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(100);
+  const after = await page.evaluate(() => ({ gone: !document.querySelector('dialog.kukie-dialog'), focused: document.activeElement?.id }));
+  check('disconnect: Escape cancels and returns focus to the button', after.gone && after.focused === 'kukie-disconnect-btn', JSON.stringify(after));
   await page.close();
 }
 

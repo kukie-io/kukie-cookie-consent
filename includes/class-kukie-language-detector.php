@@ -11,8 +11,8 @@
  * Result is normalized to Kukie's short-code convention:
  *   - lowercase
  *   - underscores replaced with hyphens
- *   - region stripped EXCEPT for zh-* (zh-cn, zh-tw) and pt-br, which
- *     are distinct Kukie locales and are preserved
+ *   - region stripped EXCEPT for zh-* (zh-cn, zh-tw), pt-br, es-mx and
+ *     es-ar, which are distinct Kukie locales and are preserved
  *
  * The detected value is passed through the `kukie_script_lang` filter
  * so third parties can override it programmatically.
@@ -26,6 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Kukie_Language_Detector {
+
+	/**
+	 * Regional locales kept whole (besides every zh-*), mirroring the
+	 * banner script's PRESERVED_REGIONAL.
+	 *
+	 * @since 1.9.0
+	 */
+	public const PRESERVED_REGIONAL = [ 'pt-br', 'es-mx', 'es-ar' ];
 
 	/**
 	 * Get the current page language as a Kukie-normalized short code,
@@ -79,6 +87,7 @@ class Kukie_Language_Detector {
 	 *
 	 *   de_DE    -> de
 	 *   pt_BR    -> pt-br (distinct Kukie locale, preserved like zh-*)
+	 *   es_MX    -> es-mx, es_AR -> es-ar (since 1.9.0)
 	 *   pt       -> pt
 	 *   en-GB    -> en
 	 *   zh_CN    -> zh-cn
@@ -116,11 +125,17 @@ class Kukie_Language_Detector {
 			return $locale;
 		}
 
-		// Preserve Brazilian Portuguese: Kukie ships pt-br as a locale
-		// distinct from European pt, so pt_BR / pt-BR must not collapse to
-		// pt. Bare 'pt' stays 'pt' (it does not reach this branch).
-		if ( $locale === 'pt-br' || strpos( $locale, 'pt-br-' ) === 0 ) {
-			return 'pt-br';
+		// Preserve the regional locales Kukie ships as distinct banner
+		// translations (the banner's own PRESERVED_REGIONAL list in
+		// banner-script/src/i18n.ts): pt_BR, es_MX and es_AR must not
+		// collapse to pt / es, or data-lang short-circuits the banner's
+		// detection before it can pick the regional text. Bare 'pt' and 'es'
+		// stay as they are (they do not reach this branch). es-mx / es-ar
+		// since 1.9.0.
+		foreach ( self::PRESERVED_REGIONAL as $regional ) {
+			if ( $locale === $regional || strpos( $locale, $regional . '-' ) === 0 ) {
+				return $regional;
+			}
 		}
 
 		// All other locales: strip region.

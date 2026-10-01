@@ -113,7 +113,7 @@ class Kukie_Api_Client {
 			}
 		}
 
-		return __( 'API error.', 'kukie-cookie-consent' );
+		return __( "Couldn't reach Kukie.io. Try again in a few minutes.", 'kukie-cookie-consent' );
 	}
 
 	public function get( string $endpoint ): array {

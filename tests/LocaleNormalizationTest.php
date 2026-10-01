@@ -27,6 +27,9 @@ final class LocaleNormalizationTest extends Kukie_Test_Case {
 			'zh_Hans'          => [ 'zh_Hans', 'zh-cn' ],
 			'zh_Hant'          => [ 'zh_Hant', 'zh-tw' ],
 			'bare zh'          => [ 'zh', 'zh-cn' ],
+			// 1.9.0: the banner's other two PRESERVED_REGIONAL locales.
+			'WordPress es_MX'  => [ 'es_MX', 'es-mx' ],
+			'BCP47 es-AR'      => [ 'es-AR', 'es-ar' ],
 		];
 	}
 
@@ -38,6 +41,9 @@ final class LocaleNormalizationTest extends Kukie_Test_Case {
 	public static function strippedProvider(): array {
 		return [
 			'bare pt stays pt' => [ 'pt', 'pt' ],
+			'bare es stays es' => [ 'es', 'es' ],
+			'es_ES'            => [ 'es_ES', 'es' ],
+			'es_CO'            => [ 'es_CO', 'es' ],
 			'de_DE'            => [ 'de_DE', 'de' ],
 			'en-GB'            => [ 'en-GB', 'en' ],
 			'fr_CA'            => [ 'fr_CA', 'fr' ],

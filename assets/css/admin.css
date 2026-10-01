@@ -179,20 +179,35 @@
 }
 
 /* Stats Grid */
-/* Five cards on the wide dashboard wrapper (1100px): ~207px each, enough
-   for the longest label ("ACCESSIBILITY WIDGET") without breaking words;
-   narrower viewports wrap to fewer columns. */
+/* Six cards since 1.9.0, three to a row: banner health on the first row
+   (banner, verification, consents today), the two features and the plan
+   on the second. Three columns on the wide wrapper (1100px) leave room for
+   the longest label; narrower viewports drop to two, then one. */
 .kukie-stats-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 16px;
 	margin-bottom: 16px;
 }
 
-@media (max-width: 782px) {
+@media (max-width: 960px) {
 	.kukie-stats-grid {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
+}
+
+@media (max-width: 480px) {
+	.kukie-stats-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.kukie-stat-hint {
+	display: block;
+	margin-top: 2px;
+	font-size: 12px;
+	font-weight: 400;
+	color: #475569;
 }
 
 .kukie-stat-card {
@@ -245,6 +260,11 @@
 .kukie-stat-icon--a11y {
 	background: #eff6ff;
 	color: #2563eb;
+}
+
+.kukie-stat-icon--uptime {
+	background: #fff1f2;
+	color: #e11d48;
 }
 
 .kukie-stat-content {
@@ -500,12 +520,25 @@
 .kukie-checkbox-item:has(input:focus-visible),
 .kukie-layout-option:has(input:focus-visible),
 .kukie-position-pill:has(input:focus-visible),
+.kukie-interval-option:has(input:focus-visible),
+.kukie-copy-btn:focus-visible,
+.kukie-wrap .button-link:focus-visible {
+	/* An outline, not a ring: it survives Windows high-contrast mode. This
+	   rule body went missing in 1.8.0 (a09c27d), which merged these
+	   selectors into the hover rule below and painted every focused chip
+	   and secondary button blue with white text. */
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+	box-shadow: none;
+}
 
-
-.kukie-btn-primary:hover,
-.kukie-btn-primary:focus {
+.kukie-btn-primary:hover {
 	background: #2563eb;
 	color: #fff;
+}
+
+.kukie-btn-primary:active {
+	background: #1d4ed8;
 }
 
 .kukie-btn-primary .dashicons {
@@ -533,11 +566,14 @@
 	line-height: 1.4;
 }
 
-.kukie-btn-secondary:hover,
-.kukie-btn-secondary:focus {
+.kukie-btn-secondary:hover {
 	background: #eff6ff;
-	color: #2563eb;
+	color: #1d4ed8;
 	border-color: #2563eb;
+}
+
+.kukie-btn-secondary:active {
+	background: #dbeafe;
 }
 
 .kukie-btn-danger {
@@ -546,8 +582,8 @@
 	justify-content: center;
 	gap: 6px;
 	background: #fff;
-	color: #dc2626;
-	border: 1px solid #dc2626;
+	color: #b91c1c;
+	border: 1px solid #b91c1c;
 	border-radius: 4px;
 	min-height: 40px;
 	padding: 8px 16px;
@@ -558,9 +594,30 @@
 	transition: all 0.15s;
 }
 
-.kukie-btn-danger:hover,
-.kukie-btn-danger:focus {
+.kukie-btn-danger:hover {
 	background: #fef2f2;
+}
+
+.kukie-btn-danger:active {
+	background: #fee2e2;
+}
+
+/* The confirming button of a destructive dialog */
+.kukie-btn-danger--solid {
+	background: #b91c1c;
+	color: #fff;
+}
+
+.kukie-btn-danger--solid:hover {
+	background: #991b1b;
+}
+
+.kukie-btn-danger--solid:active {
+	background: #7f1d1d;
+}
+
+.kukie-btn-danger:focus-visible {
+	outline-color: #b91c1c;
 }
 
 .kukie-btn-icon {
@@ -570,8 +627,15 @@
 	background: none;
 	border: none;
 	cursor: pointer;
+	min-width: 32px;
+	min-height: 32px;
 	padding: 4px;
-	color: #64748b;
+	border-radius: 4px;
+	color: #475569;
+}
+
+.kukie-btn-icon:active {
+	background: #f1f5f9;
 }
 
 .kukie-btn-icon:hover {
@@ -656,13 +720,20 @@
 }
 
 .kukie-input:focus {
-	outline: none;
-	border-color: #2563eb;
-	box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+	/* WordPress core's focus: a 1px ring plus a transparent outline that
+	   forced-colours mode draws, so focus never disappears there. */
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: 2px solid transparent;
 }
 
 .kukie-input::placeholder {
-	color: #94a3b8;
+	color: #646970;
+}
+
+.kukie-input[aria-invalid="true"] {
+	border-color: #b91c1c;
+	box-shadow: 0 0 0 1px #b91c1c;
 }
 
 .kukie-input-with-toggle {
@@ -695,9 +766,11 @@
 }
 
 .kukie-select:focus {
-	outline: none;
-	border-color: #2563eb;
-	box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+	/* WordPress core's focus: a 1px ring plus a transparent outline that
+	   forced-colours mode draws, so focus never disappears there. */
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: 2px solid transparent;
 }
 
 /* Form Groups */
@@ -791,7 +864,9 @@
 .kukie-toggle-slider {
 	position: absolute;
 	inset: 0;
-	background: #cbd5e1;
+	/* WordPress's control border grey: 3.3:1 against white, so the off
+	   state has a visible boundary (#cbd5e1 was 1.5:1). */
+	background: #8c8f94;
 	border-radius: 24px;
 	transition: background 0.2s;
 }
@@ -799,10 +874,10 @@
 .kukie-toggle-slider::before {
 	content: '';
 	position: absolute;
-	width: 18px;
-	height: 18px;
-	left: 3px;
-	bottom: 3px;
+	width: 20px;
+	height: 20px;
+	left: 2px;
+	bottom: 2px;
 	background: #fff;
 	border-radius: 50%;
 	transition: transform 0.2s;
@@ -815,6 +890,21 @@
 
 .kukie-toggle input:checked + .kukie-toggle-slider::before {
 	transform: translateX(20px);
+}
+
+.kukie-toggle input:disabled + .kukie-toggle-slider {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+	.kukie-toggle-slider {
+		border: 1px solid CanvasText;
+	}
+
+	.kukie-toggle input:checked + .kukie-toggle-slider {
+		background: Highlight;
+	}
 }
 
 .kukie-toggle input:focus-visible + .kukie-toggle-slider {
@@ -1185,13 +1275,20 @@
 	max-width: 360px;
 }
 
-.kukie-toast--success {
-	background: #059669;
-	color: #fff;
+.kukie-toast-region {
+	position: fixed;
+	top: 40px;
+	right: 20px;
+	z-index: 100001;
 }
 
-.kukie-toast--error {
-	background: #dc2626;
+.kukie-toast-region .kukie-toast {
+	position: static;
+}
+
+/* emerald-700: 5.5:1 with white text (emerald-600 was 3.8:1) */
+.kukie-toast--success {
+	background: #047857;
 	color: #fff;
 }
 
@@ -1221,12 +1318,17 @@
 
 .kukie-badge--active {
 	background: #ecfdf5;
-	color: #059669;
+	color: #047857;
 }
 
 .kukie-badge--inactive {
 	background: #f1f5f9;
-	color: #64748b;
+	color: #475569;
+}
+
+.kukie-badge--warning {
+	background: #fffbeb;
+	color: #92400e;
 }
 
 .kukie-badge--running {
@@ -1236,7 +1338,7 @@
 
 .kukie-badge--failed {
 	background: #fef2f2;
-	color: #dc2626;
+	color: #b91c1c;
 }
 
 /* Connect Box */
@@ -1350,7 +1452,12 @@
 
 /* Info Grid (Settings) */
 .kukie-info-grid {
-	margin-bottom: 16px;
+	margin: 0 0 16px;
+}
+
+.kukie-info-grid dt,
+.kukie-info-grid dd {
+	margin: 0;
 }
 
 .kukie-info-row {
@@ -2021,4 +2128,312 @@
 	height: 32px;
 	color: #2563eb;
 	margin-bottom: 8px;
+}
+
+
+/* ═══════════════════════════════════════
+   1.9.0: dialog, uptime monitoring, shared bits
+   ═══════════════════════════════════════ */
+
+/* Confirmation dialog (native <dialog>, see kukieDialog() in admin.js) */
+.kukie-dialog {
+	width: min(480px, calc(100vw - 32px));
+	padding: 24px;
+	border: 1px solid #c3c4c7;
+	border-radius: 8px;
+	box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+	color: #1e293b;
+}
+
+.kukie-dialog::backdrop {
+	background: rgba(15, 23, 42, 0.5);
+}
+
+.kukie-dialog-title {
+	margin: 0 0 8px;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.4;
+	color: #0f172a;
+}
+
+.kukie-dialog-body {
+	margin: 0 0 24px;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #334155;
+}
+
+.kukie-dialog-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+/* Tables (plans, incidents): WordPress's widefat, scoped spacing */
+.kukie-wrap .kukie-table {
+	border-color: #e2e8f0;
+}
+
+.kukie-wrap .kukie-table th,
+.kukie-wrap .kukie-table td {
+	padding: 10px 12px;
+	font-size: 13px;
+	text-align: start;
+	vertical-align: middle;
+}
+
+.kukie-wrap .kukie-table thead th {
+	font-weight: 600;
+	color: #334155;
+}
+
+/* Empty state */
+.kukie-empty {
+	padding: 24px 0 8px;
+	text-align: center;
+}
+
+.kukie-empty-title {
+	margin: 0 0 4px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #0f172a;
+}
+
+.kukie-empty-body {
+	margin: 0;
+	font-size: 13px;
+	color: #475569;
+}
+
+/* Uptime status card */
+.kukie-uptime-status-head {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.kukie-uptime-status-text .kukie-card-title {
+	margin-bottom: 4px;
+}
+
+.kukie-uptime-status-text .kukie-card-description {
+	margin: 0;
+}
+
+.kukie-uptime-dot {
+	flex-shrink: 0;
+	width: 14px;
+	height: 14px;
+	margin-top: 4px;
+	border-radius: 50%;
+	background: #94a3b8;
+	box-shadow: 0 0 0 4px #f1f5f9;
+}
+
+.kukie-uptime-status[data-state="up"] .kukie-uptime-dot {
+	background: #10b981;
+	box-shadow: 0 0 0 4px #d1fae5;
+}
+
+.kukie-uptime-status[data-state="down"] {
+	border-color: #fca5a5;
+	background: #fef2f2;
+}
+
+.kukie-uptime-status[data-state="down"] .kukie-uptime-dot {
+	background: #dc2626;
+	box-shadow: 0 0 0 4px #fecaca;
+}
+
+.kukie-uptime-status[data-state="blocked"],
+.kukie-uptime-status[data-state="paused"] {
+	border-color: #fcd34d;
+	background: #fffbeb;
+}
+
+.kukie-uptime-status[data-state="blocked"] .kukie-uptime-dot,
+.kukie-uptime-status[data-state="paused"] .kukie-uptime-dot {
+	background: #d97706;
+	box-shadow: 0 0 0 4px #fde68a;
+}
+
+.kukie-uptime-stats {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	margin: 20px 0 0;
+}
+
+@media (max-width: 782px) {
+	.kukie-uptime-stats {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.kukie-uptime-stat {
+	padding: 12px 14px;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	background: #fff;
+}
+
+.kukie-uptime-stat dt {
+	margin: 0 0 4px;
+	font-size: 12px;
+	color: #475569;
+}
+
+.kukie-uptime-stat dd {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 600;
+	color: #0f172a;
+	font-variant-numeric: tabular-nums;
+}
+
+.kukie-uptime-stat dd.kukie-text-warning {
+	color: #92400e;
+}
+
+/* Check interval radio cards */
+.kukie-interval-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+}
+
+@media (max-width: 600px) {
+	.kukie-interval-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.kukie-wrap .kukie-interval-option {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-height: 44px;
+	margin: 0;
+	padding: 10px 12px 10px 36px;
+	position: relative;
+	border: 1px solid #c3c4c7;
+	border-radius: 6px;
+	background: #fff;
+	cursor: pointer;
+	font-weight: 400;
+}
+
+.kukie-interval-option:hover {
+	border-color: #2563eb;
+}
+
+.kukie-interval-option:has(input:checked) {
+	border-color: #2563eb;
+	background: #eff6ff;
+	box-shadow: inset 0 0 0 1px #2563eb;
+}
+
+.kukie-interval-option input[type="radio"] {
+	position: absolute;
+	left: 12px;
+	top: 12px;
+	margin: 0;
+}
+
+.kukie-interval-title {
+	font-size: 13px;
+	font-weight: 500;
+	color: #0f172a;
+}
+
+.kukie-interval-option:has(input:checked) .kukie-interval-title {
+	font-weight: 600;
+}
+
+.kukie-interval-option--locked {
+	cursor: not-allowed;
+	background: #f8fafc;
+}
+
+.kukie-interval-option--locked:hover {
+	border-color: #c3c4c7;
+}
+
+.kukie-interval-option--locked .kukie-interval-title {
+	color: #475569;
+}
+
+.kukie-interval-lock {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	font-size: 12px;
+	color: #475569;
+}
+
+.kukie-interval-lock .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+}
+
+/* Values managed on Kukie.io (recipients, webhook) */
+.kukie-uptime-managed {
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px solid #f1f5f9;
+}
+
+/* Copyable value rows: on a narrow screen the value drops below its label
+   instead of squeezing the label onto two lines. */
+.kukie-info-row:has(.kukie-copy-row) {
+	flex-wrap: wrap;
+	gap: 4px 12px;
+}
+
+.kukie-info-row:has(.kukie-copy-row) .kukie-info-label {
+	flex-shrink: 0;
+}
+
+.kukie-copy-row {
+	flex: 1 1 auto;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	min-width: 0;
+}
+
+.kukie-copy-row code {
+	word-break: break-all;
+}
+
+.kukie-wrap .kukie-copy-btn {
+	min-height: 24px;
+	padding: 2px 4px;
+	font-size: 13px;
+	text-decoration: underline;
+}
+
+/* Respect the system's reduced motion setting */
+@media (prefers-reduced-motion: reduce) {
+	.kukie-skeleton,
+	.kukie-toast,
+	.kukie-toast--removing {
+		animation: none;
+	}
+
+	.kukie-spinner {
+		animation-duration: 1.5s;
+	}
+
+	.kukie-toggle-slider,
+	.kukie-toggle-slider::before,
+	.kukie-btn-primary,
+	.kukie-btn-secondary,
+	.kukie-btn-danger,
+	.kukie-stat-card--link {
+		transition: none;
+	}
 }

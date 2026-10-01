@@ -248,28 +248,35 @@ class Kukie_Script_Injector {
 
 		$banner_enabled = $this->plugin->get_option( 'banner_enabled', false );
 		$dot_color      = $banner_enabled ? '#22c55e' : '#ef4444';
+		// The dot's colour is never the only signal: screen readers hear the
+		// state, and the tooltip below carries it for sighted users.
+		$state_text = $banner_enabled
+			? __( 'Consent banner on', 'kukie-cookie-consent' )
+			: __( 'Consent banner off', 'kukie-cookie-consent' );
 
 		$node = [
 			'id'    => 'kukie-status',
 			'title' => wp_kses(
 				sprintf(
 					'<span style="display:inline-flex;align-items:center;gap:4px;">'
-					. '<span style="width:8px;height:8px;border-radius:50%%;background:%s;display:inline-block;"></span>'
-					. 'Kukie</span>',
-					esc_attr( $dot_color )
+					. '<span style="width:8px;height:8px;border-radius:50%%;background:%s;display:inline-block;" aria-hidden="true"></span>'
+					. 'Kukie.io<span class="screen-reader-text">: %s</span></span>',
+					esc_attr( $dot_color ),
+					esc_html( $state_text )
 				),
 				[
-					'span' => [ 'style' => [] ],
+					'span' => [ 'style' => [], 'class' => [], 'aria-hidden' => [] ],
 				]
 			),
 			'href'  => admin_url( 'admin.php?page=kukie' ),
+			'meta'  => [ 'title' => $state_text ],
 		];
 
 		// The dot still reports the site-wide banner state; the tooltip is
 		// what tells an administrator why THEY do not see the banner.
 		if ( $this->is_hidden_for_current_user() ) {
 			$node['meta'] = [
-				'title' => __( 'The banner is hidden for administrators. Visitors still see it.', 'kukie-cookie-consent' ),
+				'title' => $state_text . '. ' . __( 'The banner is hidden for administrators. Visitors still see it.', 'kukie-cookie-consent' ),
 			];
 		}
 

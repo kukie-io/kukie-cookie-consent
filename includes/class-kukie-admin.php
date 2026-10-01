@@ -7,8 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Kukie_Admin {
 
 	/**
-	 * Admin page slugs. The four visible entries are Dashboard, Consent banner
-	 * (one page, three tabs), Accessibility widget and Settings (since 1.8.0);
+	 * Admin page slugs. The five visible entries are Dashboard, Consent banner
+	 * (one page, seven tabs), Accessibility widget, Uptime monitoring (since
+	 * 1.9.0) and Settings;
 	 * the connect page is hidden and the three LEGACY slugs stay registered as
 	 * hidden pages whose only job is to redirect old bookmarks and inter-page
 	 * links to the matching Consent banner tab (see redirect_legacy_page()).
@@ -18,6 +19,7 @@ class Kukie_Admin {
 	public const PAGE_DASHBOARD     = 'kukie';
 	public const PAGE_BANNER        = 'kukie-banner';
 	public const PAGE_ACCESSIBILITY = 'kukie-accessibility';
+	public const PAGE_UPTIME        = 'kukie-uptime';
 	public const PAGE_SETTINGS      = 'kukie-settings';
 	public const PAGE_CONNECT       = 'kukie-connect';
 
@@ -34,6 +36,15 @@ class Kukie_Admin {
 	/** Accessibility widget whitelists - mirrors the server's, which is authoritative. */
 	public const A11Y_POSITIONS = [ 'bottom-right', 'bottom-left' ];
 	public const A11Y_SIZES     = [ 44, 52, 60 ];
+
+	/**
+	 * Uptime check cadences (seconds) the save handler forwards; the server
+	 * validates them against its own list and the plan, which is
+	 * authoritative. Anything else is dropped rather than sent.
+	 *
+	 * @since 1.9.0
+	 */
+	public const UPTIME_INTERVALS = [ 60, 180, 300, 900, 1800, 3600 ];
 
 	private Kukie_Plugin $plugin;
 
@@ -64,7 +75,10 @@ class Kukie_Admin {
 		add_action( 'wp_ajax_kukie_save_behaviour', [ $this, 'ajax_save_behaviour' ] );
 		add_action( 'wp_ajax_kukie_save_iframes', [ $this, 'ajax_save_iframes' ] );
 		add_action( 'wp_ajax_kukie_trigger_scan', [ $this, 'ajax_trigger_scan' ] );
+		add_action( 'wp_ajax_kukie_scan_status', [ $this, 'ajax_scan_status' ] );
 		add_action( 'wp_ajax_kukie_verify', [ $this, 'ajax_verify' ] );
+		add_action( 'wp_ajax_kukie_get_uptime', [ $this, 'ajax_get_uptime' ] );
+		add_action( 'wp_ajax_kukie_save_uptime', [ $this, 'ajax_save_uptime' ] );
 	}
 
 	// ─────────────────────────────────────────
@@ -126,6 +140,18 @@ class Kukie_Admin {
 			'manage_options',
 			self::PAGE_ACCESSIBILITY,
 			[ $this, 'render_accessibility_page' ]
+		);
+
+		// Visible on every plan: an unentitled plan sees what the feature
+		// does and which plan includes it (the page reads the gate from
+		// Kukie.io on every load, so an upgrade unlocks it at once).
+		add_submenu_page(
+			self::PAGE_DASHBOARD,
+			__( 'Uptime monitoring', 'kukie-cookie-consent' ),
+			__( 'Uptime monitoring', 'kukie-cookie-consent' ),
+			'manage_options',
+			self::PAGE_UPTIME,
+			[ $this, 'render_uptime_page' ]
 		);
 
 		add_submenu_page(
@@ -221,7 +247,7 @@ class Kukie_Admin {
 	public function enqueue_assets( string $hook ): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress admin menu page parameter
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
-		if ( ! in_array( $page, [ self::PAGE_DASHBOARD, self::PAGE_CONNECT, self::PAGE_BANNER, self::PAGE_ACCESSIBILITY, self::PAGE_SETTINGS ], true ) ) {
+		if ( ! in_array( $page, [ self::PAGE_DASHBOARD, self::PAGE_CONNECT, self::PAGE_BANNER, self::PAGE_ACCESSIBILITY, self::PAGE_UPTIME, self::PAGE_SETTINGS ], true ) ) {
 			return;
 		}
 
@@ -249,48 +275,163 @@ class Kukie_Admin {
 			'siteId'           => $this->plugin->get_option( 'site_id', 0 ),
 			'isConnected'      => $this->plugin->is_connected(),
 			'a11yPageUrl'      => admin_url( 'admin.php?page=' . self::PAGE_ACCESSIBILITY ),
+			'uptimePageUrl'    => admin_url( 'admin.php?page=' . self::PAGE_UPTIME ),
+			// BCP 47 tag of the admin user's language, so dates, numbers and
+			// relative times follow WordPress rather than the browser.
+			'locale'           => str_replace( '_', '-', get_user_locale() ),
 			// The WP Rocket notice's dismiss handler lives in admin.js since
 			// 1.8.0 (no inline <script> in PHP output); it needs its own nonce.
 			'rocketDismissNonce' => wp_create_nonce( 'kukie_dismiss_wp_rocket_notice' ),
 			// Strings admin.js renders itself (it reads these with inline
 			// English fallbacks, so a stale cached script degrades safely).
-			'i18n'             => [
-				'networkError'      => __( 'Network error. Please try again.', 'kukie-cookie-consent' ),
-				'saveDisabled'      => __( 'Settings could not be loaded, so saving is disabled. Please reload the page.', 'kukie-cookie-consent' ),
-				'conflictPrompt'    => __( "These settings were changed elsewhere (for example in the Kukie.io dashboard) after this page was loaded.\n\nOK: save anyway and overwrite the other changes.\nCancel: keep the other changes (reload this page to see them).", 'kukie-cookie-consent' ),
-				'couldNotLoad'      => __( 'Could not load settings.', 'kukie-cookie-consent' ),
-				'failedToSave'      => __( 'Failed to save.', 'kukie-cookie-consent' ),
-				'active'            => __( 'Active', 'kukie-cookie-consent' ),
-				'inactive'          => __( 'Inactive', 'kukie-cookie-consent' ),
-				'off'               => __( 'Off', 'kukie-cookie-consent' ),
-				'notInPlan'         => __( 'Not in plan', 'kukie-cookie-consent' ),
-				'verified'          => __( 'Verified', 'kukie-cookie-consent' ),
-				'notVerified'       => __( 'Not verified', 'kukie-cookie-consent' ),
-				/* translators: %s: date and time */
-				'verifiedOn'        => __( 'Verified on %s', 'kukie-cookie-consent' ),
-				'verifiedToast'     => __( 'Banner script verified on your site!', 'kukie-cookie-consent' ),
-				'verifiedDetected'  => __( 'Verified! Banner script detected.', 'kukie-cookie-consent' ),
-				'notFound'          => __( 'Banner script not found.', 'kukie-cookie-consent' ),
-				'noDataYet'         => __( 'No data yet', 'kukie-cookie-consent' ),
-				'noScansYet'        => __( 'No scans yet', 'kukie-cookie-consent' ),
-				'accepted'          => __( 'Accepted', 'kukie-cookie-consent' ),
-				'rejected'          => __( 'Rejected', 'kukie-cookie-consent' ),
-				'custom'            => __( 'Custom', 'kukie-cookie-consent' ),
-				/* translators: %s: number of trial days remaining */
-				'trialDays'         => __( '(Trial: %sd)', 'kukie-cookie-consent' ),
-				'disconnectConfirm' => __( 'Are you sure you want to disconnect from Kukie.io? The cookie consent banner will be removed from your site.', 'kukie-cookie-consent' ),
-				'disconnecting'     => __( 'Disconnecting...', 'kukie-cookie-consent' ),
-				'disconnectLabel'   => __( 'Disconnect from Kukie.io', 'kukie-cookie-consent' ),
-				'failedDisconnect'  => __( 'Failed to disconnect.', 'kukie-cookie-consent' ),
-				'a11yNoBlock'       => __( 'The Kukie.io service did not return accessibility widget settings. Please try again in a few minutes.', 'kukie-cookie-consent' ),
-				/* translators: %s: plan name */
-				'a11yRequiredPlan'  => __( 'The accessibility widget is available on the %s plan and above.', 'kukie-cookie-consent' ),
-				'a11yNotIncluded'   => __( 'The accessibility widget is not included in your plan.', 'kukie-cookie-consent' ),
-				'a11yStillOn'       => __( 'This site still has the widget switched on from an earlier plan. Visitors do not see it until the plan includes it again; the setting is kept so nothing needs re-doing after an upgrade.', 'kukie-cookie-consent' ),
-				'autoDetect'        => __( 'Auto-detect (recommended)', 'kukie-cookie-consent' ),
-				'checkingAgain'     => __( 'Checking...', 'kukie-cookie-consent' ),
-			],
+			'i18n'             => $this->js_strings(),
 		] );
+	}
+
+	/**
+	 * Every string admin.js renders, translated here so xgettext finds them.
+	 * Interval and history labels are whole phrases per value, never a number
+	 * glued to a word, so no language has to fit an English plural.
+	 *
+	 * @since 1.9.0 (split out of enqueue_assets())
+	 * @return array<string, string>
+	 */
+	private function js_strings(): array {
+		return [
+			'networkError'      => __( "Couldn't reach the server. Check your internet connection and try again.", 'kukie-cookie-consent' ),
+			'saveDisabled'      => __( "Couldn't load the settings, so saving is turned off. Reload the page to try again.", 'kukie-cookie-consent' ),
+			'conflictTitle'     => __( 'Replace changes made elsewhere?', 'kukie-cookie-consent' ),
+			'conflictBody'      => __( 'These settings were changed in the Kukie.io dashboard or another window after you opened this page. Saving replaces those changes with yours. To see their changes instead, reload the page.', 'kukie-cookie-consent' ),
+			'conflictReload'    => __( 'Reload page', 'kukie-cookie-consent' ),
+			'conflictOverwrite' => __( 'Save my changes', 'kukie-cookie-consent' ),
+			'cancel'            => __( 'Cancel', 'kukie-cookie-consent' ),
+			'couldNotLoad'      => __( "Couldn't load the settings. Reload the page to try again.", 'kukie-cookie-consent' ),
+			'failedToSave'      => __( "Couldn't save the settings. Try again.", 'kukie-cookie-consent' ),
+			'on'                => __( 'On', 'kukie-cookie-consent' ),
+			'off'               => __( 'Off', 'kukie-cookie-consent' ),
+			'notInPlan'         => __( 'Not in plan', 'kukie-cookie-consent' ),
+			'verified'          => __( 'Verified', 'kukie-cookie-consent' ),
+			'notVerified'       => __( 'Not verified', 'kukie-cookie-consent' ),
+			/* translators: %s: date and time */
+			'verifiedOn'        => __( 'Verified on %s', 'kukie-cookie-consent' ),
+			'verifiedFound'     => __( 'Banner script found on your site.', 'kukie-cookie-consent' ),
+			'notFound'          => __( "Couldn't find the banner script on your site.", 'kukie-cookie-consent' ),
+			'noDataYet'         => __( 'No consents yet', 'kukie-cookie-consent' ),
+			'noScansYet'        => __( 'No scans yet', 'kukie-cookie-consent' ),
+			'accepted'          => __( 'Accepted', 'kukie-cookie-consent' ),
+			'rejected'          => __( 'Rejected', 'kukie-cookie-consent' ),
+			'custom'            => __( 'Custom', 'kukie-cookie-consent' ),
+			'trial'             => __( 'Trial', 'kukie-cookie-consent' ),
+			/* translators: %s: the date the free trial ends */
+			'trialEnds'         => __( 'Trial ends %s', 'kukie-cookie-consent' ),
+			'disconnectTitle'   => __( 'Disconnect from Kukie.io?', 'kukie-cookie-consent' ),
+			'disconnectBody'    => __( 'The consent banner disappears from this site straight away, and nothing is blocked until you connect again. Your settings, scans and consent records stay in your Kukie.io account.', 'kukie-cookie-consent' ),
+			'disconnectConfirm' => __( 'Disconnect', 'kukie-cookie-consent' ),
+			'disconnecting'     => __( 'Disconnecting…', 'kukie-cookie-consent' ),
+			'disconnectLabel'   => __( 'Disconnect from Kukie.io', 'kukie-cookie-consent' ),
+			'failedDisconnect'  => __( "Couldn't disconnect. Try again.", 'kukie-cookie-consent' ),
+			'a11yNoBlock'       => __( "Couldn't load the accessibility widget settings from Kukie.io. Try again in a few minutes.", 'kukie-cookie-consent' ),
+			/* translators: %s: plan name */
+			'a11yRequiredPlan'  => __( 'The accessibility widget is available on the %s plan and above. Upgrade to turn it on.', 'kukie-cookie-consent' ),
+			'a11yNotIncluded'   => __( 'The accessibility widget is not included in your plan.', 'kukie-cookie-consent' ),
+			'a11yStillOn'       => __( 'This site still has the widget turned on from an earlier plan. Visitors do not see it until your plan includes it again. The setting is kept, so there is nothing to set up again after you upgrade.', 'kukie-cookie-consent' ),
+			/* translators: %s: plan name */
+			'upgradeTo'         => __( 'Upgrade to %s', 'kukie-cookie-consent' ),
+			'seePlans'          => __( 'See plans on Kukie.io', 'kukie-cookie-consent' ),
+			'autoDetect'        => __( 'Auto-detect (recommended)', 'kukie-cookie-consent' ),
+			'checkingAgain'     => __( 'Checking…', 'kukie-cookie-consent' ),
+			/* translators: 1: number of selected items, 2: number of items */
+			'gridCount'         => __( '%1$s of %2$s selected', 'kukie-cookie-consent' ),
+			'invalidKey'        => __( 'Paste the 64-character API key from your site on Kukie.io.', 'kukie-cookie-consent' ),
+			'connectFailed'     => __( "Couldn't connect to Kukie.io. Check the API key and try again.", 'kukie-cookie-consent' ),
+			'showKey'           => __( 'Show API key', 'kukie-cookie-consent' ),
+			'hideKey'           => __( 'Hide API key', 'kukie-cookie-consent' ),
+			'dashboardError'    => __( "Couldn't load the dashboard. Try again in a minute.", 'kukie-cookie-consent' ),
+			'scanStartFailed'   => __( "Couldn't start the scan. Try again.", 'kukie-cookie-consent' ),
+			'scanPending'       => __( 'Waiting to start', 'kukie-cookie-consent' ),
+			'scanRunning'       => __( 'Scanning', 'kukie-cookie-consent' ),
+			'scanCompleted'     => __( 'Completed', 'kukie-cookie-consent' ),
+			'scanFailed'        => __( 'Failed', 'kukie-cookie-consent' ),
+			'scanCancelled'     => __( 'Cancelled', 'kukie-cookie-consent' ),
+			/* translators: 1: pages scanned so far, 2: pages in the scan */
+			'scanProgress'      => __( 'Scanning page %1$s of %2$s', 'kukie-cookie-consent' ),
+			'copy'              => __( 'Copy', 'kukie-cookie-consent' ),
+			'copied'            => __( 'Copied', 'kukie-cookie-consent' ),
+			'copyFailed'        => __( "Couldn't copy. Select the text and copy it yourself.", 'kukie-cookie-consent' ),
+			// Uptime monitoring (1.9.0)
+			'uptimeUp'          => __( 'Up', 'kukie-cookie-consent' ),
+			'uptimeDown'        => __( 'Down', 'kukie-cookie-consent' ),
+			'uptimePending'     => __( 'Waiting for the first check', 'kukie-cookie-consent' ),
+			'uptimeBlocked'     => __( 'Blocked by bot protection', 'kukie-cookie-consent' ),
+			'uptimePaused'      => __( 'Paused', 'kukie-cookie-consent' ),
+			'uptimePausedTitle' => __( 'Uptime monitoring is paused', 'kukie-cookie-consent' ),
+			'none'              => __( 'None', 'kukie-cookie-consent' ),
+			'uptimeUpTitle'     => __( 'Your site is up', 'kukie-cookie-consent' ),
+			'uptimeDownTitle'   => __( 'Your site is down', 'kukie-cookie-consent' ),
+			'uptimePendingTitle' => __( 'Waiting for the first check', 'kukie-cookie-consent' ),
+			'uptimePendingBody' => __( 'The first check runs within a minute. Reload this page to see the result.', 'kukie-cookie-consent' ),
+			'uptimeBlockedTitle' => __( "Your site's bot protection is blocking the check", 'kukie-cookie-consent' ),
+			'uptimeBlockedBody' => __( 'Visitors may be fine, but Kukie.io cannot see the page. Add the checker below to the allow list of your firewall or security plugin.', 'kukie-cookie-consent' ),
+			'uptimeOffTitle'    => __( 'Uptime monitoring is off', 'kukie-cookie-consent' ),
+			'uptimeOffBody'     => __( 'Turn on Monitor this site below to start checking it.', 'kukie-cookie-consent' ),
+			'uptimeFrozenBody'  => __( 'Checks are paused because this site is frozen on Kukie.io.', 'kukie-cookie-consent' ),
+			'uptimeBillingBody' => __( 'Checks are paused until the subscription is active again.', 'kukie-cookie-consent' ),
+			/* translators: %s: relative time, for example "2 minutes ago" */
+			'uptimeLastCheck'   => __( 'Last checked %s', 'kukie-cookie-consent' ),
+			/* translators: %s: relative time, for example "3 hours ago" */
+			'uptimeDownSince'   => __( 'Went down %s', 'kukie-cookie-consent' ),
+			/* translators: %s: response time in milliseconds */
+			'ms'                => __( '%s ms', 'kukie-cookie-consent' ),
+			/* translators: %s: date */
+			'sslExpires'        => __( 'Expires %s', 'kukie-cookie-consent' ),
+			'notAvailable'      => __( 'Not available', 'kukie-cookie-consent' ),
+			'noDataShort'       => __( 'No data yet', 'kukie-cookie-consent' ),
+			'ongoing'           => __( 'Ongoing', 'kukie-cookie-consent' ),
+			/* translators: %s: plan name */
+			'planAndAbove'      => __( '%s plan and above', 'kukie-cookie-consent' ),
+			/* translators: %s: plan name */
+			'uptimeRequiredPlan' => __( 'Uptime monitoring is available on the %s plan and above. Upgrade to turn it on.', 'kukie-cookie-consent' ),
+			'uptimeNotIncluded' => __( 'Uptime monitoring is not included in your plan.', 'kukie-cookie-consent' ),
+			'uptimeNoService'   => __( "Couldn't load uptime monitoring from Kukie.io. Try again in a few minutes.", 'kukie-cookie-consent' ),
+			/* translators: 1: the site's domain, 2: the same domain with www */
+			'uptimeUrlHint'     => __( 'Must be on %1$s or %2$s. Usually your homepage.', 'kukie-cookie-consent' ),
+			'uptimeUrlInvalid'  => __( 'Enter a full web address that starts with https:// or http://.', 'kukie-cookie-consent' ),
+			'interval60'        => __( 'Every minute', 'kukie-cookie-consent' ),
+			'interval180'       => __( 'Every 3 minutes', 'kukie-cookie-consent' ),
+			'interval300'       => __( 'Every 5 minutes', 'kukie-cookie-consent' ),
+			'interval900'       => __( 'Every 15 minutes', 'kukie-cookie-consent' ),
+			'interval1800'      => __( 'Every 30 minutes', 'kukie-cookie-consent' ),
+			'interval3600'      => __( 'Every hour', 'kukie-cookie-consent' ),
+			/* translators: %s: number of minutes (used only for a cadence added after this release) */
+			'intervalMinutes'   => __( 'Every %s minutes', 'kukie-cookie-consent' ),
+			'history30'         => __( '30 days', 'kukie-cookie-consent' ),
+			'history90'         => __( '90 days', 'kukie-cookie-consent' ),
+			'history365'        => __( '1 year', 'kukie-cookie-consent' ),
+			/* translators: %s: number of days (used only for a history length added after this release) */
+			'historyDays'       => __( '%s days', 'kukie-cookie-consent' ),
+			/* translators: %s: number of seconds */
+			'durSeconds'        => __( '%s s', 'kukie-cookie-consent' ),
+			/* translators: %s: number of minutes */
+			'durMinutes'        => __( '%s min', 'kukie-cookie-consent' ),
+			/* translators: 1: hours, 2: minutes */
+			'durHours'          => __( '%1$s h %2$s min', 'kukie-cookie-consent' ),
+			/* translators: 1: days, 2: hours */
+			'durDays'           => __( '%1$s d %2$s h', 'kukie-cookie-consent' ),
+			'causeTimeout'      => __( 'The site did not respond in time.', 'kukie-cookie-consent' ),
+			'causeConnect'      => __( 'The connection could not be made (refused or dropped).', 'kukie-cookie-consent' ),
+			'causeDns'          => __( 'The domain name could not be found (DNS).', 'kukie-cookie-consent' ),
+			'causeTls'          => __( 'The TLS (SSL) handshake failed. The certificate may be expired or invalid.', 'kukie-cookie-consent' ),
+			/* translators: %s: HTTP status code, for example 503 */
+			'causeHttp'         => __( 'The site answered with HTTP %s.', 'kukie-cookie-consent' ),
+			'causeHttpGeneric'  => __( 'The site answered with an error status.', 'kukie-cookie-consent' ),
+			'causeRedirect'     => __( 'The site redirected too many times.', 'kukie-cookie-consent' ),
+			'causeOversized'    => __( 'The page was larger than the 5 MB limit.', 'kukie-cookie-consent' ),
+			'causeBlocked'      => __( 'The address points to a private network and cannot be checked from outside.', 'kukie-cookie-consent' ),
+			'causeChallenge'    => __( 'The site answered with a bot-protection page instead of its content.', 'kukie-cookie-consent' ),
+			'causeTransport'    => __( 'A network error interrupted the check.', 'kukie-cookie-consent' ),
+			'causeUnknown'      => __( 'The site could not be reached.', 'kukie-cookie-consent' ),
+			'uptimeSaved'       => __( 'Uptime monitoring settings saved', 'kukie-cookie-consent' ),
+		];
 	}
 
 	/**
@@ -365,9 +506,9 @@ class Kukie_Admin {
 
 		printf(
 			'<div class="notice notice-warning is-dismissible"><p>%s <a href="%s">%s</a></p></div>',
-			esc_html__( 'Kukie.io cookie consent is not connected.', 'kukie-cookie-consent' ),
-			esc_url( admin_url( 'admin.php?page=kukie-connect' ) ),
-			esc_html__( 'Connect now &rarr;', 'kukie-cookie-consent' )
+			esc_html__( 'Kukie.io is not connected, so this site shows no consent banner.', 'kukie-cookie-consent' ),
+			esc_url( admin_url( 'admin.php?page=' . self::PAGE_CONNECT ) ),
+			esc_html__( 'Connect to Kukie.io', 'kukie-cookie-consent' )
 		);
 	}
 
@@ -389,10 +530,10 @@ class Kukie_Admin {
 		}
 
 		printf(
-			'<div class="notice notice-error"><p><strong>%s</strong> %s <a href="%s">%s &rarr;</a></p></div>',
-			esc_html__( 'Kukie:', 'kukie-cookie-consent' ),
-			esc_html__( 'The stored Kukie.io API key can no longer be read. This usually happens after the site\'s security keys (salts) were changed or the database was copied from another site. Please reconnect with your API key to restore the dashboard connection - the cookie banner itself keeps working.', 'kukie-cookie-consent' ),
-			esc_url( admin_url( 'admin.php?page=kukie-connect' ) ),
+			'<div class="notice notice-error"><p><strong>%s</strong> %s <a href="%s">%s</a></p></div>',
+			esc_html__( 'Kukie.io:', 'kukie-cookie-consent' ),
+			esc_html__( "The stored API key can no longer be read. This happens after the site's security keys (salts) change or the database is copied from another site. Your consent banner keeps working. To restore stats, scans and settings, reconnect with your API key.", 'kukie-cookie-consent' ),
+			esc_url( admin_url( 'admin.php?page=' . self::PAGE_CONNECT ) ),
 			esc_html__( 'Reconnect', 'kukie-cookie-consent' )
 		);
 	}
@@ -417,11 +558,12 @@ class Kukie_Admin {
 		$key_url  = 'https://app.kukie.io/sites/' . rawurlencode( (string) $site_id );
 
 		printf(
-			'<div class="notice notice-error"><p><strong>%s</strong> %s <a href="%s" target="_blank" rel="noopener noreferrer">%s &rarr;</a></p></div>',
-			esc_html__( 'Kukie:', 'kukie-cookie-consent' ),
-			esc_html__( 'The stored API key is no longer valid, so the dashboard connection is broken - stats, scans and settings sync are paused. The cookie banner itself keeps working on your site.', 'kukie-cookie-consent' ),
+			'<div class="notice notice-error"><p><strong>%s</strong> %s <a href="%s" target="_blank" rel="noopener noreferrer">%s%s</a></p></div>',
+			esc_html__( 'Kukie.io:', 'kukie-cookie-consent' ),
+			esc_html__( 'The API key is no longer valid, so stats, scans and settings sync are paused. Your consent banner keeps working.', 'kukie-cookie-consent' ),
 			esc_url( $key_url ),
-			esc_html__( 'Generate a new API key', 'kukie-cookie-consent' )
+			esc_html__( 'Generate a new API key', 'kukie-cookie-consent' ),
+			self::new_tab_marker() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper
 		);
 	}
 
@@ -530,16 +672,17 @@ class Kukie_Admin {
 			. '<strong>%s</strong> %s'
 			. '</p><ul class="kukie-notice-list">%s</ul>'
 			. '<p><a href="%s" class="button button-small">%s</a> '
-			. '<a href="%s" target="_blank" rel="noopener noreferrer" class="kukie-notice-link">%s</a>'
+			. '<a href="%s" target="_blank" rel="noopener noreferrer" class="kukie-notice-link">%s%s</a>'
 			. '<button type="button" class="button-link kukie-dismiss-btn">%s</button>'
 			. '</p></div>',
-			esc_html__( 'Kukie.io - WP Rocket detected:', 'kukie-cookie-consent' ),
-			esc_html__( 'Your cookie banner may not load correctly. Add cdn.kukie.io to the exclusion list in these WP Rocket settings:', 'kukie-cookie-consent' ),
-			$issue_list,
+			esc_html__( 'Kukie.io and WP Rocket:', 'kukie-cookie-consent' ),
+			esc_html__( 'WP Rocket might delay or change the banner script. To keep the banner loading correctly, add cdn.kukie.io to these WP Rocket settings:', 'kukie-cookie-consent' ),
+			$issue_list, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- every item escaped above
 			esc_url( $rocket_settings_url ),
-			esc_html__( 'Open WP Rocket Settings', 'kukie-cookie-consent' ),
+			esc_html__( 'Open WP Rocket settings', 'kukie-cookie-consent' ),
 			esc_url( $help_url ),
-			esc_html__( 'Learn more', 'kukie-cookie-consent' ),
+			esc_html__( 'Learn more about WP Rocket and Kukie.io', 'kukie-cookie-consent' ),
+			self::new_tab_marker(), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper
 			esc_html__( 'Dismiss', 'kukie-cookie-consent' )
 		);
 	}
@@ -586,6 +729,13 @@ class Kukie_Admin {
 		require KUKIE_PLUGIN_DIR . 'templates/admin-accessibility.php';
 	}
 
+	/**
+	 * @since 1.9.0
+	 */
+	public function render_uptime_page(): void {
+		require KUKIE_PLUGIN_DIR . 'templates/admin-uptime.php';
+	}
+
 	public function render_settings_page(): void {
 		require KUKIE_PLUGIN_DIR . 'templates/admin-settings.php';
 	}
@@ -598,7 +748,7 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$api_key = isset( $_POST['api_key'] )
@@ -606,21 +756,21 @@ class Kukie_Admin {
 			: '';
 
 		if ( strlen( $api_key ) !== 64 ) {
-			wp_send_json_error( [ 'message' => __( 'Invalid API key format. The key should be 64 characters.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => __( 'Paste the 64-character API key from your site on Kukie.io.', 'kukie-cookie-consent' ) ] );
 		}
 
 		$client   = new Kukie_Api_Client( $api_key );
 		$response = $client->post( '/connect' );
 
 		if ( ! $response['success'] ) {
-			wp_send_json_error( [ 'message' => $response['error'] ?? __( 'Could not connect. Please check your API key.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => $response['error'] ?? __( "Couldn't connect to Kukie.io. Check the API key and try again.", 'kukie-cookie-consent' ) ] );
 		}
 
 		$data = $response['data'];
 
 		$encrypted_key = Kukie_Encryption::encrypt( $api_key );
 		if ( $encrypted_key === '' ) {
-			wp_send_json_error( [ 'message' => __( 'Could not securely store the API key on this server. Please contact your host about OpenSSL support.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => __( "Couldn't store the API key securely on this server. Ask your host to turn on OpenSSL for PHP.", 'kukie-cookie-consent' ) ] );
 		}
 
 		// Preserve a deliberate manual/body placement across a SAME-SITE
@@ -663,7 +813,7 @@ class Kukie_Admin {
 		delete_transient( 'kukie_settings_cache' );
 
 		wp_send_json_success( [
-			'message'      => __( 'Connected successfully!', 'kukie-cookie-consent' ),
+			'message'      => __( 'Connected to Kukie.io', 'kukie-cookie-consent' ),
 			'organisation' => sanitize_text_field( $data['organisation'] ?? '' ),
 			'plan'         => sanitize_text_field( $data['plan']['name'] ?? '' ),
 			'domain'       => sanitize_text_field( $data['domain'] ?? '' ),
@@ -675,7 +825,7 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$client = $this->plugin->get_api_client();
@@ -688,7 +838,7 @@ class Kukie_Admin {
 		delete_transient( 'kukie_settings_cache' );
 
 		wp_send_json_success( [
-			'message'  => __( 'Disconnected from Kukie.io.', 'kukie-cookie-consent' ),
+			'message'  => __( 'Disconnected from Kukie.io', 'kukie-cookie-consent' ),
 			'redirect' => admin_url( 'admin.php?page=kukie-connect' ),
 		] );
 	}
@@ -697,7 +847,7 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		// is_array, not !== false: a corrupted/scalar payload in the transient
@@ -709,7 +859,7 @@ class Kukie_Admin {
 
 		$client = $this->plugin->get_api_client();
 		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
 		}
 
 		$response = $client->get( '/status' );
@@ -741,7 +891,7 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		// fresh=1 bypasses the 10-minute settings cache. The Accessibility
@@ -765,7 +915,7 @@ class Kukie_Admin {
 
 		$client = $this->plugin->get_api_client();
 		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
 		}
 
 		$response = $client->get( '/settings' );
@@ -815,7 +965,7 @@ class Kukie_Admin {
 	 * callers do any local mirroring, then finish with send_settings_saved().
 	 *
 	 * @since 1.7.0
-	 * @return array{0: Kukie_Api_Client, 1: ?int} The client and the config_version that was sent.
+	 * @return array{0: Kukie_Api_Client, 1: ?int, 2: ?array} The client, the config_version that was sent and the PUT's response body.
 	 */
 	private function put_settings_or_die( array $api_data ): array {
 		$config_version = $this->posted_config_version();
@@ -825,7 +975,7 @@ class Kukie_Admin {
 
 		$client = $this->plugin->get_api_client();
 		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
 		}
 
 		$response = $client->put( '/settings', $api_data );
@@ -834,7 +984,7 @@ class Kukie_Admin {
 			$this->send_put_settings_error( $response );
 		}
 
-		return [ $client, $config_version ];
+		return [ $client, $config_version, is_array( $response['data'] ) ? $response['data'] : null ];
 	}
 
 	/**
@@ -848,31 +998,46 @@ class Kukie_Admin {
 	private function send_put_settings_error( array $response ): void {
 		// A plan-gated write (accessibility widget on a plan without it) is a
 		// structured 403 the page turns into an upgrade CTA instead of a
-		// bare error toast. Nothing was persisted server-side.
-		if ( $response['status'] === 403 && is_array( $response['data'] ) && ( $response['data']['code'] ?? '' ) === 'plan_upgrade_required' ) {
-			delete_transient( 'kukie_settings_cache' );
-
-			$upgrade_url = esc_url_raw( (string) ( $response['data']['upgrade_url'] ?? '' ) );
-
-			wp_send_json_error( [
-				'message'       => $response['error'] ?? __( 'The accessibility widget is not included in your plan.', 'kukie-cookie-consent' ),
-				'code'          => 'plan_upgrade_required',
-				'required_plan' => sanitize_text_field( (string) ( $response['data']['required_plan'] ?? '' ) ),
-				'upgrade_url'   => $upgrade_url !== '' ? $upgrade_url : 'https://app.kukie.io/billing',
-			] );
-		}
+		// bare error. Nothing was persisted server-side.
+		$this->send_plan_gate_error( $response );
 
 		if ( $response['status'] === 409 ) {
 			delete_transient( 'kukie_settings_cache' );
 
 			wp_send_json_error( [
-				'message'         => $response['error'] ?? __( 'Settings were modified elsewhere since this page was loaded.', 'kukie-cookie-consent' ),
+				'message'         => $response['error'] ?? __( 'These settings were changed elsewhere after this page was loaded.', 'kukie-cookie-consent' ),
 				'code'            => 'version_conflict',
 				'current_version' => absint( $response['data']['current_version'] ?? 0 ),
 			] );
 		}
 
 		wp_send_json_error( [ 'message' => $response['error'] ] );
+	}
+
+	/**
+	 * Forward a plan-gated 403 (`code: plan_upgrade_required`) as the
+	 * structured error the Accessibility widget and Uptime monitoring pages
+	 * render as an upgrade call to action. Returns without sending for any
+	 * other response, so callers fall through to their own error handling.
+	 *
+	 * @since 1.9.0 (extracted from send_put_settings_error())
+	 */
+	private function send_plan_gate_error( array $response ): void {
+		if ( $response['status'] !== 403 || ! is_array( $response['data'] ) || ( $response['data']['code'] ?? '' ) !== 'plan_upgrade_required' ) {
+			return;
+		}
+
+		delete_transient( 'kukie_settings_cache' );
+
+		$upgrade_url = esc_url_raw( (string) ( $response['data']['upgrade_url'] ?? '' ) );
+
+		wp_send_json_error( [
+			'message'       => $response['error'] ?? __( 'This feature is not included in your plan.', 'kukie-cookie-consent' ),
+			'code'          => 'plan_upgrade_required',
+			'feature'       => sanitize_key( (string) ( $response['data']['feature'] ?? '' ) ),
+			'required_plan' => sanitize_text_field( (string) ( $response['data']['required_plan'] ?? '' ) ),
+			'upgrade_url'   => $upgrade_url !== '' && str_starts_with( $upgrade_url, 'https://' ) ? $upgrade_url : 'https://app.kukie.io/billing',
+		] );
 	}
 
 	/**
@@ -883,7 +1048,7 @@ class Kukie_Admin {
 	 *
 	 * @since 1.7.0
 	 */
-	private function send_settings_saved( Kukie_Api_Client $client, string $message, ?int $sent_version = null ): void {
+	private function send_settings_saved( Kukie_Api_Client $client, string $message, ?int $sent_version = null, ?array $put_data = null ): void {
 		// Update config version for cache-busting (forces browser to fetch a
 		// fresh CDN bundle) - but only into an install still connected after
 		// the PUT round trip (a concurrent disconnect must stay
@@ -898,6 +1063,16 @@ class Kukie_Admin {
 		delete_transient( 'kukie_settings_cache' );
 
 		$payload = [ 'message' => $message ];
+
+		// Since the 1 October 2026 service update the PUT itself answers with
+		// the version it produced, which saves the follow-up GET round trip
+		// on every save. The settings cache stays dropped (above), so the
+		// next page load reads fresh values; the admin-bar mirror follows
+		// the local commit the caller already made and the next /status.
+		if ( is_array( $put_data ) && isset( $put_data['config_version'] ) && is_numeric( $put_data['config_version'] ) ) {
+			$payload['config_version'] = (int) $put_data['config_version'];
+			wp_send_json_success( $payload );
+		}
 
 		$refresh = $client->get( '/settings' );
 		if ( $refresh['success'] && isset( $refresh['data']['config_version'] ) ) {
@@ -1023,7 +1198,7 @@ class Kukie_Admin {
 	private function allowed_force_languages(): array {
 		return [
 			'auto',
-			'en', 'de', 'fr', 'es', 'it', 'pt', 'pt-br', 'nl',
+			'en', 'de', 'fr', 'es', 'es-mx', 'es-ar', 'it', 'pt', 'pt-br', 'nl',
 			'pl', 'ru', 'tr', 'ja', 'zh-cn', 'zh-tw', 'ar', 'bg',
 			'cs', 'da', 'el', 'fi', 'he', 'hu', 'id', 'ko',
 			'no', 'ro', 'sk', 'sv', 'th', 'uk', 'vi',
@@ -1050,7 +1225,7 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$api_data = [];
@@ -1096,7 +1271,7 @@ class Kukie_Admin {
 				: [];
 		}
 
-		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
 		// Commit local-only fields and mirror the server state only AFTER the
 		// PUT succeeded, so a failed or 409-cancelled save leaves local state
@@ -1110,14 +1285,14 @@ class Kukie_Admin {
 			$this->plugin->update_options( $local );
 		}
 
-		$this->send_settings_saved( $client, __( 'Settings saved.', 'kukie-cookie-consent' ), $config_version );
+		$this->send_settings_saved( $client, __( 'Settings saved', 'kukie-cookie-consent' ), $config_version, $put_data );
 	}
 
 	public function ajax_save_gcm(): void {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$api_data = [
@@ -1130,32 +1305,32 @@ class Kukie_Admin {
 			$api_data['auto_block_scripts'] = rest_sanitize_boolean( $_POST['auto_block_scripts'] );
 		}
 
-		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
-		$this->send_settings_saved( $client, __( 'Google Consent Mode settings saved.', 'kukie-cookie-consent' ), $config_version );
+		$this->send_settings_saved( $client, __( 'Google Consent Mode settings saved', 'kukie-cookie-consent' ), $config_version, $put_data );
 	}
 
 	public function ajax_save_uet(): void {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$api_data = [
 			'ms_uet_enabled' => rest_sanitize_boolean( $_POST['ms_uet_enabled'] ?? false ),
 		];
 
-		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
-		$this->send_settings_saved( $client, __( 'Microsoft UET settings saved.', 'kukie-cookie-consent' ), $config_version );
+		$this->send_settings_saved( $client, __( 'Microsoft UET settings saved', 'kukie-cookie-consent' ), $config_version, $put_data );
 	}
 
 	public function ajax_save_banner_design(): void {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$layout = sanitize_text_field( wp_unslash( $_POST['layout'] ?? 'popup' ) );
@@ -1193,7 +1368,7 @@ class Kukie_Admin {
 			'position'   => $rb_position,
 			'style'      => $rb_style,
 			'icon'       => $rb_icon,
-			'text'       => sanitize_text_field( $rb_raw['text'] ?? 'Cookie Settings' ),
+			'text'       => sanitize_text_field( $rb_raw['text'] ?? 'Cookie settings' ),
 			'color'      => $this->sanitize_banner_color( $rb_raw['color'] ?? '' ),
 			'icon_color' => $this->sanitize_banner_color( $rb_raw['icon_color'] ?? '' ),
 			'offset_x'   => max( 0, min( 200, absint( $rb_raw['offset_x'] ?? 20 ) ) ),
@@ -1206,9 +1381,9 @@ class Kukie_Admin {
 			'revisit_button' => $revisit_button,
 		];
 
-		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
-		$this->send_settings_saved( $client, __( 'Banner design saved.', 'kukie-cookie-consent' ), $config_version );
+		$this->send_settings_saved( $client, __( 'Banner design saved. Your site shows it within a few minutes.', 'kukie-cookie-consent' ), $config_version, $put_data );
 	}
 
 	/**
@@ -1241,7 +1416,7 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$patterns = [];
@@ -1268,9 +1443,9 @@ class Kukie_Admin {
 			'disabled_pages'     => $patterns,
 		];
 
-		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
-		$this->send_settings_saved( $client, __( 'Behaviour settings saved.', 'kukie-cookie-consent' ), $config_version );
+		$this->send_settings_saved( $client, __( 'Behaviour settings saved', 'kukie-cookie-consent' ), $config_version, $put_data );
 	}
 
 	/**
@@ -1284,7 +1459,7 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$api_data = [
@@ -1292,9 +1467,9 @@ class Kukie_Admin {
 			'blocked_iframe_services' => $this->sanitize_a11y_tokens( $_POST['blocked_iframe_services'] ?? [] ),
 		];
 
-		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
-		$this->send_settings_saved( $client, __( 'iFrame blocking settings saved.', 'kukie-cookie-consent' ), $config_version );
+		$this->send_settings_saved( $client, __( 'iFrame blocking settings saved', 'kukie-cookie-consent' ), $config_version, $put_data );
 	}
 
 	/**
@@ -1315,7 +1490,7 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$position = sanitize_text_field( wp_unslash( $_POST['position'] ?? 'bottom-right' ) );
@@ -1351,9 +1526,9 @@ class Kukie_Admin {
 			],
 		];
 
-		[ $client, $config_version ] = $this->put_settings_or_die( $api_data );
+		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
-		$this->send_settings_saved( $client, __( 'Accessibility widget settings saved.', 'kukie-cookie-consent' ), $config_version );
+		$this->send_settings_saved( $client, __( 'Accessibility widget settings saved. Your site shows them within a few minutes.', 'kukie-cookie-consent' ), $config_version, $put_data );
 	}
 
 	/**
@@ -1408,12 +1583,12 @@ class Kukie_Admin {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$client = $this->plugin->get_api_client();
 		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
 		}
 
 		$response = $client->post( '/scan' );
@@ -1422,24 +1597,67 @@ class Kukie_Admin {
 			// A 429 can mean scan-already-running, queue full, or rate limit -
 			// the server sends a distinct error message for each, so show it
 			// instead of assuming which case it was.
-			wp_send_json_error( [ 'message' => $response['error'] ?? __( 'Could not start scan.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => $response['error'] ?? __( "Couldn't start the scan. Try again.", 'kukie-cookie-consent' ) ] );
 		}
 
 		delete_transient( 'kukie_dashboard_data' );
 
-		wp_send_json_success( [ 'message' => __( 'Cookie scan started!', 'kukie-cookie-consent' ) ] );
+		wp_send_json_success( [ 'message' => __( 'Scan started. The results appear here when it finishes.', 'kukie-cookie-consent' ) ] );
+	}
+
+	/**
+	 * Live progress of the latest scan (GET /scan-status), polled by the
+	 * dashboard every few seconds while a scan is pending or running. It is
+	 * deliberately NOT cached: the dashboard's /status payload sits in a
+	 * 5-minute transient, which froze a running scan's counters for up to
+	 * five minutes (KUK-QA-2026-458). When the poll sees the scan finish it
+	 * drops that transient, so the next /status read carries the result.
+	 *
+	 * @since 1.9.0
+	 */
+	public function ajax_scan_status(): void {
+		check_ajax_referer( 'kukie_admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
+		}
+
+		$client = $this->plugin->get_api_client();
+		if ( ! $client ) {
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
+		}
+
+		$response = $client->get( '/scan-status' );
+
+		if ( ! $response['success'] || ! is_array( $response['data'] ) ) {
+			wp_send_json_error( [ 'message' => $response['error'] ?? __( "Couldn't load the dashboard. Try again in a minute.", 'kukie-cookie-consent' ) ] );
+		}
+
+		$data = $response['data'];
+		if ( ! in_array( $data['status'] ?? '', [ 'pending', 'running' ], true ) ) {
+			delete_transient( 'kukie_dashboard_data' );
+		}
+
+		wp_send_json_success( [
+			'status'        => sanitize_key( (string) ( $data['status'] ?? '' ) ),
+			'pages_scanned' => absint( $data['pages_scanned'] ?? 0 ),
+			'total_pages'   => absint( $data['total_pages'] ?? 0 ),
+			'cookies_found' => absint( $data['cookies_found'] ?? 0 ),
+			'created_at'    => sanitize_text_field( (string) ( $data['created_at'] ?? '' ) ),
+			'completed_at'  => sanitize_text_field( (string) ( $data['completed_at'] ?? '' ) ),
+		] );
 	}
 
 	public function ajax_verify(): void {
 		check_ajax_referer( 'kukie_admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised.', 'kukie-cookie-consent' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
 		}
 
 		$client = $this->plugin->get_api_client();
 		if ( ! $client ) {
-			wp_send_json_error( [ 'message' => __( 'Not connected.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
 		}
 
 		// The server verify loop probes up to 3 URLs at connectTimeout 5s +
@@ -1449,9 +1667,114 @@ class Kukie_Admin {
 		$response = $client->post( '/verify', null, 60 );
 
 		if ( ! $response['success'] ) {
-			wp_send_json_error( [ 'message' => $response['error'] ?? __( 'Verification failed.', 'kukie-cookie-consent' ) ] );
+			wp_send_json_error( [ 'message' => $response['error'] ?? __( "Couldn't find the banner script on your site.", 'kukie-cookie-consent' ) ] );
 		}
 
 		wp_send_json_success( $response['data'] );
+	}
+
+	// ─────────────────────────────────────────
+	// UPTIME MONITORING (1.9.0)
+	// ─────────────────────────────────────────
+
+	/**
+	 * Load the Uptime monitoring page: GET /uptime, never cached. The plan
+	 * gate, the monitor's state and its basic settings all live on Kukie.io
+	 * and nothing is stored in WordPress, so the page can never disagree
+	 * with the Kukie.io dashboard and an upgrade unlocks it at once.
+	 *
+	 * @since 1.9.0
+	 */
+	public function ajax_get_uptime(): void {
+		check_ajax_referer( 'kukie_admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
+		}
+
+		$client = $this->plugin->get_api_client();
+		if ( ! $client ) {
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
+		}
+
+		$response = $client->get( '/uptime' );
+
+		if ( ! $response['success'] || ! is_array( $response['data'] ) ) {
+			// A 404 means the Kukie.io service predates the endpoint.
+			wp_send_json_error( [
+				'message' => $response['status'] === 404
+					? __( "Couldn't load uptime monitoring from Kukie.io. Try again in a few minutes.", 'kukie-cookie-consent' )
+					: ( $response['error'] ?? __( "Couldn't load uptime monitoring from Kukie.io. Try again in a few minutes.", 'kukie-cookie-consent' ) ),
+			] );
+		}
+
+		wp_send_json_success( $response['data'] );
+	}
+
+	/**
+	 * Save the BASIC uptime settings: on/off, the page to check, the check
+	 * interval, the owner's alert emails and the monthly report. PRESENCE-
+	 * BASED like ajax_save_settings(): only the posted fields are sent, and
+	 * the server writes only those, so the extra recipients and the webhook
+	 * (managed on the Kukie.io dashboard only) are never touched from here.
+	 *
+	 * Values are coerced to what the server accepts before the PUT; the
+	 * server re-validates (domain, port, plan cadence) and its 422 message
+	 * reaches the page verbatim. A plan without the feature answers with the
+	 * structured 403 that becomes the upgrade call to action. Nothing is
+	 * mirrored locally.
+	 *
+	 * @since 1.9.0
+	 */
+	public function ajax_save_uptime(): void {
+		check_ajax_referer( 'kukie_admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
+		}
+
+		$body = [];
+
+		foreach ( [ 'enabled', 'notify_email', 'report_enabled' ] as $flag ) {
+			if ( isset( $_POST[ $flag ] ) ) {
+				$body[ $flag ] = rest_sanitize_boolean( wp_unslash( $_POST[ $flag ] ) );
+			}
+		}
+
+		if ( isset( $_POST['url'] ) ) {
+			$url = esc_url_raw( trim( sanitize_text_field( wp_unslash( $_POST['url'] ) ) ), [ 'http', 'https' ] );
+			if ( $url === '' ) {
+				wp_send_json_error( [ 'message' => __( 'Enter a full web address that starts with https:// or http://.', 'kukie-cookie-consent' ) ] );
+			}
+			$body['url'] = $url;
+		}
+
+		if ( isset( $_POST['check_interval_seconds'] ) ) {
+			$raw      = sanitize_text_field( wp_unslash( $_POST['check_interval_seconds'] ) );
+			$interval = absint( $raw );
+			// '' = the plan's own cadence (stored as null server-side).
+			if ( $raw === '' ) {
+				$body['check_interval_seconds'] = null;
+			} elseif ( in_array( $interval, self::UPTIME_INTERVALS, true ) ) {
+				$body['check_interval_seconds'] = $interval;
+			}
+		}
+
+		$client = $this->plugin->get_api_client();
+		if ( ! $client ) {
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
+		}
+
+		$response = $client->put( '/uptime', $body );
+
+		if ( ! $response['success'] ) {
+			$this->send_plan_gate_error( $response );
+			wp_send_json_error( [ 'message' => $response['error'] ?? __( "Couldn't save the settings. Try again.", 'kukie-cookie-consent' ) ] );
+		}
+
+		wp_send_json_success( [
+			'message' => __( 'Uptime monitoring settings saved', 'kukie-cookie-consent' ),
+			'uptime'  => is_array( $response['data'] ) ? $response['data'] : null,
+		] );
 	}
 }

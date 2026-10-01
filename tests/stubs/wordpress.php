@@ -434,8 +434,20 @@ function esc_url( string $url ): string {
 	return $url;
 }
 
-function esc_url_raw( string $url ): string {
+function esc_url_raw( string $url, ?array $protocols = null ): string {
+	// Enough of core's behaviour for the handlers: a URL whose scheme is not
+	// in the allowed list becomes ''.
+	if ( $protocols !== null ) {
+		$scheme = strtolower( (string) parse_url( $url, PHP_URL_SCHEME ) );
+		if ( ! in_array( $scheme, $protocols, true ) ) {
+			return '';
+		}
+	}
 	return $url;
+}
+
+function get_user_locale(): string {
+	return $GLOBALS['kukie_test_locale'] ?? 'en_US';
 }
 
 function wp_kses( string $content, array $allowed ): string {

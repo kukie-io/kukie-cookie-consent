@@ -1,0 +1,16 @@
+{
+    "entitled": {
+        "available": true,
+        "offered": true,
+        "enabled": true,
+        "status": "up",
+        "last_checked_at": "2026-10-01T06:40:06+00:00"
+    },
+    "locked": {
+        "available": false,
+        "offered": true,
+        "enabled": false,
+        "status": null,
+        "last_checked_at": null
+    }
+}

@@ -1,0 +1,128 @@
+{
+    "available": true,
+    "offered": true,
+    "required_plan": null,
+    "upgrade_url": "http://app.kukie.local/billing",
+    "dashboard_url": "http://app.kukie.local/sites/1/uptime",
+    "plan_rows": [
+        {
+            "name": "Agency",
+            "interval_seconds": 180,
+            "retention_days": 30
+        },
+        {
+            "name": "Unlimited",
+            "interval_seconds": 60,
+            "retention_days": 365
+        }
+    ],
+    "plan": {
+        "interval_seconds": 180,
+        "retention_days": 30
+    },
+    "settings": {
+        "enabled": true,
+        "url": "https://obshti-uslovia.com",
+        "check_interval_seconds": null,
+        "notify_email": true,
+        "report_enabled": false,
+        "alert_emails_count": 1,
+        "webhook_enabled": false,
+        "allowed_hosts": [
+            "obshti-uslovia.com",
+            "www.obshti-uslovia.com"
+        ]
+    },
+    "interval": {
+        "stored": null,
+        "effective": 180,
+        "effective_label": "every 3 minutes",
+        "plan_seconds": 180,
+        "plan_label": "every 3 minutes",
+        "options": [
+            {
+                "seconds": 60,
+                "label": "1 minute",
+                "plan_name": "Unlimited",
+                "available": false
+            },
+            {
+                "seconds": 180,
+                "label": "3 minutes",
+                "plan_name": null,
+                "available": true
+            },
+            {
+                "seconds": 300,
+                "label": "5 minutes",
+                "plan_name": null,
+                "available": true
+            },
+            {
+                "seconds": 900,
+                "label": "15 minutes",
+                "plan_name": null,
+                "available": true
+            },
+            {
+                "seconds": 1800,
+                "label": "30 minutes",
+                "plan_name": null,
+                "available": true
+            },
+            {
+                "seconds": 3600,
+                "label": "60 minutes",
+                "plan_name": null,
+                "available": true
+            }
+        ],
+        "billing_url": "/billing"
+    },
+    "monitor": {
+        "status": "up",
+        "status_changed_at": "2026-09-30T06:45:06+00:00",
+        "monitoring_since": "2026-08-02T06:45:06+00:00",
+        "last_checked_at": "2026-10-01T06:40:06+00:00",
+        "next_check_at": "2026-10-01T06:44:06+00:00",
+        "last_status_code": null,
+        "last_response_ms": 312,
+        "last_error": null,
+        "paused_reason": null,
+        "ssl": {
+            "expires_at": "2026-11-10T06:45:06+00:00",
+            "days_left": 40,
+            "issuer": "Let's Encrypt"
+        }
+    },
+    "stats": {
+        "uptime_24h": 100,
+        "uptime_7d": 99.93,
+        "uptime_30d": 99.83,
+        "avg_response_24h_ms": null,
+        "incidents_30d": 2
+    },
+    "incidents": [
+        {
+            "started_at": "2026-09-29T06:45:06+00:00",
+            "resolved_at": "2026-09-29T06:52:06+00:00",
+            "duration_seconds": 420,
+            "cause": "http",
+            "status_code": 503,
+            "ongoing": false
+        },
+        {
+            "started_at": "2026-09-22T06:45:06+00:00",
+            "resolved_at": "2026-09-22T07:50:06+00:00",
+            "duration_seconds": 3900,
+            "cause": "timeout",
+            "status_code": null,
+            "ongoing": false
+        }
+    ],
+    "checker": {
+        "ipv4": "46.62.206.36",
+        "ipv6": "2a01:4f9:c014:ea58::1",
+        "user_agent": "Kukie-Uptime/1.0 (+https://kukie.io/docs/uptime-monitoring)"
+    }
+}

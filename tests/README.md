@@ -36,6 +36,7 @@ harness is scoped to it rather than to line coverage.
 | `LegacyPageRedirectTest` (1.8.0) | the pre-1.8.0 page slugs redirect to their Consent banner tab; the tab selector is whitelisted | feature lock, no finding |
 | `ConnectionMirrorTest` (1.8.0) | /status refreshes the stored plan name, organisation and domain; never into a disconnected install | feature lock, no finding |
 | `SettingsSaveTest` (1.8.0 additions) | the shared settings handler is presence-based: a Settings-page save never touches language fields, a Language-tab save never touches banner_enabled or placement | feature lock, no finding |
+| `UptimeSaveTest` (1.9.0) | the Uptime save is presence-based, coerces every value, can never post recipients or the webhook, refuses a non-http(s) URL locally, mirrors nothing, turns the plan gate into the structured upgrade error; the page load is never cached; `/scan-status` drops the dashboard cache when a scan finishes; a settings save uses the PUT's config_version and makes one request | feature lock + KUK-QA-2026-458 |
 
 `SettingsSaveTest` and `ApiKeyTrustTest` additionally cover the 1.7.2
 concurrent-disconnect hardening: a response landing after another request
@@ -43,8 +44,8 @@ disconnected must never re-create the deleted option.
 
 ## Headless browser check (tests/e2e, since 1.8.0)
 
-`node tests/e2e/run.mjs` renders the Accessibility widget, Dashboard and
-Settings templates with the WordPress stubs, loads them in headless Chromium
+`node tests/e2e/run.mjs` renders the Accessibility widget, Dashboard,
+Settings and (since 1.9.0) Uptime monitoring templates with the WordPress stubs, loads them in headless Chromium
 (Playwright from the Laravel repo's `node_modules`, override with
 `KUKIE_PLAYWRIGHT`; PHP binary via `KUKIE_PHP`) with the real `admin.css` +
 `admin.js`, and answers `admin-ajax.php` from `tests/e2e/fixtures/` - genuine

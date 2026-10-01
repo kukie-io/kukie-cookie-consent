@@ -1,266 +1,286 @@
-=== Kukie - Cookie Banner and Consent Management (GDPR, CCPA, DSVGO, CNIL, PIPEDA) ===
+=== Kukie - Cookie Banner and Consent Management (GDPR, CCPA, DSGVO, CNIL, PIPEDA) ===
 Contributors: kukieio, filesubmit
 Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.8.2
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Free cookie consent plugin for WordPress. GDPR, CCPA & ePrivacy compliance with Google Consent Mode v2, cookie scanning and 70+ languages.
+Cookie consent banner for WordPress: hold back trackers until visitors choose, record every choice, Google Consent Mode v2 and 70+ languages.
 
 == Description ==
 
-Kukie.io is a cookie consent management platform that helps websites comply with GDPR (DSGVO), CCPA/CPRA, ePrivacy, UK GDPR, LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa), CNIL (France), TDDDG (Germany, formerly the TTDSG) and other global privacy regulations.
+Kukie.io is a cookie consent platform. This plugin connects your WordPress site to your Kukie.io account and adds a consent banner that holds back non-essential scripts until a visitor chooses, and keeps a record of every choice.
 
-The plugin connects your WordPress site to your Kukie.io account, displaying a fully customisable cookie consent banner that blocks non-essential scripts until consent is given.
+Region rules let you match the banner to the rules that apply to each visitor: opt-in for visitors covered by the GDPR (DSGVO), the UK GDPR and the ePrivacy Directive, opt-out with a "Do Not Sell or Share My Personal Information" link for California (CCPA/CPRA), and settings for LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa), the French CNIL guidance and the German TDDDG.
 
 = Features =
 
-All features below are included in the **free plan** unless marked otherwise.
+Everything below is on the **free plan** unless it names a plan.
 
-**Consent Management**
+**Consent management**
 
-* Cookie Consent Banner: Show banner with Accept/Reject options for GDPR and CCPA cookie consent.
-* Automatic Cookie Blocking: Block non-essential cookies until users give explicit consent.
-* Preference Centre: Let users manage cookie preferences by category (necessary, analytics, marketing, functional).
-* Per-Service Consent: Toggle consent for individual services (Google Analytics, Meta Pixel, Hotjar, etc.) directly in the banner UI.
-* Revisit Consent Button: Floating button for updating consent choices anytime. 4 positions, 3 styles, 4 icons.
-* CCPA/CPRA Opt-Out: "Do Not Sell or Share My Personal Information" support for California residents.
-* Consent Logging: Record user consent with full audit trail. CSV export for compliance audits.
-* Consent Verification API: Verify consent status programmatically for compliance proof.
-* CNIL-Compliant Button Styling: Accept and Reject buttons rendered with equal visual prominence in opt-in regions, eliminating dark patterns.
-* Google Consent Mode v2: Automatic consent signalling to Google Analytics, Google Ads, and Google Tag Manager. No manual tag configuration needed.
-* Google Tag Manager: Container ID support for GTM integration.
-* Microsoft UET Consent Mode: Consent signals for Microsoft advertising tags.
-* Global Privacy Control (GPC): Automatic detection and respect of browser GPC signals.
-* Do Not Track (DNT): Honour DNT browser header settings.
-* GDPR-Compliant Data Storage: All data stored in EU-based servers.
+* Consent banner: Accept all, Reject all and Manage preferences. In opt-in regions, Accept all and Reject all have the same fill, size and weight unless you set your own button colours.
+* Script blocking: known trackers such as Google Analytics and the Meta Pixel wait until the visitor agrees. Blocking a script that other code has already inserted is best effort, so tag the scripts you must be certain about with data-cc-category.
+* Preferences by category (Essential, Functional, Analytics, Marketing) and, if you want, by service.
+* Revisit button so visitors can change their choice at any time: 4 positions, 3 styles, 6 icons.
+* California opt-out: the "Do Not Sell or Share My Personal Information" link.
+* Consent records: every choice is recorded with a receipt you can verify, and you can export the records as CSV.
+* Google Consent Mode v2: once you switch it on, the banner passes each choice to Google Analytics, Google Ads and Google Tag Manager.
+* Google Tag Manager and Microsoft UET Consent Mode.
+* Global Privacy Control and Do Not Track: optionally treat these browser signals as a rejection.
+* Consent records are stored on servers in the EU.
 
-**Cookie Scanner**
+**Cookie scanner**
 
-* Automatic Scanning: Automated browser scanner detects every cookie on your site.
-* Auto-Categorisation: a continuously updated database of thousands of known cookies across 13 pre-configured services.
-* Full Detection: Detects cookies, localStorage, and sessionStorage.
-* Scheduled Scans: Weekly or monthly automated scans (Pro plan and above).
-* New Cookie Alerts: Get notified when new cookies are detected on your site.
-* Scan History: Track changes between scans.
+* A real browser visits your pages and lists every cookie, plus localStorage and sessionStorage.
+* Cookies are sorted into categories from a database of thousands of known cookies.
+* Scheduled scans (Pro plan and above), alerts for new cookies, and scan history.
 
-**Banner Customisation**
+**Banner design**
 
-* Layout Options: 4 layouts - popup, bottom bar, top bar, and floating.
-* Full Colour Theming: Background, text, and button colours to match your brand.
-* Custom CSS: Advanced design customisation with CSS injection (Pro plan and above).
-* Custom Banner Logo: Add your brand logo to the consent banner (Pro plan and above).
-* Remove Branding: Remove "Powered by Kukie" for a white-label experience (Agency plan and above).
+* 4 layouts: pop-up, bottom bar, top bar and floating.
+* Your own background, text and button colours.
+* Custom CSS and a banner logo (Pro plan and above).
+* Remove the "Powered by Kukie.io" line (Agency plan and above).
 
-**Multilingual and Accessibility**
+**Languages and accessibility**
 
-* Auto-Translation: Banner translates to 70+ languages based on visitor browser settings.
-* RTL Support: Full right-to-left language support (Arabic, Hebrew, etc.).
-* Accessibility: Banner UI follows WCAG 2.1 AA guidelines.
-* Accessibility Widget: an optional floating button that opens a panel of reading, contrast and navigation aids for your visitors - bigger text, text spacing, dyslexia-friendly font, high contrast, hide images, pause animations, read aloud, one-tap profiles and more. Delivered inside the same banner script, so there is nothing extra to install; the panel is available in 70+ languages and is configured from the plugin's Accessibility widget page or the Kukie.io dashboard. Available on selected plans. It helps visitors, but does not by itself make a website compliant with any accessibility law.
+* The banner appears in the visitor's language, with 70+ languages and right-to-left support for Arabic, Hebrew and others.
+* The banner works with a keyboard and screen readers, and its buttons and switches are sized for touch.
+* Accessibility widget: an optional floating button that opens a panel of reading, contrast and navigation aids for visitors, such as bigger text, text spacing, a dyslexia-friendly font, high contrast, read aloud and one-tap profiles. It runs inside the same banner script, so there is nothing extra to install, and you set it up on the plugin's Accessibility widget page or on Kukie.io. A plan feature: the page shows which plan includes it. The widget helps visitors, but it does not on its own make a website meet any accessibility law.
 
-**Geo-Detection and Region Rules**
+**Uptime monitoring**
 
-* IP-Based Detection: Automatic visitor region detection via Cloudflare and MaxMind GeoLite2.
-* Per-Region Consent Models: Configure opt-in, opt-out, notice-only, or hidden mode per country.
-* Sub-Region Rules: Granular rules for TDDDG (Germany), CNIL (France), per-state CCPA, Quebec Law 25.
-* Cookie Wall: Optional cookie wall for specific regions.
+* Kukie.io checks your homepage around the clock and emails you when it stops responding, and again when it is back, with the cause in plain words.
+* Two failed checks in a row are needed before an alert, and a failed check is always repeated one minute later.
+* Warnings before your SSL certificate expires, and an optional monthly uptime report.
+* Turn it on, choose the page and the check interval on the plugin's Uptime monitoring page. A plan feature: the page shows which plan includes it.
+* Checks run no JavaScript, so they never count as visits in Google Analytics or similar tools.
 
-**Legal Policy Tools**
+**Region rules**
 
-* Cookie Policy Generator: Step-by-step wizard with smart defaults, auto-filled from scan data.
-* Privacy Policy Generator: GDPR, CCPA, and UK GDPR compliant.
-* Terms of Service Generator: Complete terms generation.
-* Multiple Formats: Publish as public URLs, embed via iFrame, or copy as raw HTML.
+* Visitor region from Cloudflare and MaxMind GeoLite2.
+* Opt-in, opt-out, notice-only or no banner per country or region.
+* Sub-region rules, for example for Germany (TDDDG), France (CNIL), individual US states and Quebec (Law 25).
+* An optional cookie wall for chosen regions.
 
-**Analytics Dashboard**
+**Legal documents**
 
-* Consent Rate Trends: Daily, weekly, and monthly consent rate tracking.
-* Category Breakdown: Per-category acceptance rates (analytics, marketing, functional).
-* Geographic Insights: Country-level consent data breakdown.
-* CSV Export: Export consent logs and analytics for compliance audits.
-* Consent Reports: Detailed compliance reports (Agency plan and above).
+* Cookie policy, privacy policy and terms of service generators that start from your scan results.
+* Publish them as a public page, embed them in an iFrame, or copy the HTML.
+* The generated text is a starting point for your own policies, not legal advice.
+
+**Analytics**
+
+* Consent rates by day, week and month, by category and by country.
+* CSV export of consent records and analytics.
+* Consent reports (Agency plan and above).
 
 **Script Centre**
 
-* Third-Party Script Management: Manage scripts per service with consent-aware loading.
-* iFrame Blocking: Block YouTube, Google Maps, and social embeds until consent. Styled placeholders with thumbnails.
-* 13 Built-In Detectors: Auto-detect scripts from Google Analytics, Meta Pixel, Hotjar, and more.
-* 4 DOM Positions: Inject scripts at head start, head end, body start, or body end.
+* Manage third-party scripts per service, so each loads only with consent.
+* iFrame blocking: YouTube, Google Maps, social embeds and other services wait for consent behind a styled placeholder.
+* Built-in detectors for Google Analytics, the Meta Pixel, Hotjar and more.
+* Place scripts at the start or end of the head or the body.
 
 **Security**
 
-* Two-Factor Authentication (2FA): Secure your Kukie.io account.
-* API Rate Limiting: Protection against abuse.
-* IP and User-Agent Hashing: GDPR data minimisation for consent logs.
-* Team Roles: Owner, admin, and editor roles for team management.
+* Two-factor authentication for your Kukie.io account.
+* Rate limits on the API.
+* Visitor IP addresses and user agents are hashed in consent records.
+* Team roles: Owner, Admin and Editor.
 
-= What's Included Free vs Paid =
+= What's included on each plan =
 
-The free plan includes: cookie consent banner, 4 layouts, Google Consent Mode v2, GTM, Microsoft UET, 70+ languages, cookie scanner (100 pages), consent logging, geo-detection, analytics dashboard, legal document generators, iFrame blocking, Script Centre, and 12 months consent retention.
+The free plan includes the consent banner, 4 layouts, Google Consent Mode v2, Google Tag Manager, Microsoft UET Consent Mode, 70+ languages, the cookie scanner (100 pages per scan), consent records kept for 12 months, region rules, analytics, the legal document generators, iFrame blocking and the Script Centre, for up to 5 sites.
 
 Paid plans add:
 
-* **Pro** (from 9 EUR/mo): Scheduled scans, custom CSS, custom banner logo, 20 sites, 500 pages per scan, 3 team members, 24 months consent retention.
-* **Agency** (from 19 EUR/mo): Everything in Pro plus consent reports, remove branding, 100 sites, 3,000 pages per scan, 10 team members.
-* **Unlimited** (from 89 EUR/mo): Everything in Agency plus unlimited sites, pages, and team members, 36 months consent retention.
+* **Pro** (from €9 per month): scheduled scans, custom CSS, a banner logo, 20 sites, 500 pages per scan, 3 team members and consent records kept for 24 months.
+* **Agency** (from €19 per month): everything in Pro, plus consent reports, removing the Kukie.io branding, 100 sites, 3,000 pages per scan and 10 team members.
+* **Unlimited** (from €89 per month): everything in Agency, plus unlimited sites, pages and team members, and consent records kept for 36 months.
 
-The accessibility widget is a plan feature - the plugin page shows which plan includes it. All paid plans include a 14-day free trial. [Compare all plans](https://kukie.io/pricing).
+The accessibility widget and uptime monitoring are plan features; their pages in the plugin show which plan includes them. Every paid plan has a 14-day free trial. [Compare all plans](https://kukie.io/pricing).
 
-= Useful Links =
+= Useful links =
 
-* [Kukie.io Website](https://kukie.io)
-* [WordPress Plugin Page](https://kukie.io/wordpress)
-* [Features Overview](https://kukie.io/features)
+* [Kukie.io website](https://kukie.io)
+* [WordPress plugin page](https://kukie.io/wordpress)
+* [Features](https://kukie.io/features)
 * [Help Centre](https://kukie.io/docs)
-* [WordPress Plugin Documentation](https://kukie.io/docs/wordpress-plugin)
+* [WordPress plugin documentation](https://kukie.io/docs/wordpress-plugin)
 * [Blog](https://kukie.io/blog)
 * [Facebook](https://www.facebook.com/Kukie.io)
 * [X (Twitter)](https://x.com/kukie_io)
 * [LinkedIn](https://www.linkedin.com/company/kukie-io/)
 
-= External Service =
+= External service =
 
-This plugin relies on [Kukie.io](https://kukie.io), a third-party cookie consent management service (SaaS), to provide its core functionality.
+This plugin relies on [Kukie.io](https://kukie.io), a third-party cookie consent service, for its core features.
 
-By installing and configuring this plugin with your API key, you consent to connecting to the Kukie.io service.
+By installing the plugin and connecting it with your API key, you agree to connect to the Kukie.io service.
 
 **What is loaded:**
 
-* A cookie consent banner script from `https://cdn.kukie.io` (served over HTTPS)
-* The script contains your banner configuration (colours, text, cookie categories)
+* A consent banner script from `https://cdn.kukie.io` (over HTTPS).
+* The script contains your banner configuration (colours, texts, cookie categories).
 
-**What is transmitted:**
+**What is sent:**
 
-* Your site key (to identify your banner configuration)
-* No personal visitor data is collected by the plugin itself
+* Your site key, so the banner loads your configuration.
+* From the plugin's admin pages: your API key and the settings you save, to `https://app.kukie.io`.
+* The plugin itself collects no personal data about your visitors.
 
 **When:**
 
-* The banner script loads on every public page of your website
-* Admin pages connect to `https://app.kukie.io` for banner configuration
+* The banner script loads on every public page of your website.
+* The plugin's admin pages connect to `https://app.kukie.io` to read and save your settings, statistics and uptime monitoring.
 
 **Service links:**
 
-* [Kukie.io Website](https://kukie.io)
+* [Kukie.io website](https://kukie.io)
 * [Terms of Service](https://kukie.io/terms-of-service)
 * [Privacy Policy](https://kukie.io/privacy-policy)
 
-NOTE: INSTALLING THIS PLUGIN ALONE DOES NOT MAKE YOUR SITE FULLY COMPLIANT WITH GDPR, CCPA OR OTHER PRIVACY REGULATIONS. COMPLIANCE DEPENDS ON CORRECT CONFIGURATION AND MAY REQUIRE ADDITIONAL LEGAL MEASURES SPECIFIC TO YOUR ORGANISATION.
+NOTE: INSTALLING THIS PLUGIN DOES NOT ON ITS OWN MAKE YOUR SITE MEET THE GDPR, THE CCPA OR ANY OTHER PRIVACY LAW. THAT DEPENDS ON HOW YOU SET IT UP AND MAY NEED FURTHER MEASURES SPECIFIC TO YOUR ORGANISATION.
 
 == Multilingual Support ==
 
-Kukie works out of the box with WPML and Polylang. When a visitor views a translated page, the cookie consent banner automatically displays in the matching language - no additional configuration needed.
+Kukie.io works with WPML and Polylang. When a visitor views a translated page, the consent banner appears in the matching language, with nothing more to set up.
 
-Supported language sources (in priority order):
+Language sources, in priority order:
 
-1. Manual override from plugin settings ("Banner language" dropdown)
-2. WPML current language
-3. Polylang current language
-4. WordPress site locale
+1. The "Banner language" setting in the plugin (Consent banner > Language)
+2. The WPML language of the page
+3. The Polylang language of the page
+4. The WordPress site language
 
-Banner translations (titles, descriptions, buttons, cookie categories) are managed in the Kukie dashboard at https://app.kukie.io, where 70+ banner languages are available. The plugin's own admin interface ships with built-in translations for 11 languages.
+Regional languages that Kukie.io ships as their own translation keep their region: Brazilian Portuguese, Mexican and Argentinian Spanish, and Simplified and Traditional Chinese.
+
+Banner texts and their translations (titles, descriptions, buttons, cookie categories) are managed on https://app.kukie.io, where 70+ banner languages are available. The plugin's own admin pages are translated into 11 languages.
 
 == Installation ==
 
-1. In your WordPress dashboard, go to **Plugins > Add New**
-2. Search for **"Kukie"**
-3. Click **Install Now** then **Activate**
-4. Go to **Kukie** in the admin sidebar
-5. Enter your API key from the [Kukie.io dashboard](https://app.kukie.io)
-6. Your cookie consent banner is now active
+1. In your WordPress dashboard, go to **Plugins > Add New**.
+2. Search for **Kukie**.
+3. Select **Install Now**, then **Activate**.
+4. Go to **Kukie.io** in the admin menu.
+5. Paste the API key from your site on [app.kukie.io](https://app.kukie.io).
+6. Your consent banner is live.
 
-The plugin adds four admin pages under **Kukie**: **Dashboard** (status, consent counts, scans), **Consent banner** (Design, Behaviour, iFrame blocking, Language, Google Consent Mode v2, Microsoft UET and Regions tabs), **Accessibility widget** and **Settings** (script position, hide for administrators, connection).
+The plugin adds five admin pages under **Kukie.io**: **Dashboard** (banner status, consent counts, scans), **Consent banner** (Design, Behaviour, iFrame blocking, Language, Google Consent Mode v2, Microsoft UET and Regions tabs), **Accessibility widget**, **Uptime monitoring** and **Settings** (script position, hide for administrators, connection).
 
-Alternatively, download the plugin from [WordPress.org](https://wordpress.org/plugins/kukie-cookie-consent/) and upload the ZIP file via **Plugins > Add New > Upload Plugin**.
+You can also download the plugin from [WordPress.org](https://wordpress.org/plugins/kukie-cookie-consent/) and upload the ZIP file in **Plugins > Add New > Upload Plugin**.
 
-For detailed setup instructions, visit the [WordPress plugin documentation](https://kukie.io/docs/wordpress-plugin/install-wordpress-plugin).
+For step-by-step instructions, see the [WordPress plugin documentation](https://kukie.io/docs/wordpress-plugin/install-wordpress-plugin).
 
 == Frequently Asked Questions ==
 
 = What is GDPR cookie consent? =
 
-GDPR cookie consent is the legal requirement to obtain consent before setting cookies on a user's browser. The General Data Protection Regulation requires organisations that process data of EU residents to get prior consent before setting any cookies (except strictly necessary cookies).
+Under the GDPR and the ePrivacy Directive, a website generally needs a visitor's consent before it sets cookies that are not strictly necessary, such as analytics and advertising cookies. A consent banner asks for that choice and records it.
 
-= What is CCPA compliance? =
+= What is the CCPA? =
 
-The California Consumer Privacy Act (CCPA) and its amendment CPRA give California residents the right to opt out of the sale or sharing of their personal information. Websites must provide a clear "Do Not Sell or Share My Personal Information" option.
+The California Consumer Privacy Act (CCPA), as amended by the CPRA, gives California residents the right to opt out of the sale or sharing of their personal information. Websites covered by it show a "Do Not Sell or Share My Personal Information" link.
 
 = Is the plugin free? =
 
-Yes. The plugin is free and always will be. It connects to your Kukie.io account where you can use the free plan (unlimited pageviews, up to 5 sites) or upgrade for advanced features like scheduled scans, custom CSS, and consent reports.
+Yes. The plugin is free. It connects to your Kukie.io account, where you can stay on the free plan (up to 5 sites) or upgrade for scheduled scans, custom CSS, consent reports and more.
 
 = Do I need a Kukie.io account? =
 
-Yes. The plugin connects to the Kukie.io platform where your banner configuration, cookie scans, and consent logs are managed. [Sign up](https://app.kukie.io/register) takes 30 seconds - no credit card required.
+Yes. Your banner configuration, cookie scans and consent records live in your Kukie.io account. [Creating an account](https://app.kukie.io/register) is free and needs no credit card.
 
 = Where do I find my API key? =
 
-Log in to [app.kukie.io](https://app.kukie.io), select your site, go to Settings, and generate or copy the API key.
+Sign in to [app.kukie.io](https://app.kukie.io), open your site, then Site Settings, then API key. Only an owner or admin of the organisation can generate one.
 
 = Does it support Google Consent Mode v2? =
 
-Yes. Google Consent Mode v2 is built in and activates automatically. It signals consent state to Google Analytics, Google Ads, and Google Tag Manager without any manual tag configuration.
+Yes. Switch it on in **Consent banner > Google Consent Mode v2**, and the banner passes each visitor's choice to Google Analytics, Google Ads and Google Tag Manager, with no tag changes needed.
 
 = Does the plugin block cookies before consent? =
 
-Yes. The banner script manages cookie blocking automatically. Non-essential scripts and cookies are blocked until the visitor gives explicit consent for each category.
+With **Auto-block scripts** on (**Consent banner > Behaviour**), the banner holds back known trackers until the visitor agrees, together with any script you tag with type="text/plain" and data-cc-category. iFrame blocking does the same for embedded videos, maps and widgets. A browser cannot cancel a script that other code has already run, so tag the scripts you must be certain about.
 
-= Is the plugin compatible with caching plugins? =
+= Does it work with caching plugins? =
 
-Yes. The banner script loads from our CDN (cdn.kukie.io) with per-site configuration embedded, so it works with all WordPress caching plugins including WP Super Cache, W3 Total Cache, WP Rocket, and LiteSpeed Cache.
+Yes. The banner script loads from cdn.kukie.io with your configuration built in, so cached pages show the current banner. The plugin also keeps the script out of the minify, combine, defer and delay settings of WP Rocket, Autoptimize, WP Fastest Cache, LiteSpeed Cache, W3 Total Cache and SiteGround Optimizer.
 
-= What privacy regulations does it support? =
+= Which privacy laws does it work with? =
 
-GDPR (EU and UK), CCPA/CPRA (California), ePrivacy Directive, LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa), CNIL (France), TDDDG (Germany), and more. Region-specific consent models are applied automatically via geo-detection.
+Region rules let you set the consent model per country or region: opt-in for the GDPR (EU and UK) and the ePrivacy Directive, opt-out for the CCPA/CPRA, and rules for the LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa), the CNIL guidance (France), the TDDDG (Germany) and others. The visitor's region decides which rule applies.
 
-= Does Kukie support multilingual websites? =
+= Does it work on multilingual websites? =
 
-Yes. The banner auto-translates to 70+ languages based on the visitor's browser settings. Full RTL (right-to-left) support is included for Arabic, Hebrew, and other RTL languages.
+Yes. The banner appears in the visitor's language, with 70+ languages and right-to-left support for Arabic, Hebrew and others. With WPML or Polylang, it follows the language of the page.
 
 = Will it slow down my site? =
 
-No. The banner script is under 30KB gzipped and loads asynchronously from our global CDN, so it does not block page rendering or hurt your Core Web Vitals scores. The optional accessibility widget adds about 15KB gzipped, and only for sites that switch it on.
+The banner script is under 35KB gzipped and loads asynchronously from a CDN, so it does not block the page from rendering. The optional accessibility widget adds about 15KB gzipped, and only on sites that switch it on.
 
 = Does the plugin include an accessibility widget? =
 
-Yes, as a plan feature. The Accessibility widget page in the plugin lets you switch on a floating button that opens a panel of reading, contrast and navigation aids for visitors (bigger text, dyslexia-friendly font, high contrast, read aloud, one-tap profiles and more). It ships inside the same banner script - no second embed or plugin - makes no third-party requests, and its panel is available in 70+ languages. On plans without it the page shows what the widget does and which plan includes it. Please note: the widget helps visitors with reading and navigation, but no widget on its own makes a website compliant with the European Accessibility Act, WCAG, the ADA or any other accessibility law - that still depends on your content, your theme and your own testing.
+Yes, as a plan feature. On the plugin's Accessibility widget page you can switch on a floating button that opens a panel of reading, contrast and navigation aids for visitors (bigger text, a dyslexia-friendly font, high contrast, read aloud, one-tap profiles and more). It runs inside the same banner script, makes no third-party requests, and its panel is available in 70+ languages. On plans without it, the page shows what the widget does and which plan includes it. The widget helps visitors read and navigate, but no widget on its own makes a website meet the European Accessibility Act, WCAG, the ADA or any other accessibility law: that still depends on your content, your theme and your own testing.
+
+= How does uptime monitoring work? =
+
+On plans that include it, the plugin's Uptime monitoring page lets you turn monitoring on, choose the page to check and how often it is checked. Kukie.io then checks the page around the clock, emails the organisation owner when it goes down and again when it is back, warns before the SSL certificate expires, and can send a monthly report. Extra alert recipients and the webhook are managed on Kukie.io. If a firewall or security plugin such as Wordfence blocks the checker, the page lists the addresses and user agent to allow.
+
+= Will uptime checks show up in my analytics? =
+
+No, not in Google Analytics or other tag-based tools: a check is a plain page request that runs no JavaScript. Server-log statistics count it, and can filter it out by its user agent.
 
 = Can I customise the banner design? =
 
-Yes. Choose from 4 layouts, set your brand colours, customise all text, and add custom CSS. All customisation is done through the [Kukie.io dashboard](https://app.kukie.io) with real-time preview.
+Yes. Choose from 4 layouts and set your colours and texts; on the Pro plan and above you can add a logo and custom CSS. The layout and the revisit button can be set from the plugin, everything else on [Kukie.io](https://app.kukie.io) with a live preview.
 
-= Can I export consent logs for GDPR compliance? =
+= Can I export consent records? =
 
-Yes. All consent events are logged with timestamps, consent choices, and anonymised visitor identifiers. Export to CSV from the Kukie.io dashboard for compliance audits.
+Yes. Every choice is recorded with a timestamp, the categories chosen and hashed visitor details. Export the records as CSV from Kukie.io, for example for an audit.
 
-= Do I still need a privacy policy if I use Kukie? =
+= Do I still need a privacy policy? =
 
-Yes. A cookie consent banner is only one part of privacy compliance. You also need a Privacy Policy and Cookie Policy. Kukie.io includes generators for both on all plans, including the free plan.
+Yes. A consent banner is one part of privacy work: you also need a privacy policy and a cookie policy. Kukie.io includes generators for both on every plan, including the free plan.
 
 = Can I hide the banner for administrators? =
 
-Yes. Turn on **Hide for administrators** on the plugin's Settings page. The banner is then not loaded for logged-in administrators, which keeps front-end page builders such as Bricks or Elementor working after cookies were rejected. Visitors still see the banner. Developers can widen or narrow the rule (for example to editors who use the builder) with the `kukie_hide_banner_for_user` filter.
+Yes. Turn on **Hide for administrators** on the plugin's Settings page. Logged-in administrators then do not get the banner, which keeps front-end page builders such as Bricks or Elementor working after cookies were rejected. Visitors still see the banner. Developers can widen or narrow the rule (for example to editors who use the builder) with the `kukie_hide_banner_for_user` filter.
 
-= Is Kukie suitable for agencies managing multiple sites? =
+= Does Kukie.io suit agencies with many sites? =
 
-Yes. Kukie.io supports multi-site management with team roles (owner, admin, editor). The free plan supports up to 5 sites, and paid plans support up to 100 or unlimited.
+Yes. You can manage many sites with team roles (Owner, Admin, Editor). The free plan covers up to 5 sites, Pro 20, Agency 100 and Unlimited has no limit.
 
 == Screenshots ==
 
-1. Plugin dashboard - connection status, site key, and quick access to Kukie.io settings
-2. Banner design settings - choose layout, position, and preview on desktop, tablet, and mobile
-3. Google Consent Mode v2 and Google Tag Manager integration settings
-4. Language and auto-translation configuration with 70+ supported languages
-5. Cookie consent banner live on a WordPress site - popup layout with Accept, Reject, and Preferences
-6. Cookie scanning results - auto-categorised cookies by type (necessary, analytics, marketing, functional)
-7. Consent analytics dashboard - acceptance rates, trends, and geographic breakdown
-8. Revisit consent button settings - position, style, icon, and colour customisation
+1. Plugin dashboard: connection status, site key and quick access to Kukie.io settings
+2. Banner design settings: layout, position and a preview
+3. Google Consent Mode v2 and Google Tag Manager settings
+4. Language and auto-translation settings with 70+ languages
+5. The consent banner on a WordPress site: pop-up layout with Accept all, Reject all and Manage preferences
+6. Cookie scan results: cookies sorted by category (Essential, Functional, Analytics, Marketing)
+7. Consent analytics on Kukie.io: acceptance rates, trends and countries
+8. Revisit button settings: position, style, icon and colour
 
 == Changelog ==
+
+= 1.9.0 =
+* Added: Uptime monitoring page. On plans that include it, turn monitoring on, choose the page to check and the check interval, and switch the owner's alert emails and the monthly report on or off. The page shows whether the site is up, uptime for the last 24 hours, 7 days and 30 days, the average response time, the SSL certificate's expiry date, recent incidents, and the checker's addresses to allow in a firewall or security plugin. On other plans it shows what the feature does and which plan includes it. Needs the Kukie.io service update of 1 October 2026.
+* Added: an Uptime monitoring card on the dashboard.
+* Added: a running cookie scan now shows its progress on the dashboard ("Scanning page 12 of 40") instead of figures up to five minutes old.
+* Added: Mexican and Argentinian Spanish sites (WPML, Polylang or the WordPress language) now get the matching banner translation, and both can be chosen as the banner language.
+* Changed: every admin page was reworded: sentence-case labels, plainer descriptions, and error messages that say what to do next. Settings pages use "Save changes".
+* Changed: errors stay on the page as a notice instead of disappearing after a few seconds. Disconnecting and the "changed elsewhere" warning now open an accessible dialog instead of the browser's confirmation box.
+* Changed: dates, numbers and times follow your WordPress language.
+* Changed: the dashboard's consent counts are labelled "Last 7 days" and "Last 30 days", which is what they always counted.
+* Fixed: keyboard focus on buttons, checkbox chips and layout options showed a blue fill with white text and no outline. Focus is now a clear outline again.
+* Fixed: better contrast for status badges, the success message, switches in the off position and input placeholders. The admin bar indicator now says whether the banner is on or off, not only by its colour.
+* Improved: saving settings needs one request to Kukie.io instead of two. The dashboard stops refreshing while its browser tab is hidden.
+* Changed: corrected this listing: the banner script size (under 35KB gzipped), Google Consent Mode v2 (it signals once switched on), the blocking description, the plan details, the typo in the title, and claims that read as legal promises.
 
 = 1.8.2 =
 * Added: "Hide for administrators" on the Settings page. When on, the banner is not loaded for logged-in administrators, so front-end page builders such as Bricks or Elementor keep working after cookies were rejected. Visitors still see the banner. Off by default. Developers can widen or narrow the rule with the kukie_hide_banner_for_user filter.

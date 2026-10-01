@@ -41,10 +41,19 @@ final class BlindSaveGuardTest extends Kukie_Test_Case {
 		// The guard lives in kukieSaveSettings(). A page calling kukieAjax()
 		// directly with a save action would bypass it entirely, which is what
 		// makes this the structural half of the fix rather than a detail.
+		// The one exception (1.9.0): Uptime monitoring is not banner config -
+		// it has no config_version to lock on, so it cannot use the wrapper.
+		// It carries its own load guard instead (asserted below), which is
+		// the property that matters: no save before a successful load.
 		$this->assertDoesNotMatchRegularExpression(
-			"/kukieAjax\(\s*'kukie_save_/",
+			"/kukieAjax\(\s*'kukie_save_(?!uptime')/",
 			$js,
 			'A save action reaching kukieAjax() directly skips the blind-save and conflict handling.'
+		);
+		$this->assertMatchesRegularExpression(
+			'/if\s*\(\s*uptimeState\s*===\s*null\s*\)\s*\{[^}]*return;\s*\}[\s\S]*kukieAjax\(\s*\'kukie_save_uptime\'/',
+			$js,
+			'The uptime save must refuse to post before a successful load.'
 		);
 
 		// [a-z0-9_]: kukie_save_a11y carries digits (the pre-1.8.0 class

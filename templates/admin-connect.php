@@ -14,25 +14,24 @@ $kukie_plugin = Kukie_Plugin::instance();
 		</div>
 
 		<p class="kukie-connect-description">
-			<?php esc_html_e( 'Connect your WordPress site to Kukie.io for automatic cookie consent management, GDPR/CCPA compliance, and consent analytics.', 'kukie-cookie-consent' ); ?>
+			<?php esc_html_e( 'Connect this site to Kukie.io to show a consent banner, hold back trackers until visitors choose, and keep a record of every choice.', 'kukie-cookie-consent' ); ?>
 		</p>
 
 		<!-- Connect Form -->
 		<div id="kukie-connect-form">
 			<div class="kukie-form-group kukie-form-group--left">
-				<label for="kukie-api-key"><?php esc_html_e( 'API Key', 'kukie-cookie-consent' ); ?></label>
+				<label for="kukie-api-key"><?php esc_html_e( 'API key', 'kukie-cookie-consent' ); ?></label>
 				<div class="kukie-input-with-toggle">
 					<input
 						type="password"
 						id="kukie-api-key"
 						class="kukie-input"
-						placeholder="<?php esc_attr_e( 'Paste your 64-character API key', 'kukie-cookie-consent' ); ?>"
 						maxlength="64"
 						autocomplete="off"
 						spellcheck="false"
 						aria-describedby="kukie-api-key-hint"
 					/>
-					<button type="button" id="kukie-toggle-key" class="kukie-btn-icon" aria-label="<?php esc_attr_e( 'Show/hide API key', 'kukie-cookie-consent' ); ?>" aria-pressed="false">
+					<button type="button" id="kukie-toggle-key" class="kukie-btn-icon" aria-label="<?php esc_attr_e( 'Show API key', 'kukie-cookie-consent' ); ?>" aria-pressed="false">
 						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
 					</button>
 				</div>
@@ -40,7 +39,7 @@ $kukie_plugin = Kukie_Plugin::instance();
 					<?php
 					printf(
 						/* translators: %s: link to Kukie.io dashboard */
-						esc_html__( 'Find your API key in %s under your site settings.', 'kukie-cookie-consent' ),
+						esc_html__( 'The 64-character key from your site on %s: open the site, then Site Settings, then API key.', 'kukie-cookie-consent' ),
 						'<a href="https://app.kukie.io" target="_blank" rel="noopener noreferrer">app.kukie.io' . Kukie_Admin::new_tab_marker() . '</a>'
 					);
 					?>
@@ -53,7 +52,7 @@ $kukie_plugin = Kukie_Plugin::instance();
 				<span class="kukie-btn-text"><?php esc_html_e( 'Connect to Kukie.io', 'kukie-cookie-consent' ); ?></span>
 				<span class="kukie-btn-loading" hidden>
 					<span class="kukie-spinner" aria-hidden="true"></span>
-					<?php esc_html_e( 'Connecting...', 'kukie-cookie-consent' ); ?>
+					<?php esc_html_e( 'Connecting…', 'kukie-cookie-consent' ); ?>
 				</span>
 			</button>
 		</div>
@@ -63,7 +62,7 @@ $kukie_plugin = Kukie_Plugin::instance();
 			<div class="kukie-success-icon" aria-hidden="true">
 				<span class="dashicons dashicons-yes-alt"></span>
 			</div>
-			<h2><?php esc_html_e( 'Connected!', 'kukie-cookie-consent' ); ?></h2>
+			<h2><?php esc_html_e( 'Connected to Kukie.io', 'kukie-cookie-consent' ); ?></h2>
 			<div class="kukie-connect-details">
 				<div class="kukie-detail-row">
 					<span class="kukie-detail-label"><?php esc_html_e( 'Organisation', 'kukie-cookie-consent' ); ?></span>
@@ -79,7 +78,7 @@ $kukie_plugin = Kukie_Plugin::instance();
 				</div>
 			</div>
 			<a id="kukie-go-dashboard" href="<?php echo esc_url( admin_url( 'admin.php?page=' . Kukie_Admin::PAGE_DASHBOARD ) ); ?>" class="kukie-btn-primary kukie-btn-full">
-				<?php esc_html_e( 'Go to Dashboard', 'kukie-cookie-consent' ); ?>
+				<?php esc_html_e( 'Open the dashboard', 'kukie-cookie-consent' ); ?>
 			</a>
 		</div>
 
@@ -87,8 +86,8 @@ $kukie_plugin = Kukie_Plugin::instance();
 			<?php
 			printf(
 				/* translators: %s: link to Kukie.io registration */
-				esc_html__( "Don't have an account? %s", 'kukie-cookie-consent' ),
-				'<a href="https://app.kukie.io/register" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Sign up free at kukie.io', 'kukie-cookie-consent' ) . Kukie_Admin::new_tab_marker() . '</a>'
+				esc_html__( 'No Kukie.io account yet? %s', 'kukie-cookie-consent' ),
+				'<a href="https://app.kukie.io/register" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Create a free account', 'kukie-cookie-consent' ) . Kukie_Admin::new_tab_marker() . '</a>'
 			);
 			?>
 		</p>

@@ -1,0 +1,30 @@
+{
+    "available": false,
+    "offered": true,
+    "required_plan": "Agency",
+    "upgrade_url": "http://app.kukie.local/billing",
+    "dashboard_url": "http://app.kukie.local/sites/2/uptime",
+    "plan_rows": [
+        {
+            "name": "Agency",
+            "interval_seconds": 180,
+            "retention_days": 30
+        },
+        {
+            "name": "Unlimited",
+            "interval_seconds": 60,
+            "retention_days": 365
+        }
+    ],
+    "plan": null,
+    "settings": null,
+    "interval": null,
+    "monitor": null,
+    "stats": null,
+    "incidents": [],
+    "checker": {
+        "ipv4": "46.62.206.36",
+        "ipv6": "2a01:4f9:c014:ea58::1",
+        "user_agent": "Kukie-Uptime/1.0 (+https://kukie.io/docs/uptime-monitoring)"
+    }
+}
