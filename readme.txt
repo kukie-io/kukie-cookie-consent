@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, ccpa, wpml, polylang
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.9.0
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ Everything below is on the **free plan** unless it names a plan.
 * Revisit button so visitors can change their choice at any time: 4 positions, 3 styles, 6 icons.
 * California opt-out: the "Do Not Sell or Share My Personal Information" link.
 * Consent records: every choice is recorded with a receipt you can verify, and you can export the records as CSV.
-* Google Consent Mode v2: once you switch it on, the banner passes each choice to Google Analytics, Google Ads and Google Tag Manager.
+* Google Consent Mode v2: once you switch it on, the banner passes each choice to Google Analytics, Google Ads and Google Tag Manager. The plugin shows the banner text Google recommends for Consent Mode and applies it to every language of your banner with one button.
 * Google Tag Manager and Microsoft UET Consent Mode.
 * Global Privacy Control and Do Not Track: optionally treat these browser signals as a rejection.
 * Consent records are stored on servers in the EU.
@@ -204,6 +204,8 @@ Sign in to [app.kukie.io](https://app.kukie.io), open your site, then Site Setti
 
 Yes. Switch it on in **Consent banner > Google Consent Mode v2**, and the banner passes each visitor's choice to Google Analytics, Google Ads and Google Tag Manager, with no tag changes needed.
 
+The same tab shows what Google's EU user consent policy asks a banner to say: that data is collected for ads personalisation, a link to Google's privacy page, and a clear Accept all button. **Apply Google's banner text** puts Google's text in every language of your banner and turns on Accept all, Reject all and Manage preferences. Before a visitor chooses, Google tags start with consent denied, and while the banner is on screen no consent update is sent until the visitor makes a choice.
+
 = Does the plugin block cookies before consent? =
 
 With **Auto-block scripts** on (**Consent banner > Behaviour**), the banner holds back known trackers until the visitor agrees, together with any script you tag with type="text/plain" and data-cc-category. iFrame blocking does the same for embedded videos, maps and widgets. A browser cannot cancel a script that other code has already run, so tag the scripts you must be certain about.
@@ -222,7 +224,7 @@ Yes. The banner appears in the visitor's language, with 70+ languages and right-
 
 = Will it slow down my site? =
 
-The banner script is under 35KB gzipped and loads asynchronously from a CDN, so it does not block the page from rendering. The optional accessibility widget adds about 15KB gzipped, and only on sites that switch it on.
+The banner script is under 40KB gzipped and loads asynchronously from a CDN, so it does not block the page from rendering. The optional accessibility widget adds about 15KB gzipped, and only on sites that switch it on.
 
 = Does the plugin include an accessibility widget? =
 
@@ -260,7 +262,7 @@ Yes. You can manage many sites with team roles (Owner, Admin, Editor). The free 
 
 1. Plugin dashboard: connection status, site key and quick access to Kukie.io settings
 2. Banner design settings: layout, position and a preview
-3. Google Consent Mode v2 and Google Tag Manager settings
+3. Google Consent Mode v2 settings, with Google's banner text
 4. Language and auto-translation settings with 70+ languages
 5. The consent banner on a WordPress site: pop-up layout with Accept all, Reject all and Manage preferences
 6. Cookie scan results: cookies sorted by category (Essential, Functional, Analytics, Marketing)
@@ -268,6 +270,12 @@ Yes. You can manage many sites with team roles (Owner, Admin, Editor). The free 
 8. Revisit button settings: position, style, icon and colour
 
 == Changelog ==
+
+= 1.10.0 =
+* Added: Google's banner text on the Google Consent Mode v2 tab. While Consent Mode is on, the tab lists what Google's EU user consent policy asks a banner to say, with a button that applies Google's text to every language of your banner and turns on Accept all, Reject all and Manage preferences, the same as the banner editor on Kukie.io. Once it is applied, the tab tells you when a language or a region no longer has all of it. Needs the Kukie.io service update of October 2026.
+* Changed: the tab now describes the default consent state the banner sends since October 2026. Google tags start with consent denied, regions whose rules allow cookies until a choice get a granted default, and no consent update is sent while the banner is on screen until the visitor chooses. It links to the debug mode guide and to Google's own guide.
+* Unchanged, now documented: the WP Consent API integration reports the consent type opt-in in every region, so plugins that read it wait for the visitor's choice.
+* Changed: corrected the banner script size in this listing (under 40KB gzipped).
 
 = 1.9.0 =
 * Added: Uptime monitoring page. On plans that include it, turn monitoring on, choose the page to check and the check interval, and switch the owner's alert emails and the monthly report on or off. The page shows whether the site is up, uptime for the last 24 hours, 7 days and 30 days, the average response time, the SSL certificate's expiry date, recent incidents, and the checker's addresses to allow in a firewall or security plugin. On other plans it shows what the feature does and which plan includes it. Needs the Kukie.io service update of 1 October 2026.

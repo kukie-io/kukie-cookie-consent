@@ -93,6 +93,40 @@
 	justify-content: center;
 }
 
+/* Google's banner text card (1.10.0): the three asks, the state notice and
+   the apply button keep the card's 13px rhythm. */
+.kukie-gtpl-asks {
+	color: #334155;
+	font-size: 13px;
+	line-height: 1.5;
+	margin-bottom: 16px;
+}
+
+#kukie-gtpl-card .notice.kukie-notice {
+	margin: 0 0 16px;
+}
+
+#kukie-gtpl-actions {
+	margin-bottom: 16px;
+}
+
+/* A short list of related links, one per line. */
+.kukie-link-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.kukie-link-list li {
+	margin: 0 0 6px;
+}
+
+.kukie-link-list li:last-child {
+	margin-bottom: 0;
+}
+
 /* Feature list (intro card) */
 .kukie-feature-list {
 	margin: 0 0 16px;

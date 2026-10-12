@@ -3,7 +3,7 @@
  * Plugin Name:       Kukie - Cookie Banner and Consent Management (GDPR, CCPA, DSGVO, CNIL, PIPEDA)
  * Plugin URI:        https://kukie.io/wordpress
  * Description:       Connects your WordPress site to Kukie.io: a consent banner that holds back trackers until visitors choose, consent records, cookie scans and uptime monitoring. Requires a Kukie.io account.
- * Version:           1.9.0
+ * Version:           1.10.0
  * Requires at least: 6.7
  * Requires PHP:      8.1
  * Tested up to:      7.1
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KUKIE_VERSION', '1.9.0' );
+define( 'KUKIE_VERSION', '1.10.0' );
 define( 'KUKIE_PLUGIN_FILE', __FILE__ );
 define( 'KUKIE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'KUKIE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

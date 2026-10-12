@@ -77,6 +77,7 @@ class Kukie_Admin {
 		add_action( 'wp_ajax_kukie_get_settings', [ $this, 'ajax_get_settings' ] );
 		add_action( 'wp_ajax_kukie_save_settings', [ $this, 'ajax_save_settings' ] );
 		add_action( 'wp_ajax_kukie_save_gcm', [ $this, 'ajax_save_gcm' ] );
+		add_action( 'wp_ajax_kukie_apply_google_template', [ $this, 'ajax_apply_google_template' ] );
 		add_action( 'wp_ajax_kukie_save_uet', [ $this, 'ajax_save_uet' ] );
 		add_action( 'wp_ajax_kukie_save_banner_design', [ $this, 'ajax_save_banner_design' ] );
 		add_action( 'wp_ajax_kukie_save_a11y', [ $this, 'ajax_save_a11y' ] );
@@ -462,6 +463,23 @@ class Kukie_Admin {
 			'overlayFollow'     => __( "Same as the banner (currently %s)", 'kukie-cookie-consent' ),
 			'onLower'           => __( 'on', 'kukie-cookie-consent' ),
 			'offLower'          => __( 'off', 'kukie-cookie-consent' ),
+			// Google's banner text on the Consent Mode tab (1.10.0)
+			'gtplApply'         => __( "Apply Google's banner text", 'kukie-cookie-consent' ),
+			'gtplReapply'       => __( "Re-apply Google's banner text", 'kukie-cookie-consent' ),
+			'gtplConfirmTitle'  => __( "Apply Google's banner text?", 'kukie-cookie-consent' ),
+			'gtplConfirmBody'   => __( "This replaces the banner description in every language with Google's text. It also turns on Google Consent Mode v2, Accept all, Reject all and Manage preferences.", 'kukie-cookie-consent' ),
+			'gtplConfirm'       => __( 'Apply text', 'kukie-cookie-consent' ),
+			'gtplFailed'        => __( "Couldn't apply Google's banner text. Try again.", 'kukie-cookie-consent' ),
+			/* translators: %s: a list of languages, for example "German, French and Polish" */
+			'gtplTranslated'    => __( 'The text is translated into %s.', 'kukie-cookie-consent' ),
+			/* translators: %s: a list of languages, for example "Bulgarian and Greek" */
+			'gtplEnglish'       => __( 'Your banner shows it in English for %s. You can translate it in the banner editor on Kukie.io.', 'kukie-cookie-consent' ),
+			/* translators: %s: a list of languages */
+			'gtplGapLink'       => __( "No link to Google's privacy page in %s", 'kukie-cookie-consent' ),
+			/* translators: %s: a list of languages */
+			'gtplGapAds'        => __( 'No sentence about ads personalisation in %s', 'kukie-cookie-consent' ),
+			/* translators: %s: a list of region names, for example "European Union and Rest of World" */
+			'gtplGapAcceptAll'  => __( 'Accept all is hidden in these regions: %s', 'kukie-cookie-consent' ),
 		];
 	}
 
@@ -1339,6 +1357,58 @@ class Kukie_Admin {
 		[ $client, $config_version, $put_data ] = $this->put_settings_or_die( $api_data );
 
 		$this->send_settings_saved( $client, __( 'Google Consent Mode settings saved', 'kukie-cookie-consent' ), $config_version, $put_data );
+	}
+
+	/**
+	 * Consent banner > Google Consent Mode v2 tab: "Apply Google's banner
+	 * text". POST /google-template runs the Kukie.io editor's own apply
+	 * (Google's text in every language, Consent Mode on, Accept all, Reject
+	 * all and Manage preferences on); the plugin sends nothing but the
+	 * request and stores nothing but the CDN cache-buster, like a settings
+	 * save. The answer carries the new template state and config_version, so
+	 * the tab re-renders and can save again without a conflict.
+	 *
+	 * @since 1.10.0
+	 */
+	public function ajax_apply_google_template(): void {
+		check_ajax_referer( 'kukie_admin', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to change Kukie.io settings.', 'kukie-cookie-consent' ) ], 403 );
+		}
+
+		$client = $this->plugin->get_api_client();
+		if ( ! $client ) {
+			wp_send_json_error( [ 'message' => __( 'This site is not connected to Kukie.io.', 'kukie-cookie-consent' ) ] );
+		}
+
+		$response = $client->post( '/google-template' );
+
+		if ( ! $response['success'] ) {
+			// A plan without Consent Mode: the structured upgrade error.
+			$this->send_plan_gate_error( $response );
+
+			wp_send_json_error( [ 'message' => $response['error'] ?? __( "Couldn't apply Google's banner text. Try again.", 'kukie-cookie-consent' ) ] );
+		}
+
+		// The same local follow-up as send_settings_saved(): the CDN
+		// cache-buster only into an install still connected after the round
+		// trip, and the settings cache dropped so the next load is fresh.
+		if ( $this->plugin->settings_still_connected() ) {
+			$this->plugin->update_options( [ 'config_version' => (string) time() ] );
+		}
+		delete_transient( 'kukie_settings_cache' );
+
+		$data    = is_array( $response['data'] ) ? $response['data'] : [];
+		$payload = [
+			'message'         => __( "Google's banner text is applied, and Google Consent Mode v2 is on.", 'kukie-cookie-consent' ),
+			'google_template' => isset( $data['google_template'] ) && is_array( $data['google_template'] ) ? $data['google_template'] : null,
+		];
+		if ( isset( $data['config_version'] ) && is_numeric( $data['config_version'] ) ) {
+			$payload['config_version'] = (int) $data['config_version'];
+		}
+
+		wp_send_json_success( $payload );
 	}
 
 	public function ajax_save_uet(): void {

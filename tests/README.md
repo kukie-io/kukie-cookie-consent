@@ -38,6 +38,7 @@ harness is scoped to it rather than to line coverage.
 | `SettingsSaveTest` (1.8.0 additions) | the shared settings handler is presence-based: a Settings-page save never touches language fields, a Language-tab save never touches banner_enabled or placement | feature lock, no finding |
 | `PreferencesModalSaveTest` (1.9.0) | the Preferences modal save coerces every value, refuses an out-of-range width locally, maps the overlay choice to null/true/false, drops a broken order or layout, never sends the title icon unless the form carried it, never forwards a non-http logo URL | feature lock, no finding |
 | `UptimeSaveTest` (1.9.0) | the Uptime save is presence-based, coerces every value, can never post recipients or the webhook, refuses a non-http(s) URL locally, mirrors nothing, turns the plan gate into the structured upgrade error; the page load is never cached; `/scan-status` drops the dashboard cache when a scan finishes; a settings save uses the PUT's config_version and makes one request | feature lock + KUK-QA-2026-458 |
+| `GoogleTemplateApplyTest` (1.10.0) | "Apply Google's banner text" posts once to `/google-template` with no body, hands back the new state and `config_version`, moves only the CDN cache-buster, drops the settings cache, turns the plan gate into the structured upgrade error, re-creates nothing after a concurrent disconnect; the Consent Mode tab loads with `fresh=1` | KUK-QA-2026-1008 |
 
 `SettingsSaveTest` and `ApiKeyTrustTest` additionally cover the 1.7.2
 concurrent-disconnect hardening: a response landing after another request
@@ -46,7 +47,8 @@ disconnected must never re-create the deleted option.
 ## Headless browser check (tests/e2e, since 1.8.0)
 
 `node tests/e2e/run.mjs` renders the Accessibility widget, Dashboard,
-Settings and (since 1.9.0) Uptime monitoring templates with the WordPress stubs, loads them in headless Chromium
+Settings, (since 1.9.0) Uptime monitoring and (since 1.10.0, the Google
+Consent Mode v2 tab's three banner-text states) Consent banner templates with the WordPress stubs, loads them in headless Chromium
 (Playwright from the Laravel repo's `node_modules`, override with
 `KUKIE_PLAYWRIGHT`; PHP binary via `KUKIE_PHP`) with the real `admin.css` +
 `admin.js`, and answers `admin-ajax.php` from `tests/e2e/fixtures/` - genuine

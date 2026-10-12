@@ -1,0 +1,229 @@
+{
+    "not_applied": {
+        "applied": false,
+        "intact": false,
+        "languages": [
+            {
+                "locale": "bg",
+                "name": "Bulgarian",
+                "missing": [
+                    "link"
+                ]
+            },
+            {
+                "locale": "en",
+                "name": "English",
+                "missing": [
+                    "link",
+                    "ads"
+                ]
+            },
+            {
+                "locale": "de",
+                "name": "German",
+                "missing": [
+                    "link",
+                    "ads"
+                ]
+            }
+        ],
+        "accept_all_hidden": [],
+        "english": [
+            {
+                "locale": "bg",
+                "name": "Bulgarian"
+            }
+        ],
+        "translated": [
+            {
+                "locale": "en",
+                "name": "English"
+            },
+            {
+                "locale": "de",
+                "name": "German"
+            },
+            {
+                "locale": "fr",
+                "name": "fr"
+            },
+            {
+                "locale": "es",
+                "name": "es"
+            },
+            {
+                "locale": "it",
+                "name": "it"
+            },
+            {
+                "locale": "nl",
+                "name": "nl"
+            },
+            {
+                "locale": "pl",
+                "name": "pl"
+            },
+            {
+                "locale": "pt",
+                "name": "pt"
+            }
+        ]
+    },
+    "apply_response": {
+        "message": "Google's banner text is applied, and Google Consent Mode is on.",
+        "gcm_v2_enabled": true,
+        "google_template": {
+            "applied": true,
+            "intact": true,
+            "languages": [],
+            "accept_all_hidden": [],
+            "english": [
+                {
+                    "locale": "bg",
+                    "name": "Bulgarian"
+                }
+            ],
+            "translated": [
+                {
+                    "locale": "en",
+                    "name": "English"
+                },
+                {
+                    "locale": "de",
+                    "name": "German"
+                },
+                {
+                    "locale": "fr",
+                    "name": "fr"
+                },
+                {
+                    "locale": "es",
+                    "name": "es"
+                },
+                {
+                    "locale": "it",
+                    "name": "it"
+                },
+                {
+                    "locale": "nl",
+                    "name": "nl"
+                },
+                {
+                    "locale": "pl",
+                    "name": "pl"
+                },
+                {
+                    "locale": "pt",
+                    "name": "pt"
+                }
+            ]
+        },
+        "config_version": 8
+    },
+    "intact": {
+        "applied": true,
+        "intact": true,
+        "languages": [],
+        "accept_all_hidden": [],
+        "english": [
+            {
+                "locale": "bg",
+                "name": "Bulgarian"
+            }
+        ],
+        "translated": [
+            {
+                "locale": "en",
+                "name": "English"
+            },
+            {
+                "locale": "de",
+                "name": "German"
+            },
+            {
+                "locale": "fr",
+                "name": "fr"
+            },
+            {
+                "locale": "es",
+                "name": "es"
+            },
+            {
+                "locale": "it",
+                "name": "it"
+            },
+            {
+                "locale": "nl",
+                "name": "nl"
+            },
+            {
+                "locale": "pl",
+                "name": "pl"
+            },
+            {
+                "locale": "pt",
+                "name": "pt"
+            }
+        ]
+    },
+    "broken": {
+        "applied": true,
+        "intact": false,
+        "languages": [
+            {
+                "locale": "de",
+                "name": "German",
+                "missing": [
+                    "link",
+                    "ads"
+                ]
+            }
+        ],
+        "accept_all_hidden": [
+            {
+                "code": "eu",
+                "name": "European Union (GDPR)"
+            }
+        ],
+        "english": [
+            {
+                "locale": "bg",
+                "name": "Bulgarian"
+            }
+        ],
+        "translated": [
+            {
+                "locale": "en",
+                "name": "English"
+            },
+            {
+                "locale": "de",
+                "name": "German"
+            },
+            {
+                "locale": "fr",
+                "name": "fr"
+            },
+            {
+                "locale": "es",
+                "name": "es"
+            },
+            {
+                "locale": "it",
+                "name": "it"
+            },
+            {
+                "locale": "nl",
+                "name": "nl"
+            },
+            {
+                "locale": "pl",
+                "name": "pl"
+            },
+            {
+                "locale": "pt",
+                "name": "pt"
+            }
+        ]
+    }
+}

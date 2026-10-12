@@ -37,7 +37,7 @@ class Kukie_WP_Consent_API {
 		$plugin = plugin_basename( KUKIE_PLUGIN_FILE );
 		add_filter( "wp_consent_api_registered_{$plugin}", '__return_true' );
 
-		// Set the consent type based on Kukie's consent model
+		// Declare the consent type: always 'optin' (see get_consent_type()).
 		add_filter( 'wp_get_consent_type', [ $this, 'get_consent_type' ] );
 
 		// Enqueue the JS bridge script
@@ -46,10 +46,30 @@ class Kukie_WP_Consent_API {
 	}
 
 	/**
-	 * Return consent type for WP Consent API.
+	 * Return consent type for WP Consent API: always 'optin', whatever the
+	 * visitor's Kukie.io region rule (decided 1.10.0, KUK-QA-2026-1010).
 	 *
-	 * Maps Kukie consent models to WP Consent API types.
-	 * Default to 'optin' (safest - requires explicit consent).
+	 * Why not the rule's own model (opt_out, notice_only ...):
+	 *
+	 * - This filter runs in PHP while the page is built, but Kukie.io places
+	 *   the visitor in the browser, after the page loads (the banner's region
+	 *   lookup), and a page cache serves one HTML to every region. PHP cannot
+	 *   know the model.
+	 * - WP Consent API does let a banner set window.wp_consent_type later and
+	 *   dispatch wp_consent_type_defined. But 'optout' changes nothing while
+	 *   the bridge below writes an explicit 'deny' for every category until
+	 *   the visitor chooses, and dropping those writes would make
+	 *   wp_has_consent() answer true before any choice. Google Site Kit's
+	 *   Consent Mode script (checked in its October 2026 build) sends
+	 *   gtag('consent', 'update') granted at page load for every category
+	 *   wp_has_consent() allows, so the visitor would be granted while
+	 *   Kukie's banner is still on screen: the pattern Kukie.io itself
+	 *   stopped sending in v1.112.0 (Google's Consent Mode requirement that
+	 *   no granted update goes out before the visitor acts).
+	 *
+	 * So consumers see 'optin' and 'deny' until the visitor's stored choice
+	 * says otherwise. In opt-out regions that is stricter than the banner,
+	 * never looser.
 	 */
 	public function get_consent_type( string $consent_type ): string {
 		return 'optin';

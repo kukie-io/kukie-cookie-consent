@@ -37,6 +37,14 @@ settings.entitled = { ...settings.entitled, preferences_modal: modalBlocks.entit
 settings.locked = { ...settings.locked, preferences_modal: modalBlocks.locked };
 status.entitled = { ...status.entitled, uptime_monitoring: uptimeBlocks.entitled };
 status.locked = { ...status.locked, uptime_monitoring: uptimeBlocks.locked };
+// 1.10.0: the google_template block of GET /settings and the apply answer
+// (captured from the Laravel suite on 2026-10-12, PluginController).
+const gtpl = json('settings-google-template.json');
+settings['gtpl-not'] = { ...settings.entitled, gcm_v2_enabled: true, google_template: gtpl.not_applied };
+settings['gtpl-broken'] = { ...settings.entitled, gcm_v2_enabled: true, google_template: gtpl.broken };
+settings['gtpl-intact'] = { ...settings.entitled, gcm_v2_enabled: true, google_template: gtpl.intact };
+settings['gtpl-none'] = { ...settings.entitled, gcm_v2_enabled: true, google_template: null };
+settings['gtpl-off'] = { ...settings.entitled, gcm_v2_enabled: false, google_template: gtpl.not_applied };
 // A pre-1.8.0 service answer: neither block.
 const noBlockStatus = { ...status.entitled }; delete noBlockStatus.accessibility_widget; delete noBlockStatus.uptime_monitoring;
 // Pre-1.8.0 API answer: same payload without the block.
@@ -83,6 +91,12 @@ async function open(browser, file, scenario) {
           return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: false, data: { message: "Couldn't load uptime monitoring from Kukie.io. Try again in a few minutes." } }) });
         }
         data = uptime[scenario];
+      } else if (action === 'kukie_apply_google_template') {
+        globalThis.__gtplApplyCount = (globalThis.__gtplApplyCount || 0) + 1;
+        data = { message: "Google's banner text is applied, and Google Consent Mode v2 is on.", google_template: gtpl.apply_response.google_template, config_version: 9 };
+      } else if (action === 'kukie_save_gcm') {
+        globalThis.__lastGcmPost = body;
+        data = { message: 'Google Consent Mode settings saved', config_version: 10 };
       } else if (action === 'kukie_save_uptime') {
         // Record what the form posted, so the run can assert an untouched
         // interval is not sent.
@@ -299,6 +313,91 @@ for (const [scenario, expected] of [['entitled', 'On'], ['locked', 'Not in plan'
   const st = await page.evaluate(() => ({ autoBlockGone: !document.getElementById('kukie-auto-block'), gcm: document.getElementById('kukie-gcm-enabled') !== null }));
   check('gcm tab: script blocking moved to Behaviour', st.autoBlockGone && st.gcm, JSON.stringify(st));
   await page.close();
+}
+
+// 7a. Google's banner text on the GCM tab (1.10.0)
+{
+  const readGtpl = (page) => page.evaluate(() => {
+    const vis = (id) => { const el = document.getElementById(id); return !!el && !el.closest('[hidden]') && getComputedStyle(el).display !== 'none'; };
+    return {
+      card: vis('kukie-gtpl-card'),
+      recommend: vis('kukie-gtpl-recommend'),
+      broken: vis('kukie-gtpl-broken'),
+      intact: vis('kukie-gtpl-intact'),
+      actions: vis('kukie-gtpl-actions'),
+      button: document.querySelector('#kukie-gtpl-apply .kukie-btn-text')?.textContent.trim(),
+      languages: document.getElementById('kukie-gtpl-languages')?.textContent,
+      gaps: Array.from(document.querySelectorAll('#kukie-gtpl-gaps li')).map((li) => li.textContent),
+      switchOn: document.getElementById('kukie-gcm-enabled').checked,
+    };
+  });
+
+  {
+    const { page, errors } = await open(browser, 'admin-banner-gcm.html', 'gtpl-not');
+    const st = await readGtpl(page);
+    check('gcm tab (not applied): the recommendation with Apply', st.card && st.recommend && !st.broken && !st.intact && st.actions && st.button === "Apply Google's banner text", JSON.stringify(st));
+    check('gcm tab (not applied): languages named, the English fallback listed', /translated into English, German, French/.test(st.languages || '') && /in English for Bulgarian\./.test(st.languages || ''), st.languages);
+    await page.screenshot({ path: path.join(E2E, 'shot-gcm-recommend.png'), fullPage: true });
+
+    await page.click('label:has(#kukie-gcm-enabled)');
+    const off = await readGtpl(page);
+    await page.click('label:has(#kukie-gcm-enabled)');
+    const on = await readGtpl(page);
+    check('gcm tab: the card follows the switch before Save', !off.switchOn && !off.card && on.switchOn && on.card, JSON.stringify({ off: off.card, on: on.card }));
+
+    await page.click('#kukie-gtpl-apply');
+    await page.waitForTimeout(100);
+    const dlg = await page.evaluate(() => ({ open: !!document.querySelector('dialog.kukie-dialog[open]'), title: document.getElementById('kukie-dialog-title')?.textContent, focused: document.activeElement?.textContent }));
+    check('gcm tab: Apply asks first, focus on Cancel', dlg.open && dlg.title === "Apply Google's banner text?" && dlg.focused === 'Cancel', JSON.stringify(dlg));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(100);
+    check('gcm tab: Escape cancels the apply, nothing is sent', !globalThis.__gtplApplyCount, String(globalThis.__gtplApplyCount));
+
+    await page.click('#kukie-gtpl-apply');
+    await page.waitForTimeout(100);
+    await page.click('dialog.kukie-dialog .kukie-btn-primary');
+    await page.waitForTimeout(300);
+    const after = await readGtpl(page);
+    const toast = await page.evaluate(() => document.querySelector('.kukie-toast')?.textContent);
+    check('gcm tab: Apply confirmed shows the complete state and a toast', globalThis.__gtplApplyCount === 1 && after.intact && !after.actions && !after.recommend && after.switchOn && /applied/.test(toast || ''), JSON.stringify(after) + ' ' + toast);
+
+    await page.click('#kukie-gcm-save');
+    await page.waitForTimeout(200);
+    const posted = /name="config_version"\r?\n\r?\n([^\r\n]+)/.exec(globalThis.__lastGcmPost || '')?.[1];
+    check('gcm tab: the next Save carries the version the apply produced', posted === '9', String(posted));
+    check('gcm tab (not applied): no JS errors', errors.length === 0, errors.join('|'));
+    await page.close();
+  }
+  {
+    const { page, errors } = await open(browser, 'admin-banner-gcm.html', 'gtpl-broken');
+    const st = await readGtpl(page);
+    check('gcm tab (broken): the warning names what is missing, with Re-apply', st.card && st.broken && !st.recommend && !st.intact && st.actions && st.button === "Re-apply Google's banner text"
+      && JSON.stringify(st.gaps) === JSON.stringify(["No link to Google's privacy page in German", 'No sentence about ads personalisation in German', 'Accept all is hidden in these regions: European Union (GDPR)']), JSON.stringify(st));
+    await page.screenshot({ path: path.join(E2E, 'shot-gcm-broken.png'), fullPage: true });
+    check('gcm tab (broken): no JS errors', errors.length === 0, errors.join('|'));
+    await page.close();
+  }
+  {
+    const { page } = await open(browser, 'admin-banner-gcm.html', 'gtpl-intact');
+    const st = await readGtpl(page);
+    check('gcm tab (complete): the success notice, no button', st.card && st.intact && !st.broken && !st.recommend && !st.actions, JSON.stringify(st));
+    await page.setViewportSize({ width: 360, height: 800 });
+    const sc = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
+    check('gcm tab: no horizontal scroll at 360px', sc.scroll <= sc.client, JSON.stringify(sc));
+    await page.close();
+  }
+  {
+    const { page } = await open(browser, 'admin-banner-gcm.html', 'gtpl-none');
+    const st = await readGtpl(page);
+    check('gcm tab (plan without Consent Mode or an older service): no card', !st.card, JSON.stringify(st));
+    await page.close();
+  }
+  {
+    const { page } = await open(browser, 'admin-banner-gcm.html', 'gtpl-off');
+    const st = await readGtpl(page);
+    check('gcm tab (switch off): no card', !st.switchOn && !st.card, JSON.stringify(st));
+    await page.close();
+  }
 }
 
 // 7b. Preferences modal tab (1.9.0)

@@ -692,7 +692,52 @@
 		const loading = document.getElementById('kukie-gcm-loading');
 		if (!form) return;
 
-		loadGcmSettings(form, loading);
+		// The google_template block of the last load or apply (null on a plan
+		// without Consent Mode, undefined from a service before 1.10.0).
+		let googleTemplate = null;
+		const toggle = form.querySelector('#kukie-gcm-enabled');
+		const render = () => renderGoogleTemplate(googleTemplate, !!toggle?.checked);
+
+		loadGcmSettings(form, loading).then((block) => {
+			googleTemplate = block;
+			render();
+		});
+
+		// The card follows the switch as it is flipped, before Save: Apply
+		// turns Consent Mode on by itself, so it is offered whenever the
+		// switch reads on.
+		toggle?.addEventListener('change', render);
+
+		const applyBtn = document.getElementById('kukie-gtpl-apply');
+		applyBtn?.addEventListener('click', async () => {
+			hideNotice('kukie-gcm-error');
+
+			const choice = await kukieDialog({
+				title: kukieI18n('gtplConfirmTitle', "Apply Google's banner text?"),
+				body: kukieI18n('gtplConfirmBody', "This replaces the banner description in every language with Google's text. It also turns on Google Consent Mode v2, Accept all, Reject all and Manage preferences."),
+				cancelLabel: kukieI18n('cancel', 'Cancel'),
+				confirmLabel: kukieI18n('gtplConfirm', 'Apply text'),
+			});
+			if (choice !== 'confirm') return;
+
+			setButtonLoading(applyBtn, true);
+			const result = await kukieAjax('kukie_apply_google_template');
+			setButtonLoading(applyBtn, false);
+
+			if (!result.success) {
+				showError('kukie-gcm-error', result.data?.message || kukieI18n('gtplFailed', "Couldn't apply Google's banner text. Try again."));
+				return;
+			}
+
+			// The apply bumped the server's config_version and turned
+			// Consent Mode on: remember both, so the next Save neither
+			// conflicts nor switches it back off.
+			rememberConfigVersion(result.data);
+			if (toggle) toggle.checked = true;
+			if (result.data?.google_template) googleTemplate = result.data.google_template;
+			render();
+			showToast(result.data?.message || '');
+		});
 
 		form.addEventListener('submit', async (e) => {
 			e.preventDefault();
@@ -702,7 +747,7 @@
 			setButtonLoading(saveBtn, true);
 
 			const data = {
-				gcm_v2_enabled: form.querySelector('#kukie-gcm-enabled')?.checked ? '1' : '0',
+				gcm_v2_enabled: toggle?.checked ? '1' : '0',
 			};
 
 			const result = await kukieSaveSettings('kukie_save_gcm', data);
@@ -713,8 +758,12 @@
 		});
 	}
 
+	// Returns the google_template block (or null) once the form is shown.
 	async function loadGcmSettings(form, loading) {
-		const result = await kukieAjax('kukie_get_settings');
+		// fresh=1: the google_template block arrived with a service update
+		// (the 1.9.0 lesson: a cached payload from before it would hide the
+		// card for ten minutes), and the template state changes on Kukie.io.
+		const result = await kukieAjax('kukie_get_settings', { fresh: '1' });
 
 		if (loading) loading.hidden = true;
 
@@ -722,7 +771,7 @@
 		// unpopulated form would post template defaults on Save.
 		if (!result.success) {
 			showError('kukie-gcm-error', result.data?.message || kukieI18n('couldNotLoad', "Couldn't load the settings. Reload the page to try again."));
-			return;
+			return null;
 		}
 
 		form.hidden = false;
@@ -730,6 +779,98 @@
 		const d = result.data;
 		rememberConfigVersion(d);
 		setChecked('kukie-gcm-enabled', d.gcm_v2_enabled);
+
+		return d.google_template && typeof d.google_template === 'object' ? d.google_template : null;
+	}
+
+	// "German, French and Polish", in the admin user's language. Language
+	// names come from Intl by locale code (the service sends English names,
+	// used only when Intl cannot name a code); region names are Kukie.io's.
+	function gtplList(names) {
+		try {
+			return new Intl.ListFormat(KUKIE_LOCALE, { type: 'conjunction' }).format(names);
+		} catch (e) {
+			return names.join(', ');
+		}
+	}
+
+	function gtplLanguageNames(items) {
+		let display = null;
+		try {
+			display = new Intl.DisplayNames(KUKIE_LOCALE ? [KUKIE_LOCALE] : undefined, { type: 'language' });
+		} catch (e) {
+			display = null;
+		}
+		return (Array.isArray(items) ? items : []).map((item) => {
+			let name = '';
+			try {
+				name = display && item?.locale ? display.of(String(item.locale)) : '';
+			} catch (e) {
+				name = '';
+			}
+			return name || String(item?.name || item?.locale || '');
+		}).filter(Boolean);
+	}
+
+	// One of three states while the switch is on: not applied (the
+	// recommendation and Apply), applied but no longer complete (what is
+	// missing, and Re-apply), complete (a success notice, no button).
+	function renderGoogleTemplate(block, switchOn) {
+		const card = document.getElementById('kukie-gtpl-card');
+		if (!card) return;
+
+		const shown = switchOn && block && typeof block === 'object';
+		card.hidden = !shown;
+		if (!shown) return;
+
+		const applied = !!block.applied;
+		const intact = applied && !!block.intact;
+		const broken = applied && !intact;
+
+		document.getElementById('kukie-gtpl-recommend').hidden = applied;
+		document.getElementById('kukie-gtpl-broken').hidden = !broken;
+		document.getElementById('kukie-gtpl-intact').hidden = !intact;
+		document.getElementById('kukie-gtpl-actions').hidden = intact;
+
+		const label = document.querySelector('#kukie-gtpl-apply .kukie-btn-text');
+		if (label) {
+			label.textContent = broken
+				? kukieI18n('gtplReapply', "Re-apply Google's banner text")
+				: kukieI18n('gtplApply', "Apply Google's banner text");
+		}
+
+		if (!applied) {
+			const translated = gtplLanguageNames(block.translated);
+			const english = gtplLanguageNames(block.english);
+			let text = translated.length
+				? kukieSprintf(kukieI18n('gtplTranslated', 'The text is translated into %s.'), gtplList(translated))
+				: '';
+			if (english.length) {
+				text += (text ? ' ' : '') + kukieSprintf(kukieI18n('gtplEnglish', 'Your banner shows it in English for %s. You can translate it in the banner editor on Kukie.io.'), gtplList(english));
+			}
+			const p = document.getElementById('kukie-gtpl-languages');
+			p.textContent = text;
+			p.hidden = text === '';
+		}
+
+		const gaps = document.getElementById('kukie-gtpl-gaps');
+		gaps.replaceChildren();
+		if (broken) {
+			const languages = Array.isArray(block.languages) ? block.languages : [];
+			const missing = (gap) => gtplLanguageNames(languages.filter((l) => Array.isArray(l?.missing) && l.missing.includes(gap)));
+			const lines = [];
+			const noLink = missing('link');
+			const noAds = missing('ads');
+			const hidden = (Array.isArray(block.accept_all_hidden) ? block.accept_all_hidden : []).map((r) => String(r?.name || r?.code || '')).filter(Boolean);
+			if (noLink.length) lines.push(kukieSprintf(kukieI18n('gtplGapLink', "No link to Google's privacy page in %s"), gtplList(noLink)));
+			if (noAds.length) lines.push(kukieSprintf(kukieI18n('gtplGapAds', 'No sentence about ads personalisation in %s'), gtplList(noAds)));
+			if (hidden.length) lines.push(kukieSprintf(kukieI18n('gtplGapAcceptAll', 'Accept all is hidden in these regions: %s'), gtplList(hidden)));
+			lines.forEach((line) => {
+				const li = document.createElement('li');
+				li.textContent = line;
+				gaps.appendChild(li);
+			});
+		}
 	}
 
 	// ─────────────────────────────────────────
