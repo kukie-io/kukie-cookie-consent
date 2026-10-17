@@ -159,66 +159,96 @@ Not in Google Analytics or other tag-based tools: a check runs no JavaScript. Se
 == Changelog ==
 
 = 1.11.0 =
-* New name: Kukie - Cookie Consent & Privacy Banner.
-* New layout: one Kukie.io menu item, with every section and banner tab in a side navigation on the page.
-* Refreshed admin design.
-* Faster banner loading: browsers connect to the Kukie.io CDN earlier.
-* Hardened: the API key is never sent on a redirect, and caching-plugin filters accept unexpected values.
+* New: plugin name "Kukie - Cookie Consent & Privacy Banner".
+* New: a side navigation inside the plugin page for every section and banner tab, with one Kukie.io item in the WordPress menu.
+* New: a brand bar with your site's domain and plan.
+* Improved: refreshed admin design with softer cards, buttons and tabs.
+* Improved: on tablets and phones the sections become a row above the page.
+* Improved: faster banner loading, as browsers connect to the Kukie.io CDN earlier.
+* Security: the API key is never sent on to a redirected address.
+* Fixed: caching-plugin filters no longer fail when another plugin passes an unexpected value.
+* Changed: a shorter plugin listing with new screenshots.
 
 = 1.10.0 =
-* Added: Google's recommended banner text on the Google Consent Mode v2 tab, applied with one button.
-* Changed: clearer description of the default consent state.
+* New: Google's recommended banner text on the Google Consent Mode v2 tab, applied to every language with one button.
+* New: a notice when a language or region no longer has all of Google's text.
+* Changed: the tab describes the default consent state the banner sends since October 2026.
+* Documented: the WP Consent API integration reports opt-in in every region.
+* Fixed: the banner script size in this listing (under 40KB gzipped).
 
 = 1.9.0 =
-* Added: Uptime monitoring page and dashboard card.
-* Added: Preferences modal tab.
-* Added: live cookie scan progress on the dashboard.
-* Added: Mexican and Argentinian Spanish.
-* Improved: clearer wording, accessible dialogs, better contrast and fewer requests per save.
+* New: Uptime monitoring page with the page to check, the interval, uptime, response time, SSL expiry and incidents.
+* New: an Uptime monitoring card on the dashboard.
+* New: Preferences modal tab for the width, button layout and order, overlay, policy links and title icon.
+* New: live cookie scan progress on the dashboard.
+* New: Mexican and Argentinian Spanish banner translations.
+* Changed: every admin page reworded with plainer labels and clearer error messages.
+* Changed: errors stay on the page, and confirmations use an accessible dialog.
+* Changed: dates, numbers and times follow your WordPress language.
+* Fixed: keyboard focus shows a clear outline again.
+* Fixed: better contrast for badges, switches and placeholders.
+* Improved: saving settings needs one request instead of two.
 
 = 1.8.2 =
-* Added: Hide for administrators setting.
+* New: Hide for administrators, so page builders such as Bricks and Elementor keep working after cookies are rejected.
+* New: the kukie_hide_banner_for_user filter for developers.
 
 = 1.8.1 =
-* Improved: admin pages fully translated in all 11 languages.
+* Improved: the admin pages added in 1.8.0 are translated into all 11 languages.
 
 = 1.8.0 =
-* Added: Behaviour, iFrame blocking, Language and Regions tabs, and the Accessibility widget page.
-* Changed: Banner design, Google Consent Mode and Microsoft UET moved into one Consent banner page.
-* Fixed: today's consent counts and plan details stay current.
+* New: Behaviour, iFrame blocking, Language and Regions tabs on the Consent banner page.
+* New: Accessibility widget page with position, colour, size, modules and languages.
+* Changed: Banner design, Google Consent Mode v2 and Microsoft UET moved into one Consent banner page, and old links redirect.
+* Changed: refreshed admin styling with WordPress-native notices and tabs.
+* Fixed: today's consent counts include live consents.
+* Fixed: the Settings page follows plan and organisation changes made on Kukie.io.
+* Fixed: a save on one page can no longer reset a setting from another.
+* Fixed: PHP 8.1 deprecation notices on hidden admin pages.
 
 = 1.7.3 =
-* Added: Lock and Sliders icons for the revisit button.
+* New: Lock and Sliders icons for the revisit button.
+* Improved: a sharper Shield icon.
 
 = 1.7.2 =
 * Fixed: a disconnect could be undone by a save in another tab.
+* Fixed: plan prices and the script size in this listing.
 
 = 1.7.1 =
 * Fixed: a wrong API key no longer switches the banner off.
+* Fixed: settings cannot be saved after a failed load.
+* Fixed: reconnecting keeps your script position.
 * Fixed: Brazilian Portuguese detected with WPML and Polylang.
+* Improved: real error messages from Kukie.io and a cleaner uninstall.
 
 = 1.7.0 =
-* Changed: requires WordPress 6.7.
-* Fixed: reconnect notice after a security keys change.
-* Fixed: warning before overwriting settings changed on Kukie.io.
+* Changed: requires WordPress 6.7 or later.
+* Fixed: a clear reconnect notice after a security keys change or a database copy.
+* Fixed: a warning before overwriting settings changed on Kukie.io.
+* Fixed: the scan button shows why a scan could not start.
+* Fixed: site verification no longer times out early.
 
 = 1.6.2 =
-* Fixed: manual embed code showed the wrong script URL.
+* Fixed: the manual embed code showed the wrong script URL.
 
 = 1.6.1 =
-* Changed: Consent Mode descriptions reworded.
+* Changed: Consent Mode descriptions reworded as a technical signal.
 
 = 1.6.0 =
-* Added: WPML and Polylang support, and a banner language setting.
+* New: WPML and Polylang support.
+* New: Banner language setting.
+* New: the kukie_script_lang filter.
 
 = 1.5.0 =
-* Added: automatic WP Rocket defer exclusion.
+* New: automatic WP Rocket defer exclusion.
+* Improved: the WP Rocket notice checks the settings in effect.
 
 = 1.4.1 =
-* Fixed: notice and recovery when the API key becomes invalid.
+* Fixed: the banner keeps showing after the API key changes.
+* New: a notice when the API key is invalid.
 
 = 1.4.0 =
-* Added: admin translations in 11 languages.
+* New: admin translations in 11 languages.
 
 = 1.3.4 =
 * Fixed: WP Consent API script order.
@@ -230,46 +260,50 @@ Not in Google Analytics or other tag-based tools: a check runs no JavaScript. Se
 * Fixed: WP Consent API script timing.
 
 = 1.3.1 =
-* Fixed: WP Consent API consent type.
+* Fixed: wp_has_consent() always returned true.
 
 = 1.3.0 =
-* Added: WP Consent API integration.
+* New: WP Consent API integration with category mapping.
 
 = 1.2.2 =
-* Added: exclusions for six caching plugins.
+* New: exclusions for six caching plugins.
+* Fixed: caching plugins could corrupt the banner script.
 
 = 1.2.1 =
 * Fixed: WP Rocket notice link.
 
 = 1.2.0 =
-* Added: WP Rocket compatibility check.
+* New: WP Rocket compatibility check.
 
 = 1.1.3 =
 * Changed: plugin name.
 
 = 1.1.2 =
-* Added: revisit button icon colour.
+* New: revisit button icon colour.
 
 = 1.1.1 =
 * Fixed: other plugins' notices inside Kukie pages.
 
 = 1.1.0 =
-* Changed: banner loaded with wp_enqueue_script, plus WordPress.org review fixes.
+* Changed: the banner loads through wp_enqueue_script.
+* Improved: input sanitisation and output escaping.
 
 = 1.0.9 =
-* Fixed: banner loading timing and cache-busting.
+* Fixed: banner loading timing.
+* New: cache-busting after settings changes.
 
 = 1.0.8 =
-* Added: revisit button settings.
+* New: revisit button settings.
 
 = 1.0.7 =
-* Fixed: design settings sync with Kukie.io.
+* Fixed: layout settings sync with Kukie.io.
 
 = 1.0.5 =
-* Added: banner design page.
+* New: banner design page with a preview.
 
 = 1.0.1 =
 * Changed: branding.
+* Fixed: settings page loading.
 
 = 1.0.0 =
 * Initial release.
