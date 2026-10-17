@@ -1607,11 +1607,6 @@
    BANNER DESIGN PAGE
    ═══════════════════════════════════════ */
 
-/* Wide layout */
-.kukie-wrap--wide {
-	max-width: 1100px;
-}
-
 /* Two-column grid */
 .kukie-design-layout {
 	display: grid;
@@ -2679,5 +2674,459 @@
 	.kukie-modal-preview,
 	.kukie-mpv {
 		transition: none;
+	}
+}
+
+/* ═══════════════════════════════════════
+   APP SHELL (1.11.0)
+   Brand bar + in-page side navigation on every connected page
+   (templates/partials/shell-start.php). The WordPress sidebar keeps one
+   Kukie.io entry. Below 1100px the navigation becomes a row of sections
+   above the page and the Consent banner page shows its tab strip instead
+   of the nested tab list. The main column is a size container, so the
+   page grids follow the room they actually have, not the viewport.
+   ═══════════════════════════════════════ */
+
+.kukie-wrap.kukie-shell {
+	max-width: 1360px;
+	margin-block: 16px 0;
+	margin-inline: 2px 20px;
+}
+
+/* Brand bar */
+.kukie-appbar {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	min-height: 60px;
+	padding-block: 10px;
+	padding-inline: 20px 12px;
+	margin-bottom: 20px;
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.kukie-appbar-brand {
+	display: inline-flex;
+	align-items: center;
+	flex: none;
+	border-radius: 4px;
+}
+
+.kukie-appbar-brand img {
+	display: block;
+	width: auto;
+	height: 20px;
+}
+
+.kukie-appbar-site {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	margin: 0;
+	padding-inline-start: 16px;
+	border-inline-start: 1px solid #e2e8f0;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.kukie-appbar-domain {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #0f172a;
+	font-weight: 500;
+}
+
+.kukie-appbar-plan {
+	flex: none;
+	padding: 2px 10px;
+	border-radius: 999px;
+	background: #eff6ff;
+	color: #1d4ed8;
+	font-size: 12px;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+.kukie-wrap .kukie-appbar-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	flex: none;
+	min-height: 40px;
+	margin-inline-start: auto;
+	padding: 8px 14px;
+	border: 1px solid #cbd5e1;
+	border-radius: 8px;
+	background: #fff;
+	color: #0f172a;
+	font-size: 13px;
+	font-weight: 500;
+	text-decoration: none;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.kukie-wrap .kukie-appbar-link:hover {
+	background: #f8fafc;
+	border-color: #94a3b8;
+	color: #0f172a;
+}
+
+.kukie-wrap .kukie-appbar-link .dashicons.kukie-ext {
+	margin-inline-start: 2px;
+}
+
+/* Layout */
+.kukie-layout {
+	display: grid;
+	grid-template-columns: 232px minmax(0, 1fr);
+	gap: 24px;
+	align-items: start;
+}
+
+.kukie-main {
+	min-width: 0;
+	container-type: inline-size;
+	container-name: kukie-main;
+}
+
+/* Side navigation */
+.kukie-sidenav {
+	position: sticky;
+	top: 48px;
+	padding: 8px;
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.kukie-wrap .kukie-nav,
+.kukie-wrap .kukie-nav-sub {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.kukie-wrap .kukie-nav li {
+	margin: 0;
+}
+
+.kukie-wrap .kukie-nav-entry + .kukie-nav-entry {
+	margin-top: 2px;
+}
+
+.kukie-wrap .kukie-nav-link {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-height: 40px;
+	padding: 8px 12px;
+	border-radius: 8px;
+	color: #334155;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.3;
+	text-decoration: none;
+	transition: background 0.15s, color 0.15s;
+}
+
+.kukie-wrap .kukie-nav-link .dashicons {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	color: #64748b;
+	transition: color 0.15s;
+}
+
+.kukie-wrap .kukie-nav-link:hover {
+	background: #f1f5f9;
+	color: #0f172a;
+}
+
+.kukie-wrap .kukie-nav-link:hover .dashicons {
+	color: #334155;
+}
+
+.kukie-wrap .kukie-nav-link.is-current {
+	background: #eff6ff;
+	color: #1d4ed8;
+}
+
+.kukie-wrap .kukie-nav-link.is-current .dashicons {
+	color: #2563eb;
+}
+
+/* The Consent banner entry while one of its tabs is shown: the tab carries
+   the highlight, the parent only reads as the open group. */
+.kukie-wrap .kukie-nav-entry.is-open > .kukie-nav-link {
+	background: transparent;
+	color: #0f172a;
+}
+
+.kukie-wrap .kukie-nav-entry.is-open > .kukie-nav-link .dashicons {
+	color: #2563eb;
+}
+
+.kukie-wrap .kukie-nav-sub {
+	margin-block: 2px 6px;
+	margin-inline: 20px 0;
+	padding-inline-start: 12px;
+	border-inline-start: 1px solid #e2e8f0;
+}
+
+.kukie-wrap .kukie-nav-sub li + li {
+	margin-top: 1px;
+}
+
+.kukie-wrap .kukie-nav-sublink {
+	position: relative;
+	display: block;
+	padding: 6px 10px;
+	border-radius: 6px;
+	color: #475569;
+	font-size: 13px;
+	line-height: 20px;
+	text-decoration: none;
+	transition: background 0.15s, color 0.15s;
+}
+
+.kukie-wrap .kukie-nav-sublink:hover {
+	background: #f1f5f9;
+	color: #0f172a;
+}
+
+.kukie-wrap .kukie-nav-sublink.is-current {
+	background: #eff6ff;
+	color: #1d4ed8;
+	font-weight: 500;
+}
+
+.kukie-wrap .kukie-nav-sublink.is-current::before {
+	content: "";
+	position: absolute;
+	top: 6px;
+	bottom: 6px;
+	inset-inline-start: -13px;
+	width: 2px;
+	border-radius: 2px;
+	background: #2563eb;
+}
+
+.kukie-wrap .kukie-nav-link:focus-visible,
+.kukie-wrap .kukie-nav-sublink:focus-visible,
+.kukie-wrap .kukie-appbar-link:focus-visible,
+.kukie-wrap .kukie-appbar-brand:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 0;
+	box-shadow: none;
+}
+
+/* Page header inside the main column */
+.kukie-shell .kukie-header {
+	min-height: 40px;
+	margin-bottom: 20px;
+}
+
+/* Tab strip of the Consent banner page: narrow screens only (below). */
+.kukie-wrap.kukie-shell .kukie-tabs {
+	display: none;
+}
+
+.kukie-wrap .kukie-tabs.nav-tab-wrapper {
+	gap: 4px;
+	margin: 0 0 20px;
+	padding: 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+	border-bottom: 1px solid #e2e8f0;
+	scrollbar-width: thin;
+}
+
+.kukie-wrap .kukie-tabs .nav-tab {
+	float: none;
+	flex: none;
+	margin: 0;
+	padding: 10px 12px;
+	border: 0;
+	border-bottom: 2px solid transparent;
+	background: none;
+	color: #475569;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.kukie-wrap .kukie-tabs .nav-tab:hover {
+	color: #0f172a;
+	border-bottom-color: #cbd5e1;
+}
+
+.kukie-wrap .kukie-tabs .nav-tab-active,
+.kukie-wrap .kukie-tabs .nav-tab-active:hover {
+	color: #0f172a;
+	border-bottom-color: #2563eb;
+}
+
+.kukie-wrap .kukie-tabs .nav-tab:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: -2px;
+	box-shadow: none;
+}
+
+/* Softer surfaces inside the shell */
+.kukie-shell .kukie-card,
+.kukie-shell .kukie-stat-card,
+.kukie-shell .kukie-preview-card {
+	border-color: #e2e8f0;
+	border-radius: 12px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.kukie-shell .kukie-cta-banner {
+	border-radius: 12px;
+}
+
+.kukie-shell .kukie-card--locked {
+	border-color: #f59e0b;
+}
+
+.kukie-shell .kukie-stat-card--link:hover {
+	border-color: #2563eb;
+	box-shadow: 0 1px 4px rgba(37, 99, 235, 0.12);
+}
+
+.kukie-shell .kukie-btn-primary,
+.kukie-shell .kukie-btn-secondary,
+.kukie-shell .kukie-btn-danger {
+	border-radius: 8px;
+}
+
+.kukie-shell .kukie-input,
+.kukie-shell .kukie-select {
+	border-radius: 6px;
+}
+
+/* Page grids follow the main column's width */
+@container kukie-main (max-width: 720px) {
+	/* The form needs about 320px beside the 380px preview. */
+	.kukie-design-layout {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.kukie-design-preview {
+		position: static;
+	}
+}
+
+@container kukie-main (max-width: 720px) {
+	.kukie-stats-grid,
+	.kukie-uptime-stats,
+	.kukie-interval-grid,
+	.kukie-checkbox-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@container kukie-main (max-width: 440px) {
+	.kukie-stats-grid,
+	.kukie-uptime-stats,
+	.kukie-interval-grid,
+	.kukie-checkbox-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* Narrow screens: the sections become a row above the page */
+@media (max-width: 1100px) {
+	.kukie-layout {
+		display: block;
+	}
+
+	.kukie-sidenav {
+		position: static;
+		margin-bottom: 20px;
+		padding: 6px;
+		overflow-x: auto;
+		scrollbar-width: thin;
+	}
+
+	.kukie-wrap .kukie-nav {
+		display: flex;
+		gap: 4px;
+	}
+
+	.kukie-wrap .kukie-nav-entry {
+		flex: none;
+	}
+
+	.kukie-wrap .kukie-nav-entry + .kukie-nav-entry {
+		margin-top: 0;
+	}
+
+	.kukie-wrap .kukie-nav-link {
+		white-space: nowrap;
+	}
+
+	.kukie-wrap .kukie-nav-sub {
+		display: none;
+	}
+
+	.kukie-wrap .kukie-nav-entry.is-open > .kukie-nav-link {
+		background: #eff6ff;
+		color: #1d4ed8;
+	}
+
+	.kukie-wrap.kukie-shell .kukie-tabs {
+		display: flex;
+	}
+}
+
+@media (max-width: 782px) {
+	.kukie-wrap.kukie-shell {
+		margin-block: 12px 0;
+		margin-inline: 0 12px;
+	}
+
+	.kukie-appbar {
+		flex-wrap: wrap;
+		gap: 8px 12px;
+		padding: 12px 16px;
+	}
+
+	.kukie-appbar-site {
+		order: 3;
+		width: 100%;
+		padding-inline-start: 0;
+		border-inline-start: 0;
+	}
+
+	.kukie-wrap .kukie-nav-link {
+		min-height: 44px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kukie-wrap .kukie-nav-link,
+	.kukie-wrap .kukie-nav-link .dashicons,
+	.kukie-wrap .kukie-nav-sublink,
+	.kukie-wrap .kukie-appbar-link {
+		transition: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.kukie-wrap .kukie-nav-link.is-current,
+	.kukie-wrap .kukie-nav-sublink.is-current {
+		outline: 2px solid Highlight;
+		outline-offset: -2px;
 	}
 }

@@ -32,10 +32,13 @@ class Kukie_Api_Client {
 		$url = KUKIE_API_BASE . $endpoint;
 
 		$args = [
-			'method'    => strtoupper( $method ),
-			'timeout'   => $timeout,
-			'sslverify' => true,
-			'headers'   => [
+			'method'      => strtoupper( $method ),
+			'timeout'     => $timeout,
+			'sslverify'   => true,
+			// The API never redirects; following one would resend the API
+			// key header to wherever the redirect points (since 1.11.0).
+			'redirection' => 0,
+			'headers'     => [
 				'X-Kukie-Api-Key' => $this->api_key,
 				'Content-Type'    => 'application/json',
 				'Accept'          => 'application/json',
@@ -90,7 +93,9 @@ class Kukie_Api_Client {
 		return [
 			'success' => $status >= 200 && $status < 300,
 			'data'    => $data,
-			'error'   => $status >= 400 ? $this->extract_error_message( $data ) : null,
+			// Any non-2xx carries a message (a 3xx included: redirects are
+			// not followed), so no caller shows an empty error.
+			'error'   => ( $status < 200 || $status >= 300 ) ? $this->extract_error_message( $data ) : null,
 			'status'  => $status,
 		];
 	}

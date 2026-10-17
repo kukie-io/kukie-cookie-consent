@@ -4,6 +4,10 @@
  * blocking / Language / Google Consent Mode v2 / Microsoft UET / Regions). The tab partials are the pre-1.8.0 per-page templates with
  * their page chrome removed; only the active tab's partial is included.
  *
+ * Since 1.11.0 the tabs are listed in the side navigation; the tab strip
+ * below shows only on narrow screens, where the side navigation becomes a
+ * row of sections without the tabs (admin.css).
+ *
  * @since 1.8.0
  */
 
@@ -14,18 +18,9 @@ $kukie_plugin  = Kukie_Plugin::instance();
 $kukie_site_id = absint( $kukie_plugin->get_option( 'site_id', 0 ) );
 $kukie_app_url = 'https://app.kukie.io';
 $kukie_tab     = Kukie_Admin::current_banner_tab();
-$kukie_tabs    = [
-	'design'    => __( 'Design', 'kukie-cookie-consent' ),
-	'modal'     => __( 'Preferences modal', 'kukie-cookie-consent' ),
-	'behaviour' => __( 'Behaviour', 'kukie-cookie-consent' ),
-	'iframes'   => __( 'iFrame blocking', 'kukie-cookie-consent' ),
-	'language'  => __( 'Language', 'kukie-cookie-consent' ),
-	'gcm'       => __( 'Google Consent Mode v2', 'kukie-cookie-consent' ),
-	'uet'       => __( 'Microsoft UET', 'kukie-cookie-consent' ),
-	'regions'   => __( 'Regions', 'kukie-cookie-consent' ),
-];
+$kukie_tabs    = Kukie_Admin::banner_tab_labels();
 ?>
-<div class="wrap kukie-wrap<?php echo in_array( $kukie_tab, [ 'design', 'modal' ], true ) ? ' kukie-wrap--wide' : ''; ?>">
+<?php require KUKIE_PLUGIN_DIR . 'templates/partials/shell-start.php'; ?>
 	<div class="kukie-header">
 		<h1><?php esc_html_e( 'Consent banner', 'kukie-cookie-consent' ); ?></h1>
 		<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/banner' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
@@ -75,4 +70,4 @@ $kukie_tabs    = [
 			break;
 	}
 	?>
-</div>
+<?php require KUKIE_PLUGIN_DIR . 'templates/partials/shell-end.php'; ?>

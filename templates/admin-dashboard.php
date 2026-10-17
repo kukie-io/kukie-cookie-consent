@@ -6,13 +6,9 @@ $kukie_plugin  = Kukie_Plugin::instance();
 $kukie_site_id = absint( $kukie_plugin->get_option( 'site_id', 0 ) );
 $kukie_app_url = 'https://app.kukie.io';
 ?>
-<div class="wrap kukie-wrap kukie-wrap--wide">
+<?php require KUKIE_PLUGIN_DIR . 'templates/partials/shell-start.php'; ?>
 	<div class="kukie-header">
-		<h1><?php esc_html_e( 'Kukie.io dashboard', 'kukie-cookie-consent' ); ?></h1>
-		<a href="<?php echo esc_url( $kukie_plugin->get_option( 'dashboard_url', $kukie_app_url ) ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
-			<?php esc_html_e( 'Open Kukie.io', 'kukie-cookie-consent' ); ?>
-			<?php echo Kukie_Admin::new_tab_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-sanitised in the helper ?>
-		</a>
+		<h1><?php esc_html_e( 'Dashboard', 'kukie-cookie-consent' ); ?></h1>
 	</div>
 	<hr class="wp-header-end">
 
@@ -197,4 +193,4 @@ $kukie_app_url = 'https://app.kukie.io';
 			</a>
 		</p>
 	</div>
-</div>
+<?php require KUKIE_PLUGIN_DIR . 'templates/partials/shell-end.php'; ?>

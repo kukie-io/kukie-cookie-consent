@@ -17,7 +17,7 @@ $kukie_plugin  = Kukie_Plugin::instance();
 $kukie_site_id = absint( $kukie_plugin->get_option( 'site_id', 0 ) );
 $kukie_app_url = 'https://app.kukie.io';
 ?>
-<div class="wrap kukie-wrap">
+<?php require KUKIE_PLUGIN_DIR . 'templates/partials/shell-start.php'; ?>
 	<div class="kukie-header">
 		<h1><?php esc_html_e( 'Accessibility widget', 'kukie-cookie-consent' ); ?></h1>
 		<a href="<?php echo esc_url( $kukie_app_url . '/sites/' . $kukie_site_id . '/accessibility' ); ?>" target="_blank" rel="noopener noreferrer" class="kukie-external-link">
@@ -252,4 +252,4 @@ $kukie_app_url = 'https://app.kukie.io';
 			</div>
 		</form>
 	</div>
-</div>
+<?php require KUKIE_PLUGIN_DIR . 'templates/partials/shell-end.php'; ?>

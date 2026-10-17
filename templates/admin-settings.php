@@ -6,9 +6,9 @@ $kukie_plugin  = Kukie_Plugin::instance();
 $kukie_site_id = absint( $kukie_plugin->get_option( 'site_id', 0 ) );
 $kukie_app_url = 'https://app.kukie.io';
 ?>
-<div class="wrap kukie-wrap">
+<?php require KUKIE_PLUGIN_DIR . 'templates/partials/shell-start.php'; ?>
 	<div class="kukie-header">
-		<h1><?php esc_html_e( 'Kukie.io settings', 'kukie-cookie-consent' ); ?></h1>
+		<h1><?php esc_html_e( 'Settings', 'kukie-cookie-consent' ); ?></h1>
 	</div>
 	<hr class="wp-header-end">
 
@@ -149,4 +149,4 @@ $kukie_app_url = 'https://app.kukie.io';
 			</div>
 		</form>
 	</div>
-</div>
+<?php require KUKIE_PLUGIN_DIR . 'templates/partials/shell-end.php'; ?>

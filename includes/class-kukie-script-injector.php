@@ -32,6 +32,7 @@ class Kukie_Script_Injector {
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_banner_script' ] );
 		add_filter( 'script_loader_tag', [ $this, 'add_compatibility_attributes' ], 10, 2 );
+		add_filter( 'wp_resource_hints', [ $this, 'add_resource_hints' ], 10, 2 );
 
 		// Admin bar indicator
 		add_action( 'admin_bar_menu', [ $this, 'admin_bar_status' ], 999 );
@@ -60,63 +61,48 @@ class Kukie_Script_Injector {
 	 * @since 1.5.0 Added rocket_exclude_defer_js filter.
 	 */
 	public static function register_cache_exclusions(): void {
-		// --- Autoptimize ---
-		add_filter( 'autoptimize_filter_js_exclude', function ( $exclude ) {
+		// Every callback accepts whatever the filter carries: another plugin
+		// on the same filter may hand over a string or null instead of the
+		// documented array, and a type error here would break every page.
+
+		// --- Autoptimize (a comma-separated string) ---
+		add_filter( 'autoptimize_filter_js_exclude', static function ( $exclude ) {
 			$kukie = 'kukie.io,c.js,kukie-cookie';
-			return $exclude ? $exclude . ',' . $kukie : $kukie;
+			if ( $exclude === null || $exclude === '' || $exclude === false ) {
+				return $kukie;
+			}
+			// Another plugin's non-string value is passed on untouched.
+			return is_string( $exclude ) ? $exclude . ',' . $kukie : $exclude;
 		} );
 
 		// --- WP Rocket ---
-		add_filter( 'rocket_exclude_js', function ( $excluded_js ) {
-			if ( ! kukie_array_contains_domain( $excluded_js, 'kukie.io' ) ) {
-				$excluded_js[] = 'cdn.kukie.io(.*)';
-				$excluded_js[] = 'app.kukie.io(.*)';
-			}
-			return $excluded_js;
+		add_filter( 'rocket_exclude_js', static function ( $excluded ) {
+			return self::exclude_hosts( $excluded, [ 'cdn.kukie.io(.*)', 'app.kukie.io(.*)' ] );
 		} );
-		add_filter( 'rocket_delay_js_exclusions', function ( $excluded ) {
-			if ( ! kukie_array_contains_domain( $excluded, 'kukie.io' ) ) {
-				$excluded[] = 'cdn.kukie.io';
-				$excluded[] = 'app.kukie.io';
-			}
-			return $excluded;
+		add_filter( 'rocket_delay_js_exclusions', static function ( $excluded ) {
+			return self::exclude_hosts( $excluded, [ 'cdn.kukie.io', 'app.kukie.io' ] );
 		} );
-		add_filter( 'rocket_minify_excluded_external_js', function ( $excluded ) {
-			if ( ! kukie_array_contains_domain( $excluded, 'kukie.io' ) ) {
-				$excluded[] = 'cdn.kukie.io';
-				$excluded[] = 'app.kukie.io';
-			}
-			return $excluded;
+		add_filter( 'rocket_minify_excluded_external_js', static function ( $excluded ) {
+			return self::exclude_hosts( $excluded, [ 'cdn.kukie.io', 'app.kukie.io' ] );
 		} );
 		// WP Rocket: exclude from Load JavaScript deferred (Defer JS)
-		add_filter( 'rocket_exclude_defer_js', function ( $excluded ) {
-			if ( ! kukie_array_contains_domain( $excluded, 'kukie.io' ) ) {
-				$excluded[] = 'cdn.kukie.io';
-				$excluded[] = 'app.kukie.io';
-			}
-			return $excluded;
+		add_filter( 'rocket_exclude_defer_js', static function ( $excluded ) {
+			return self::exclude_hosts( $excluded, [ 'cdn.kukie.io', 'app.kukie.io' ] );
 		} );
 
 		// --- WP Fastest Cache ---
-		add_filter( 'wpfc_minify_js_exclude', function ( $exclude ) {
-			if ( ! is_array( $exclude ) ) {
-				$exclude = [];
-			}
-			$exclude[] = 'kukie.io';
-			return $exclude;
+		add_filter( 'wpfc_minify_js_exclude', static function ( $exclude ) {
+			return self::exclude_hosts( $exclude, [ 'kukie.io' ] );
 		} );
 
 		// --- LiteSpeed Cache ---
-		add_filter( 'litespeed_optimize_js_excludes', function ( $excludes ) {
-			if ( ! kukie_array_contains_domain( $excludes, 'kukie.io' ) ) {
-				$excludes[] = 'cdn.kukie.io';
-				$excludes[] = 'app.kukie.io';
-			}
-			return $excludes;
+		add_filter( 'litespeed_optimize_js_excludes', static function ( $excludes ) {
+			return self::exclude_hosts( $excludes, [ 'cdn.kukie.io', 'app.kukie.io' ] );
 		} );
 
 		// --- W3 Total Cache ---
-		add_filter( 'w3tc_minify_js_do_tag_minification', function ( $do_minify, $script_tag, $file ) {
+		add_filter( 'w3tc_minify_js_do_tag_minification', static function ( $do_minify, $script_tag = '', $file = '' ) {
+			$file = is_string( $file ) ? $file : '';
 			if ( str_contains( $file, 'kukie.io' ) || str_contains( $file, 'kukie-cookie' ) ) {
 				return false;
 			}
@@ -124,14 +110,65 @@ class Kukie_Script_Injector {
 		}, 10, 3 );
 
 		// --- SG Optimizer ---
-		add_filter( 'sgo_js_minify_exclude', function ( $exclude ) {
-			$exclude[] = 'kukie.io';
-			return $exclude;
+		add_filter( 'sgo_js_minify_exclude', static function ( $exclude ) {
+			return self::exclude_hosts( $exclude, [ 'kukie.io' ] );
 		} );
-		add_filter( 'sgo_javascript_combine_exclude', function ( $exclude ) {
-			$exclude[] = 'kukie.io';
-			return $exclude;
+		add_filter( 'sgo_javascript_combine_exclude', static function ( $exclude ) {
+			return self::exclude_hosts( $exclude, [ 'kukie.io' ] );
 		} );
+	}
+
+	/**
+	 * Add Kukie's hosts to a cache plugin's exclusion list, once. A value
+	 * that is not an array (null, or a string another plugin returned) is
+	 * kept as a list entry rather than dropped or fatal.
+	 *
+	 * @since 1.11.0
+	 * @param mixed    $list  The filter's current value.
+	 * @param string[] $hosts Entries to add when no entry names kukie.io yet.
+	 * @return array
+	 */
+	public static function exclude_hosts( mixed $list, array $hosts ): array {
+		if ( ! is_array( $list ) ) {
+			$list = is_string( $list ) && $list !== '' ? [ $list ] : [];
+		}
+
+		if ( ! kukie_array_contains_domain( $list, 'kukie.io' ) ) {
+			array_push( $list, ...$hosts );
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Resource hints for the banner: a preconnect to the CDN that serves the
+	 * script (it saves the TLS handshake when the script sits at the end of
+	 * the page) and a DNS lookup ahead of app.kukie.io, which the banner
+	 * calls for the visitor's region and to record a choice.
+	 *
+	 * Only when this page really enqueued the banner (wp_enqueue_scripts runs
+	 * on wp_head before the hints are printed), so the login page, the
+	 * Customizer and administrators who do not get the banner get no hints.
+	 * Both parameters tolerate a caller that passes fewer or other values:
+	 * this runs on every public page.
+	 *
+	 * @since 1.11.0
+	 * @param mixed $urls          Hints WordPress already prints.
+	 * @param mixed $relation_type preconnect, dns-prefetch, ...
+	 * @return mixed
+	 */
+	public function add_resource_hints( mixed $urls = [], mixed $relation_type = '' ): mixed {
+		if ( ! is_array( $urls ) || ! wp_script_is( 'kukie-banner-script', 'enqueued' ) ) {
+			return $urls;
+		}
+
+		if ( $relation_type === 'preconnect' ) {
+			$urls[] = 'https://cdn.kukie.io';
+		} elseif ( $relation_type === 'dns-prefetch' ) {
+			$urls[] = '//app.kukie.io';
+		}
+
+		return $urls;
 	}
 
 	public function enqueue_banner_script(): void {

@@ -914,17 +914,9 @@ msgstr "Kukie.io e WP Rocket:"
 msgid "Kukie.io checks your homepage around the clock and emails you when it stops responding, and again when it is back, with the cause in plain words."
 msgstr "O Kukie.io verifica sua página inicial 24 horas por dia e envia um e-mail quando ela para de responder, e outro quando ela volta, com a causa em palavras simples."
 
-#: templates/admin-dashboard.php:11
-msgid "Kukie.io dashboard"
-msgstr "Painel Kukie.io"
-
 #: includes/class-kukie-admin.php:558
 msgid "Kukie.io is not connected, so this site shows no consent banner."
 msgstr "O Kukie.io não está conectado, então este site não exibe nenhum banner de consentimento."
-
-#: templates/admin-settings.php:11
-msgid "Kukie.io settings"
-msgstr "Configurações do Kukie.io"
 
 #: includes/class-kukie-admin.php:583 includes/class-kukie-admin.php:611
 msgid "Kukie.io:"

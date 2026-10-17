@@ -498,6 +498,8 @@
 			: 0
 		));
 
+		if (d.plan?.name) showAppbarPlan(d.plan.name);
+
 		// Plan, with the trial's end date underneath while one runs.
 		const planEl = document.getElementById('kukie-stat-plan');
 		if (planEl) {
@@ -1032,7 +1034,10 @@
 		const result = await kukieAjax('kukie_get_status');
 		if (!result.success || !result.data) return;
 		const d = result.data;
-		if (d.plan?.name) setText('kukie-conn-plan', d.plan.name);
+		if (d.plan?.name) {
+			setText('kukie-conn-plan', d.plan.name);
+			showAppbarPlan(d.plan.name);
+		}
 		if (d.organisation) setText('kukie-conn-org', d.organisation);
 		if (d.domain) setText('kukie-conn-domain', d.domain);
 	}
@@ -2553,6 +2558,14 @@
 		label.appendChild(checkbox);
 		label.appendChild(span);
 		return label;
+	}
+
+	// The brand bar's plan badge (1.11.0), kept current from /status.
+	function showAppbarPlan(name) {
+		const el = document.getElementById('kukie-appbar-plan');
+		if (!el) return;
+		el.textContent = name;
+		el.hidden = false;
 	}
 
 	function setText(id, text) {

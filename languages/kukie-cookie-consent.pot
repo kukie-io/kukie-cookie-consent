@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kukie Cookie Consent 1.10.0\n"
+"Project-Id-Version: Kukie Cookie Consent 1.11.0\n"
 "Report-Msgid-Bugs-To: support@kukie.io\n"
 "POT-Creation-Date: 2026-10-12 00:00+0000\n"
 "MIME-Version: 1.0\n"
@@ -988,16 +988,8 @@ msgid ""
 "responding, and again when it is back, with the cause in plain words."
 msgstr ""
 
-#: templates/admin-dashboard.php:11
-msgid "Kukie.io dashboard"
-msgstr ""
-
 #: includes/class-kukie-admin.php:558
 msgid "Kukie.io is not connected, so this site shows no consent banner."
-msgstr ""
-
-#: templates/admin-settings.php:11
-msgid "Kukie.io settings"
 msgstr ""
 
 #: includes/class-kukie-admin.php:583 includes/class-kukie-admin.php:611

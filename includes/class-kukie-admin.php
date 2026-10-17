@@ -7,12 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Kukie_Admin {
 
 	/**
-	 * Admin page slugs. The five visible entries are Dashboard, Consent banner
-	 * (one page, seven tabs), Accessibility widget, Uptime monitoring (since
-	 * 1.9.0) and Settings;
-	 * the connect page is hidden and the three LEGACY slugs stay registered as
-	 * hidden pages whose only job is to redirect old bookmarks and inter-page
-	 * links to the matching Consent banner tab (see redirect_legacy_page()).
+	 * Admin page slugs. The five sections are Dashboard, Consent banner (one
+	 * page, eight tabs), Accessibility widget, Uptime monitoring (since 1.9.0)
+	 * and Settings. Since 1.11.0 only the dashboard has a WordPress menu
+	 * entry; the others are hidden pages reached from the side navigation
+	 * inside the page. The connect page is hidden too, and the three LEGACY
+	 * slugs stay registered as hidden pages whose only job is to redirect old
+	 * bookmarks and inter-page links to the matching Consent banner tab (see
+	 * redirect_legacy_page()).
 	 *
 	 * @since 1.8.0
 	 */
@@ -29,6 +31,12 @@ class Kukie_Admin {
 		'kukie-gcm'    => 'gcm',
 		'kukie-uet'    => 'uet',
 	];
+
+	/**
+	 * Section pages reached from the in-page side navigation (1.11.0): all of
+	 * them are hidden in the WordPress sidebar except the dashboard.
+	 */
+	public const SECTION_PAGES = [ self::PAGE_DASHBOARD, self::PAGE_BANNER, self::PAGE_ACCESSIBILITY, self::PAGE_UPTIME, self::PAGE_SETTINGS ];
 
 	/** Tabs of the Consent banner page, in display order. */
 	public const BANNER_TABS = [ 'design', 'modal', 'behaviour', 'iframes', 'language', 'gcm', 'uet', 'regions' ];
@@ -62,6 +70,7 @@ class Kukie_Admin {
 
 	public function init(): void {
 		add_action( 'admin_menu', [ $this, 'register_menus' ] );
+		add_filter( 'parent_file', [ $this, 'highlight_menu' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 		add_action( 'admin_init', [ $this, 'maybe_redirect' ] );
 		add_action( 'admin_notices', [ $this, 'connection_notice' ] );
@@ -114,7 +123,10 @@ class Kukie_Admin {
 			return;
 		}
 
-		// Main menu -> Dashboard
+		// One entry in the WordPress sidebar since 1.11.0. The sections are
+		// reached from the side navigation inside the page (see
+		// templates/partials/shell-start.php), so the dashboard is the only
+		// visible menu item and every other section is a hidden page.
 		add_menu_page(
 			__( 'Kukie.io', 'kukie-cookie-consent' ),
 			__( 'Kukie.io', 'kukie-cookie-consent' ),
@@ -125,59 +137,30 @@ class Kukie_Admin {
 			100
 		);
 
-		add_submenu_page(
-			self::PAGE_DASHBOARD,
-			__( 'Dashboard', 'kukie-cookie-consent' ),
-			__( 'Dashboard', 'kukie-cookie-consent' ),
-			'manage_options',
-			self::PAGE_DASHBOARD,
-			[ $this, 'render_dashboard_page' ]
-		);
-
-		add_submenu_page(
-			self::PAGE_DASHBOARD,
-			__( 'Consent banner', 'kukie-cookie-consent' ),
-			__( 'Consent banner', 'kukie-cookie-consent' ),
-			'manage_options',
-			self::PAGE_BANNER,
-			[ $this, 'render_banner_page' ]
-		);
-
-		add_submenu_page(
-			self::PAGE_DASHBOARD,
-			__( 'Accessibility widget', 'kukie-cookie-consent' ),
-			__( 'Accessibility widget', 'kukie-cookie-consent' ),
-			'manage_options',
-			self::PAGE_ACCESSIBILITY,
-			[ $this, 'render_accessibility_page' ]
-		);
-
-		// Visible on every plan: an unentitled plan sees what the feature
-		// does and which plan includes it (the page reads the gate from
-		// Kukie.io on every load, so an upgrade unlocks it at once).
-		add_submenu_page(
-			self::PAGE_DASHBOARD,
-			__( 'Uptime monitoring', 'kukie-cookie-consent' ),
-			__( 'Uptime monitoring', 'kukie-cookie-consent' ),
-			'manage_options',
-			self::PAGE_UPTIME,
-			[ $this, 'render_uptime_page' ]
-		);
-
-		add_submenu_page(
-			self::PAGE_DASHBOARD,
-			__( 'Settings', 'kukie-cookie-consent' ),
-			__( 'Settings', 'kukie-cookie-consent' ),
-			'manage_options',
-			self::PAGE_SETTINGS,
-			[ $this, 'render_settings_page' ]
-		);
+		// Hidden section pages (Uptime monitoring is visible on every plan:
+		// an unentitled plan sees what the feature does and which plan
+		// includes it). A hidden page gets no title from WordPress, so the
+		// load hook sets it; parent_file keeps Kukie.io highlighted.
+		$sections = [
+			self::PAGE_BANNER        => [ __( 'Consent banner', 'kukie-cookie-consent' ), 'render_banner_page' ],
+			self::PAGE_ACCESSIBILITY => [ __( 'Accessibility widget', 'kukie-cookie-consent' ), 'render_accessibility_page' ],
+			self::PAGE_UPTIME        => [ __( 'Uptime monitoring', 'kukie-cookie-consent' ), 'render_uptime_page' ],
+			self::PAGE_SETTINGS      => [ __( 'Settings', 'kukie-cookie-consent' ), 'render_settings_page' ],
+		];
+		foreach ( $sections as $slug => [ $title, $callback ] ) {
+			$hook = add_submenu_page( '', $title, $title, 'manage_options', $slug, [ $this, $callback ] );
+			if ( is_string( $hook ) && $hook !== '' ) {
+				add_action( 'load-' . $hook, static function () use ( $title ): void {
+					$GLOBALS['title'] = $title;
+				} );
+			}
+		}
 
 		// Hidden connect page (for reconnecting). An EMPTY parent slug
 		// registers the page without a menu entry; the historical null
 		// parent reaches plugin_basename()'s string functions and raises
 		// PHP 8.1+ deprecation notices on every admin request.
-		add_submenu_page(
+		$hook = add_submenu_page(
 			'',
 			__( 'Connect', 'kukie-cookie-consent' ),
 			__( 'Connect', 'kukie-cookie-consent' ),
@@ -185,6 +168,11 @@ class Kukie_Admin {
 			self::PAGE_CONNECT,
 			[ $this, 'render_connect_page' ]
 		);
+		if ( is_string( $hook ) && $hook !== '' ) {
+			add_action( 'load-' . $hook, static function (): void {
+				$GLOBALS['title'] = __( 'Connect', 'kukie-cookie-consent' );
+			} );
+		}
 
 		// Legacy slugs (pre-1.8.0 Banner Design / GCM / UET pages): still
 		// registered so bookmarks pass WordPress's page-access check, then
@@ -204,6 +192,88 @@ class Kukie_Admin {
 				add_action( 'load-' . $hook, [ $this, 'redirect_legacy_page' ] );
 			}
 		}
+	}
+
+	/**
+	 * Keep the Kukie.io menu item highlighted on the hidden section pages,
+	 * which WordPress otherwise renders with no current menu item.
+	 *
+	 * @since 1.11.0
+	 */
+	public function highlight_menu( mixed $parent_file ): mixed {
+		global $plugin_page;
+
+		if ( is_string( $plugin_page ) && in_array( $plugin_page, self::SECTION_PAGES, true ) ) {
+			return self::PAGE_DASHBOARD;
+		}
+
+		return $parent_file;
+	}
+
+	/**
+	 * Labels of the Consent banner tabs, in display order. Shared by the
+	 * side navigation and the tab strip the page shows on narrow screens.
+	 *
+	 * @since 1.11.0
+	 * @return array<string, string>
+	 */
+	public static function banner_tab_labels(): array {
+		return [
+			'design'    => __( 'Design', 'kukie-cookie-consent' ),
+			'modal'     => __( 'Preferences modal', 'kukie-cookie-consent' ),
+			'behaviour' => __( 'Behaviour', 'kukie-cookie-consent' ),
+			'iframes'   => __( 'iFrame blocking', 'kukie-cookie-consent' ),
+			'language'  => __( 'Language', 'kukie-cookie-consent' ),
+			'gcm'       => __( 'Google Consent Mode v2', 'kukie-cookie-consent' ),
+			'uet'       => __( 'Microsoft UET', 'kukie-cookie-consent' ),
+			'regions'   => __( 'Regions', 'kukie-cookie-consent' ),
+		];
+	}
+
+	/**
+	 * The in-page side navigation: one entry per section, the Consent banner
+	 * with its tabs as children. `current` marks the page being shown.
+	 *
+	 * @since 1.11.0
+	 * @return array<int, array{slug: string, label: string, icon: string, url: string, current: bool, children: array<int, array{label: string, url: string, current: bool}>}>
+	 */
+	public static function nav_items(): array {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only menu page parameter
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : self::PAGE_DASHBOARD;
+		$tab  = self::current_banner_tab();
+
+		$sections = [
+			self::PAGE_DASHBOARD     => [ __( 'Dashboard', 'kukie-cookie-consent' ), 'dashboard' ],
+			self::PAGE_BANNER        => [ __( 'Consent banner', 'kukie-cookie-consent' ), 'shield' ],
+			self::PAGE_ACCESSIBILITY => [ __( 'Accessibility widget', 'kukie-cookie-consent' ), 'universal-access-alt' ],
+			self::PAGE_UPTIME        => [ __( 'Uptime monitoring', 'kukie-cookie-consent' ), 'heart' ],
+			self::PAGE_SETTINGS      => [ __( 'Settings', 'kukie-cookie-consent' ), 'admin-generic' ],
+		];
+
+		$items = [];
+		foreach ( $sections as $slug => [ $label, $icon ] ) {
+			$children = [];
+			if ( $slug === self::PAGE_BANNER ) {
+				foreach ( self::banner_tab_labels() as $key => $tab_label ) {
+					$children[] = [
+						'label'   => $tab_label,
+						'url'     => self::banner_tab_url( $key ),
+						'current' => $page === self::PAGE_BANNER && $tab === $key,
+					];
+				}
+			}
+
+			$items[] = [
+				'slug'     => $slug,
+				'label'    => $label,
+				'icon'     => $icon,
+				'url'      => $slug === self::PAGE_BANNER ? self::banner_tab_url( 'design' ) : admin_url( 'admin.php?page=' . $slug ),
+				'current'  => $page === $slug,
+				'children' => $children,
+			];
+		}
+
+		return $items;
 	}
 
 	/**
@@ -257,7 +327,7 @@ class Kukie_Admin {
 	public function enqueue_assets( string $hook ): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress admin menu page parameter
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
-		if ( ! in_array( $page, [ self::PAGE_DASHBOARD, self::PAGE_CONNECT, self::PAGE_BANNER, self::PAGE_ACCESSIBILITY, self::PAGE_UPTIME, self::PAGE_SETTINGS ], true ) ) {
+		if ( $page !== self::PAGE_CONNECT && ! in_array( $page, self::SECTION_PAGES, true ) ) {
 			return;
 		}
 

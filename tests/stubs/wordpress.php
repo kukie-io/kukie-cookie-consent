@@ -341,6 +341,10 @@ function wp_enqueue_script( string $handle, string $src = '', array $deps = [], 
 
 function wp_enqueue_style( string $handle, string $src = '', array $deps = [], mixed $ver = false ): void {}
 
+function wp_script_is( string $handle, string $status = 'enqueued' ): bool {
+	return isset( $GLOBALS['kukie_test_enqueued'][ $handle ] );
+}
+
 function wp_localize_script( string $handle, string $name, array $data ): bool {
 	return true;
 }

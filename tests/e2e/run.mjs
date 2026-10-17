@@ -74,7 +74,7 @@ async function open(browser, file, scenario) {
     const url = new URL(route.request().url());
     if (url.pathname.startsWith('/plugin/')) {
       const p = path.join(PLUGIN, url.pathname.replace('/plugin/', ''));
-      const ct = p.endsWith('.css') ? 'text/css' : p.endsWith('.js') ? 'application/javascript' : 'text/plain';
+      const ct = p.endsWith('.css') ? 'text/css' : p.endsWith('.js') ? 'application/javascript' : p.endsWith('.svg') ? 'image/svg+xml' : 'text/plain';
       return route.fulfill({ status: 200, contentType: ct, body: fs.readFileSync(p) });
     }
     if (url.pathname.endsWith('/admin-ajax.php')) {
@@ -242,6 +242,32 @@ for (const [scenario, expected] of [['entitled', 'On'], ['locked', 'Not in plan'
   }));
   check('settings: language fields moved off the page', st.langGone, JSON.stringify(st));
   check('settings: connection card shows the live plan/org/domain from /status', st.plan === 'Pixadoro Custom Plan' && st.org.length > 0 && st.domain === 'obshti-uslovia.com', JSON.stringify(st) + ' ' + errors.join('|'));
+  await page.close();
+}
+// 6b. In-page navigation (1.11.0): the side navigation marks the section and
+// the tab; below 1100px it becomes a row and the tab strip takes over.
+{
+  const { page, errors } = await open(browser, 'admin-banner-behaviour.html', 'entitled');
+  const wide = await page.evaluate(() => ({
+    sections: Array.from(document.querySelectorAll('.kukie-nav-link .kukie-nav-label')).map(e => e.textContent.trim()),
+    currentTab: document.querySelector('.kukie-nav-sublink[aria-current="page"]')?.textContent.trim(),
+    pageMarks: document.querySelectorAll('.kukie-sidenav [aria-current="page"]').length,
+    tabsShown: getComputedStyle(document.querySelector('.kukie-tabs')).display !== 'none',
+    subShown: getComputedStyle(document.querySelector('.kukie-nav-sub')).display !== 'none',
+    sideBySide: document.querySelector('.kukie-sidenav').getBoundingClientRect().right <= document.querySelector('.kukie-main').getBoundingClientRect().left,
+  }));
+  check('nav: five sections in order', JSON.stringify(wide.sections) === JSON.stringify(['Dashboard', 'Consent banner', 'Accessibility widget', 'Uptime monitoring', 'Settings']), JSON.stringify(wide.sections));
+  check('nav (wide): the tab is marked once, beside the page, tab strip hidden', wide.currentTab === 'Behaviour' && wide.pageMarks === 1 && !wide.tabsShown && wide.subShown && wide.sideBySide, JSON.stringify(wide) + ' ' + errors.join('|'));
+  await page.setViewportSize({ width: 900, height: 1000 });
+  const narrow = await page.evaluate(() => ({
+    tabsShown: getComputedStyle(document.querySelector('.kukie-tabs')).display !== 'none',
+    subShown: getComputedStyle(document.querySelector('.kukie-nav-sub')).display !== 'none',
+    above: document.querySelector('.kukie-sidenav').getBoundingClientRect().bottom <= document.querySelector('.kukie-main').getBoundingClientRect().top,
+  }));
+  check('nav (narrow): a row above the page, the tab strip takes over', narrow.tabsShown && !narrow.subShown && narrow.above, JSON.stringify(narrow));
+  await page.setViewportSize({ width: 360, height: 800 });
+  const sc = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
+  check('nav: no horizontal page scroll at 360px', sc.scroll <= sc.client + 1, JSON.stringify(sc));
   await page.close();
 }
 // 7. Consent banner tabs

@@ -51,11 +51,12 @@ foreach ( glob( $kukie_src . '/includes/*.php' ) as $kukie_class_file ) {
 }
 
 // The main plugin file defines this helper outside any class; the injector's
-// cache-exclusion filters call it.
+// cache-exclusion filters call it. Keep this copy identical to the one in
+// kukie-cookie-consent.php (scalar entries only since 1.11.0).
 if ( ! function_exists( 'kukie_array_contains_domain' ) ) {
 	function kukie_array_contains_domain( array $list, string $domain ): bool {
 		foreach ( $list as $entry ) {
-			if ( str_contains( (string) $entry, $domain ) ) {
+			if ( is_scalar( $entry ) && str_contains( (string) $entry, $domain ) ) {
 				return true;
 			}
 		}

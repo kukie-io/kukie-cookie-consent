@@ -26,7 +26,7 @@ $_GET = [ 'page' => $argv[2] ?? 'kukie', 'tab' => $argv[3] ?? '' ];
 ob_start();
 require $src . '/templates/' . $argv[1];
 $body = ob_get_clean();
-$html = '<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://obshti-uslovia.com/wp-includes/css/dashicons.min.css"><link rel="stylesheet" href="/plugin/assets/css/admin.css"></head><body class="wp-admin wp-core-ui"><div id="wpbody-content">' . $body . '</div><script src="/plugin/assets/js/admin.js"></script></body></html>';
+$html = '<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://obshti-uslovia.com/wp-includes/css/dashicons.min.css"><link rel="stylesheet" href="/plugin/assets/css/admin.css"><style>body{margin:0;background:#f0f0f1;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:13px}#wpbody-content{padding:0 0 0 20px}hr.wp-header-end{visibility:hidden;margin:-1px 0 0;border:0}</style></head><body class="wp-admin wp-core-ui"><div id="wpbody-content">' . $body . '</div><script src="/plugin/assets/js/admin.js"></script></body></html>';
 $name = pathinfo( $argv[1], PATHINFO_FILENAME ) . ( ( $argv[3] ?? '' ) !== '' ? '-' . $argv[3] : '' );
 file_put_contents( $out . '/' . $name . '.html', $html );
 echo "rendered " . $argv[1] . "\n";
